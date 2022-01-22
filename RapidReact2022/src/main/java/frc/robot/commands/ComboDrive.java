@@ -38,7 +38,7 @@ public class ComboDrive extends CommandBase {
     //driveSubsystem.curvatureDrive();
 
     //switches from arcade to curvature at a bound
-    if(Math.abs(throttle) < .80){
+    if(Math.abs(throttle) < .90){
       driveTrain.arcadeDrive(throttle, steer);
       SmartDashboard.putString("Mode", "arcade");
     }else{

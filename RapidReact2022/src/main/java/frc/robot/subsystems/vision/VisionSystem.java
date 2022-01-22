@@ -68,6 +68,7 @@ public abstract class VisionSystem extends SubsystemBase {
     visionLayout.addNumber(name + " Cal Angle", this::getCalAngle).withSize(1, 1);
     //visionLayout.addBoolean(name + " Driver Mode", RobotContainer::getDriverMode).withSize(1, 1);
   }
+  public abstract void setPipeline(double pipeline);
 
   public VisionValues getRawValues() {
     return rawValues;

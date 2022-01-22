@@ -82,6 +82,7 @@ public class ControlConstants {
 
     public static int driverColumn = 4;
     public static int autoColumn = 4;
+    public static int limelightColumn = 0;
     public static int intakeVisionColumn = 0;
     public static int shooterVisionColumn = 6;
 

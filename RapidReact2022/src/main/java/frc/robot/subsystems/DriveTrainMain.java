@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -14,6 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ControlConstants;
+import frc.robot.commands.ComboDrive;
+import frc.robot.commands.CurvatureDrive;
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -31,11 +34,13 @@ public class DriveTrainMain extends SubsystemBase {
   private MotorController rightMaster;
 
   Pose pose;
+  private DifferentialDrive diffDrive;
 
   public DriveTrainMain(MotorController left, MotorController right, Joystick driver, Pose pose) {
     leftMaster = left;
     rightMaster = right;
     this.pose = pose;
+    diffDrive = new DifferentialDrive(left, right);
 
     ShuffleboardLayout layout = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay)
       .getLayout("Driver", BuiltInLayouts.kList)
@@ -54,7 +59,7 @@ public class DriveTrainMain extends SubsystemBase {
       .withPosition(ControlConstants.driverColumn, 1);
 
   //  pdp = new PowerDistributionPanel();
-    setDefaultCommand(new Driving(this, driver));
+    setDefaultCommand(new ComboDrive(this, driver));
    // setDefaultCommand(new FlickStick(this, driver, pose));
   }
 
@@ -82,11 +87,18 @@ public class DriveTrainMain extends SubsystemBase {
   public void arcadeDrive(double throttle, double steer) {
     steer *= DriveConstants.steerFactor;
     throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
-    //0.7 is set currently for Michael's practice runs
-    leftMaster.set(throttle + steer);
-    rightMaster.set(throttle - steer);
+    diffDrive.arcadeDrive(throttle, steer);
   }
-
+  public void curvatureDrive(double throttle, double steer){
+    steer *= DriveConstants.steerFactor;
+    throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
+    diffDrive.curvatureDrive(throttle, steer, true);
+  }
+  public void curvatureDrive(double throttle, double steer, boolean turnStop){
+    steer *= DriveConstants.steerFactor;
+    throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
+    diffDrive.curvatureDrive(throttle, steer, turnStop);
+  }
   public static double scaleInputs(double input) {
     if (input > -.1 && input < .1) {
       return 0.0;

@@ -19,9 +19,8 @@ public class LowerCargoToHub extends SequentialCommandGroup {
     String path1 = "paths/LowestCargo.wpilib.json";
     String path2 = "paths/LowestCargoToHub.wpilib.json";
     addCommands(
-
-                new SequentialCommandGroup(
-                    Drive.getAutonomousCommand(path1, true),
-                    Drive.getAutonomousCommand(path2, false)));
+      new SequentialCommandGroup(
+        Drive.getAutonomousCommand(path1, true),
+        Drive.getAutonomousCommand(path2, false)));
   }
 }

@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 public class VisionLimeLightH extends VisionSystem {
   /**
    * Creates a new LimeLightVision.
@@ -57,5 +59,10 @@ public class VisionLimeLightH extends VisionSystem {
 
   public boolean isLightOn() {
     return 1 != table.getTable(name).getEntry("ledMode").getNumber(0).intValue();
+  }
+
+  @Override
+  public void setPipeline(double pipeline) {
+    NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(pipeline);
   }
 }

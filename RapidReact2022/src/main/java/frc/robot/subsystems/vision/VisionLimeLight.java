@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 public class VisionLimeLight extends VisionSystem {
   /**
    * Creates a new LimeLightVision.
@@ -38,6 +40,7 @@ public class VisionLimeLight extends VisionSystem {
       double vertical = table.getTable(path).getEntry("thor").getDouble(0);
       double horizontal = table.getTable(path).getEntry("tvert").getDouble(0);
 
+
       // calculating distance
       double distance = (targetHeight - camHeight) / Math.tan(Math.toRadians(angleY + camAngle));
       rawValues = new VisionValues(valid, 0, 0, angleX, angleY, distance, horizontal, vertical);
@@ -48,6 +51,12 @@ public class VisionLimeLight extends VisionSystem {
       smoothedValues = new VisionValues();
     }
   }
+
+  public void setPipeline(double pipeline){
+    NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(pipeline);
+  }
+  //name is assigned in the constructor, and will give you the correct limelight table
+  //aka use name whenever you use getTable()
 
   public void setLight(boolean on) {
     table.getTable(name).getEntry("ledMode").setNumber(on ? 3 : 1);

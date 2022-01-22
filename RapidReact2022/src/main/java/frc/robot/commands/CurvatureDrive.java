@@ -33,6 +33,7 @@ public class CurvatureDrive extends CommandBase {
     double steer = driver.getRawAxis(ControlConstants.steer);
     SmartDashboard.putNumber("Throttle", throttle);
     SmartDashboard.putNumber("Steer", steer);
+    //turns the robot at a curve/ rate like a car
     driveSubsystem.curvatureDrive(
       DriveTrainMain.scaleInputs(throttle), 
       DriveTrainMain.scaleInputs(steer));

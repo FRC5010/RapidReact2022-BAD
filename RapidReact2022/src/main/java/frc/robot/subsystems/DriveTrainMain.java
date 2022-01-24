@@ -83,18 +83,24 @@ public class DriveTrainMain extends SubsystemBase {
   public boolean getDriveDirection(){
     return DriveConstants.driveInversion == 1;
   }
-
+  //Driver means it's being affected by sensitivity
+  // Non driver is full power
+  public void driverArcadeDrive(double throttle, double steer) {
+    steer *= DriveConstants.steerFactor;
+    throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
+    diffDrive.arcadeDrive(throttle, steer);
+  }
   public void arcadeDrive(double throttle, double steer) {
     steer *= DriveConstants.steerFactor;
     throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
     diffDrive.arcadeDrive(throttle, steer);
   }
-  public void curvatureDrive(double throttle, double steer){
+  public void driverCurvatureDrive(double throttle, double steer){
     steer *= DriveConstants.steerFactor;
     throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
     diffDrive.curvatureDrive(throttle, steer, true);
   }
-  public void curvatureDrive(double throttle, double steer, boolean turnStop){
+  public void driverCurvatureDrive(double throttle, double steer, boolean turnStop){
     steer *= DriveConstants.steerFactor;
     throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
     diffDrive.curvatureDrive(throttle, steer, turnStop);

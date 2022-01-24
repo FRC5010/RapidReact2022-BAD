@@ -40,10 +40,10 @@ public class ComboDrive extends CommandBase {
     //switches from arcade to curvature at a bound
 
     if(Math.abs(throttle) < .85){
-      driveTrain.arcadeDrive(throttle, steer);
+      driveTrain.driverArcadeDrive(throttle, steer);
       SmartDashboard.putString("Mode", "arcade");
     }else{
-      driveTrain.curvatureDrive(throttle, steer, false);
+      driveTrain.driverCurvatureDrive(throttle, steer, false);
       SmartDashboard.putString("Mode", "curve");
     }
   }

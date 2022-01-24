@@ -36,7 +36,7 @@ public class Driving extends CommandBase {
   @Override
   public void execute() {
     
-    driveSubsystem.arcadeDrive(
+    driveSubsystem.driverArcadeDrive(
       DriveTrainMain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle)), 
       DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
   }

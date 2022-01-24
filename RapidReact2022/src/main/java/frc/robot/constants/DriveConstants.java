@@ -70,7 +70,7 @@ public final class DriveConstants {
 
     public static final double kTurnP = 0.5 / 180; // max power / max error
     public static final double kTurnD = kTurnP * 0.1; 
-    public static final double minTurn = 0;
+    public static final double minTurn = .2;
 
     public static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),

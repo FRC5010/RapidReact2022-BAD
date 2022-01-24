@@ -14,14 +14,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.Driving;
 import frc.robot.commands.SetPipeline;
+import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.HubToBall2;
 import frc.robot.commands.auto.HubToBall3;
 import frc.robot.commands.auto.LowerCargoToHub;
 import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
+import frc.robot.subsystems.Pose;
 import frc.robot.subsystems.vision.VisionLimeLight;
 import frc.robot.subsystems.vision.VisionLimeLightH;
 import frc.robot.subsystems.vision.VisionSystem;
@@ -49,6 +50,7 @@ public class RobotContainer {
     driver = new Joystick(ControlConstants.driverJoystick);
     operator = new Joystick(ControlConstants.operatorJoystick);
 
+
     shooterVision = new VisionLimeLight("limelight-shooter", 19.25, 14.562694, 102.559, ControlConstants.shooterVisionColumn);
     intakeVision = new VisionLimeLightH("limelight-intake", 24, -5, 6, ControlConstants.shooterVisionColumn);
 
@@ -58,6 +60,7 @@ public class RobotContainer {
     command.addOption("HubBall2", new HubToBall2());
     command.addOption("HubBall3", new HubToBall3());
     command.addOption("ManyBall", new ManyBallAuto());
+    command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));
     teamColor.addOption("Red", new InstantCommand(() -> shooterVision.setPipeline(1)));

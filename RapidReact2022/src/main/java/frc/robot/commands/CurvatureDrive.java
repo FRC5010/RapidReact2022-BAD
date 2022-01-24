@@ -34,7 +34,7 @@ public class CurvatureDrive extends CommandBase {
     SmartDashboard.putNumber("Throttle", throttle);
     SmartDashboard.putNumber("Steer", steer);
     //turns the robot at a curve/ rate like a car
-    driveSubsystem.curvatureDrive(
+    driveSubsystem.driverCurvatureDrive(
       DriveTrainMain.scaleInputs(throttle), 
       DriveTrainMain.scaleInputs(steer));
   }

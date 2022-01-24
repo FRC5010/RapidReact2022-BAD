@@ -166,4 +166,8 @@ public class Drive {
   public DriveTrainMain getDriveTrainMain() {
     return driveTrain;
   }
+
+  public Pose getPose(){
+    return robotPose;
+  }
 }

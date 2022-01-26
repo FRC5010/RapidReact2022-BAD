@@ -22,6 +22,7 @@ import frc.robot.commands.auto.LowerCargoToHub;
 import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Pose;
 import frc.robot.subsystems.vision.VisionLimeLight;
 import frc.robot.subsystems.vision.VisionLimeLightH;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private VisionLimeLight shooterVision;
   private VisionSystem intakeVision;
 
+  private CameraSubsystem cameraSubsystem;
 
   private Drive drive; 
 
@@ -56,6 +58,8 @@ public class RobotContainer {
 
     drive = new Drive(driver,shooterVision);
     
+    cameraSubsystem = new CameraSubsystem(operator);
+
     command.addOption("LowerCargoToHub", new LowerCargoToHub());
     command.addOption("HubBall2", new HubToBall2());
     command.addOption("HubBall3", new HubToBall3());

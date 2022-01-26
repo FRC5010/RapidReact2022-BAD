@@ -91,8 +91,7 @@ public class DriveTrainMain extends SubsystemBase {
     diffDrive.arcadeDrive(throttle, steer);
   }
   public void arcadeDrive(double throttle, double steer) {
-    steer *= DriveConstants.steerFactor;
-    throttle *= DriveConstants.throttleFactor * DriveConstants.driveInversion;
+    throttle *= DriveConstants.driveInversion;
     diffDrive.arcadeDrive(throttle, steer);
   }
   public void driverCurvatureDrive(double throttle, double steer){

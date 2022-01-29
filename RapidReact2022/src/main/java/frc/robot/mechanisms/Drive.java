@@ -45,9 +45,11 @@ public class Drive {
   public static Joystick driver;
   public static CANSparkMax lDrive1;
   public static CANSparkMax lDrive2;
+  public static CANSparkMax lDrive3;
 
   public static CANSparkMax rDrive1;
   public static CANSparkMax rDrive2;
+  public static CANSparkMax rDrive3;
 
   public static RelativeEncoder lEncoder;
   public static RelativeEncoder rEncoder;
@@ -105,20 +107,28 @@ public class Drive {
     // Neos HAVE to be in brushless
     lDrive1 = new CANSparkMax(1, MotorType.kBrushless);
     lDrive2 = new CANSparkMax(2, MotorType.kBrushless);
+    lDrive3 = new CANSparkMax(3, MotorType.kBrushless);
 
-    rDrive1 = new CANSparkMax(3, MotorType.kBrushless);
-    rDrive2 = new CANSparkMax(4, MotorType.kBrushless);
+    rDrive1 = new CANSparkMax(4, MotorType.kBrushless);
+    rDrive2 = new CANSparkMax(5, MotorType.kBrushless);
+    rDrive3 = new CANSparkMax(6, MotorType.kBrushless);
 
     lDrive1.restoreFactoryDefaults();
     lDrive2.restoreFactoryDefaults();
+    lDrive3.restoreFactoryDefaults();
     rDrive1.restoreFactoryDefaults();
     rDrive2.restoreFactoryDefaults();
+    rDrive3.restoreFactoryDefaults();
 
     lDrive1.setInverted(false);
     lDrive2.follow(lDrive1, false);
+    lDrive3.follow(lDrive1,false);
+    
     rDrive1.setInverted(true);
     rDrive2.follow(rDrive1, false);
     rDrive2.setInverted(false);
+    rDrive3.follow(rDrive1,false);
+    rDrive3.setInverted(false);
 
     lEncoder = lDrive1.getEncoder();
     rEncoder = rDrive1.getEncoder();

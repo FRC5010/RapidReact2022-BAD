@@ -35,7 +35,7 @@ public class GalacticSearch extends SequentialCommandGroup {
     addCommands(
     new SeekTarget(this.driveTrainMain, this.visionSystem, this.pose), 
     new ParallelDeadlineGroup(
-      new DriveWithVision(this.driveTrainMain, this.visionSystem, 0, 0, -.4)
+      new DriveWithVision(this.driveTrainMain, this.visionSystem, 0, 0, -0)
       )
     );
   }

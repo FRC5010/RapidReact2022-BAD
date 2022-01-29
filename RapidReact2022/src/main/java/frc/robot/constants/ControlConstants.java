@@ -26,6 +26,13 @@ public class ControlConstants {
     static enum POVDirs {
         UP, RIGHT, DOWN, LEFT 
     }
+    static enum DioPorts {
+        Port0, Port1, Port2, Port3, Port4, Port5, Port6, Port7, Port8, Port9;
+    }
+    //DIO Ports
+    public static int limitSwitch = DioPorts.Port0.ordinal();
+    public static int BB1 = DioPorts.Port1.ordinal();
+    public static int BB2 = DioPorts.Port2.ordinal();
     // Driver
     public static int driverJoystick = 0;
     public static int throttle = AxisNums.LEFT_Y.ordinal();

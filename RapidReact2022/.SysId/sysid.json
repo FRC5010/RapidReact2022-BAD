@@ -1,6 +1,11 @@
 {
   "SysId": {
     "Analysis Type": "Drivetrain",
-    "AnalyzerJSONLocation": "C:\\Dev\\VS\\RapidReact2022\\Characterizer 2022\\sysid_data20220122-131503.json"
+    "AnalyzerJSONLocation": "C:\\Dev\\VS\\RapidReact2022\\Characterizer 2022\\sysid_data20220122-131503.json",
+    "NetworkTables Settings": {
+      "serverTeam": "5010"
+    },
+    "mode": "Client",
+    "serverTeam": "5010"
   }
 }

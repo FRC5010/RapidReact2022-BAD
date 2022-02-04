@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.LedBlink;
+import frc.robot.commands.LedColor;
+import frc.robot.commands.PistonForward;
+import frc.robot.commands.PistonReverse;
 import frc.robot.commands.SetPipeline;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.HubToBall2;
@@ -23,6 +28,8 @@ import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.LedSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.Pose;
 import frc.robot.subsystems.vision.VisionLimeLight;
 import frc.robot.subsystems.vision.VisionLimeLightH;
@@ -36,6 +43,7 @@ import frc.robot.subsystems.vision.VisionSystem;
  */
 public class RobotContainer {
   private Joystick driver;
+  private JoystickButton togglePiston;
   private Joystick operator;
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
@@ -44,6 +52,9 @@ public class RobotContainer {
   private VisionSystem intakeVision;
 
   private CameraSubsystem cameraSubsystem;
+  private LedSubsystem ledSubsystem;
+
+  private PneumaticSubsystem pneumaticSubsystem;
 
   private Drive drive; 
 
@@ -59,6 +70,9 @@ public class RobotContainer {
     drive = new Drive(driver,shooterVision);
     
     cameraSubsystem = new CameraSubsystem(operator);
+    ledSubsystem = new LedSubsystem(0, 300);
+
+    pneumaticSubsystem = new PneumaticSubsystem();
 
     command.addOption("LowerCargoToHub", new LowerCargoToHub());
     command.addOption("HubBall2", new HubToBall2());
@@ -84,6 +98,7 @@ public class RobotContainer {
     Command red = new InstantCommand(() -> shooterVision.setPipeline(1));
     Command blue = new InstantCommand(() -> shooterVision.setPipeline(0));
     Command vTargets = new InstantCommand(() -> shooterVision.setPipeline(2));
+    Command ledOrange = new InstantCommand(()-> ledSubsystem.setSolidColor(255, 20, 0));
     // this adds auto selections in SmartDashboard
     Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay).getLayout("Auto", BuiltInLayouts.kList)
         .withPosition(ControlConstants.autoColumn, 0).withSize(3, 1).add("Choose an Auto Mode", command)
@@ -92,8 +107,14 @@ public class RobotContainer {
     SmartDashboard.putData("red", new SetPipeline(1, shooterVision));
     SmartDashboard.putData("blue", new SetPipeline(0, shooterVision));
     SmartDashboard.putData("default", new SetPipeline(2, shooterVision));
-
-
+    SmartDashboard.putData("Leds Orange", new LedColor(255, 25, 0, ledSubsystem));
+    SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
+    SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
+    SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
+    SmartDashboard.putData("Piston Forward", new PistonForward(pneumaticSubsystem));
+    SmartDashboard.putData("Piston Reverse", new PistonReverse(pneumaticSubsystem));
+    togglePiston = new JoystickButton(driver, ControlConstants.launchButton);
+    togglePiston.whenPressed(new InstantCommand(() -> pneumaticSubsystem.togglePiston(), pneumaticSubsystem));
 
   }
 

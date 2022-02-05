@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.IntakeDefault;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
 import frc.robot.commands.PistonForward;
@@ -30,7 +31,6 @@ import frc.robot.mechanisms.Drive;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.PneumaticSubsystem;
-import frc.robot.subsystems.Pose;
 import frc.robot.subsystems.vision.VisionLimeLight;
 import frc.robot.subsystems.vision.VisionLimeLightH;
 import frc.robot.subsystems.vision.VisionSystem;
@@ -73,6 +73,7 @@ public class RobotContainer {
     ledSubsystem = new LedSubsystem(0, 300);
 
     pneumaticSubsystem = new PneumaticSubsystem();
+    pneumaticSubsystem.setDefaultCommand(new IntakeDefault(pneumaticSubsystem, driver));
 
     command.addOption("LowerCargoToHub", new LowerCargoToHub());
     command.addOption("HubBall2", new HubToBall2());

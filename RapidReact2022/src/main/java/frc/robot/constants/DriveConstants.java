@@ -32,7 +32,7 @@ public final class DriveConstants {
     public static double throttleFactor = 0.7;    
     public static double steerFactor = 0.6;    
     public static double drivingAdjustment = 0.05;
-    public static int driveInversion = 1;
+    public static int driveInversion = -1;
     
     public static final double ksVolts = 0.16449; //0.2543;
     public static final double kvVoltSecondsPerMeter = 1.0582; //1.1055;

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.PistonRetract;
+import frc.robot.commands.SpinIntake;
 import frc.robot.commands.PistonDeploy;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -36,7 +37,7 @@ public class Transport {
         intakeMotor = new CANSparkMax(8, MotorType.kBrushless);
         intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
         intakeSubsystem = new IntakeSubsystem(intakeMotor, intakePiston);
-
+        intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, operator));
 
 
         SmartDashboard.putData("Piston Retract", new PistonRetract(intakeSubsystem));

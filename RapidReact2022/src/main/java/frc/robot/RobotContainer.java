@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
-import frc.robot.commands.PistonForward;
-import frc.robot.commands.PistonReverse;
+import frc.robot.commands.PistonRetract;
+import frc.robot.commands.PistonDeploy;
 import frc.robot.commands.SetPipeline;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.HubToBall2;
@@ -27,9 +27,10 @@ import frc.robot.commands.auto.LowerCargoToHub;
 import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
+import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
-import frc.robot.subsystems.PneumaticSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Pose;
 import frc.robot.subsystems.vision.VisionLimeLight;
 import frc.robot.subsystems.vision.VisionLimeLightH;
@@ -43,18 +44,18 @@ import frc.robot.subsystems.vision.VisionSystem;
  */
 public class RobotContainer {
   private Joystick driver;
-  private JoystickButton togglePiston;
+  
   private Joystick operator;
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
   private VisionLimeLight shooterVision;
   private VisionSystem intakeVision;
+  private Transport transport;
 
   private CameraSubsystem cameraSubsystem;
   private LedSubsystem ledSubsystem;
 
-  private PneumaticSubsystem pneumaticSubsystem;
 
   private Drive drive; 
 
@@ -68,11 +69,12 @@ public class RobotContainer {
     intakeVision = new VisionLimeLightH("limelight-intake", 24, -5, 6, ControlConstants.shooterVisionColumn);
 
     drive = new Drive(driver,shooterVision);
-    
-    cameraSubsystem = new CameraSubsystem(operator);
-    ledSubsystem = new LedSubsystem(0, 300);
+    transport = new Transport(operator);
 
-    pneumaticSubsystem = new PneumaticSubsystem();
+    
+    //cameraSubsystem = new CameraSubsystem(operator);
+    //ledSubsystem = new LedSubsystem(0, 300);
+
 
     command.addOption("LowerCargoToHub", new LowerCargoToHub());
     command.addOption("HubBall2", new HubToBall2());
@@ -111,10 +113,8 @@ public class RobotContainer {
     SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
     SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
-    SmartDashboard.putData("Piston Forward", new PistonForward(pneumaticSubsystem));
-    SmartDashboard.putData("Piston Reverse", new PistonReverse(pneumaticSubsystem));
-    togglePiston = new JoystickButton(driver, ControlConstants.launchButton);
-    togglePiston.whenPressed(new InstantCommand(() -> pneumaticSubsystem.togglePiston(), pneumaticSubsystem));
+    
+    
 
   }
 

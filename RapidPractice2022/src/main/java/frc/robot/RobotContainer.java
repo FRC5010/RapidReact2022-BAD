@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.BabyNeo;
 import frc.robot.commands.IntakeDefault;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
@@ -45,6 +51,7 @@ public class RobotContainer {
   private Joystick driver;
   private JoystickButton togglePiston;
   private Joystick operator;
+  private JoystickButton babyNeoButton; 
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
@@ -55,6 +62,8 @@ public class RobotContainer {
   private LedSubsystem ledSubsystem;
 
   private PneumaticSubsystem pneumaticSubsystem;
+  private CANSparkMax motor = new CANSparkMax(7, MotorType.kBrushless);
+
 
   private Drive drive; 
 
@@ -62,6 +71,7 @@ public class RobotContainer {
   public RobotContainer() {
     driver = new Joystick(ControlConstants.driverJoystick);
     operator = new Joystick(ControlConstants.operatorJoystick);
+    
 
 
     shooterVision = new VisionLimeLight("limelight-shooter", 19.25, 14.562694, 102.559, ControlConstants.shooterVisionColumn);
@@ -116,6 +126,13 @@ public class RobotContainer {
     SmartDashboard.putData("Piston Reverse", new PistonReverse(pneumaticSubsystem));
     togglePiston = new JoystickButton(driver, ControlConstants.launchButton);
     togglePiston.whenPressed(new InstantCommand(() -> pneumaticSubsystem.togglePiston(), pneumaticSubsystem));
+
+    SparkMaxLimitSwitch forward = motor.getForwardLimitSwitch(Type.kNormallyOpen);
+    SparkMaxLimitSwitch reverse = motor.getReverseLimitSwitch(Type.kNormallyOpen);
+    forward.enableLimitSwitch(true);
+    reverse.enableLimitSwitch(true);
+    babyNeoButton = new JoystickButton(operator, ControlConstants.ButtonNums.A_BUTTON.ordinal());
+    babyNeoButton.whileHeld(new BabyNeo(motor, operator));
 
   }
 

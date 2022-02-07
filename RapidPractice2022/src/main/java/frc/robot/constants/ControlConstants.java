@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.GenericHID.HIDType;
  * Add your docs here.
  */
 public class ControlConstants {
-    static enum ButtonNums {
+    public static enum ButtonNums {
         NO_BUTTON, A_BUTTON, B_BUTTON, X_BUTTON, Y_BUTTON, LEFT_BUMPER, RIGHT_BUMPER, START_BUTTON, BACK_BUTTON,LEFT_STICK_BUTT, RIGHT_STICK_BUTT;
     }
     static enum AxisNums {

@@ -105,13 +105,13 @@ public class Drive {
   public void init(Joystick driver, VisionSystem shooterVision) {
     this.driver = driver;
     // Neos HAVE to be in brushless
-    lDrive1 = new CANSparkMax(1, MotorType.kBrushless);
-    lDrive2 = new CANSparkMax(2, MotorType.kBrushless);
-    lDrive3 = new CANSparkMax(3, MotorType.kBrushless);
+    lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
+    lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);
+    lDrive3 = new CANSparkMax(ControlConstants.leftDrive3M, MotorType.kBrushless);
 
-    rDrive1 = new CANSparkMax(4, MotorType.kBrushless);
-    rDrive2 = new CANSparkMax(5, MotorType.kBrushless);
-    rDrive3 = new CANSparkMax(6, MotorType.kBrushless);
+    rDrive1 = new CANSparkMax(ControlConstants.rightDrive1M, MotorType.kBrushless);
+    rDrive2 = new CANSparkMax(ControlConstants.rightDrive2M, MotorType.kBrushless);
+    rDrive3 = new CANSparkMax(ControlConstants.rightDrive3M, MotorType.kBrushless);
 
     lDrive1.restoreFactoryDefaults();
     lDrive2.restoreFactoryDefaults();

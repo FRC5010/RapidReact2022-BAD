@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TurretSubsystem extends SubsystemBase {
   /** Creates a new TurretHead. */
-  public TurretSubsystem() {}
+  public TurretSubsystem() {
+    
+  }
 
   @Override
   public void periodic() {

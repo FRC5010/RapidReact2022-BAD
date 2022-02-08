@@ -8,36 +8,28 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 
-public class SpinIntake extends CommandBase {
-  /** Creates a new SpinIntake. */
-  private Joystick operator;
-  private IntakeSubsystem intakeSubsystem;
+public class RunIndexer extends CommandBase {
+  /** Creates a new RunIndexer. */
+  IndexerSubsystem indexerSubsystem;
+  Joystick operator;
 
-  public SpinIntake(IntakeSubsystem intakeSubsystem, Joystick operator) {
+  public RunIndexer(IndexerSubsystem indexerSubsystem, Joystick operator) {
+    this.indexerSubsystem = indexerSubsystem;
     this.operator = operator;
-    this.intakeSubsystem = intakeSubsystem;
-    addRequirements(intakeSubsystem);
+    addRequirements(indexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    intakeSubsystem.retractIntake();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // gets intake pow from each analog trigger
-    double intakePow = operator.getRawAxis(ControlConstants.intakeAxis) - operator.getRawAxis(ControlConstants.outtakeAxis);
-    
-    // modifies intake power cubing it and then using a multiplier
-    double modPow = Math.pow(intakePow, 3) * 0.8;
-
-    intakeSubsystem.setIntakePow(modPow);
+    indexerSubsystem.setIndexM1(operator.getRawAxis(ControlConstants.runIndexer));
   }
 
   // Called once the command ends or is interrupted.

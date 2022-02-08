@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.GenericHID.HIDType;
  */
 public class ControlConstants {
     static enum ButtonNums {
-        NO_BUTTON, A_BUTTON, B_BUTTON, X_BUTTON, Y_BUTTON, LEFT_BUMPER, RIGHT_BUMPER, START_BUTTON, BACK_BUTTON,LEFT_STICK_BUTT, RIGHT_STICK_BUTT;
+        NO_BUTTON, A_BUTTON, B_BUTTON, X_BUTTON, Y_BUTTON, LEFT_BUMPER, RIGHT_BUMPER, START_BUTTON,
+        BACK_BUTTON,LEFT_STICK_BUTT, RIGHT_STICK_BUTT;
     }
     static enum AxisNums {
     LEFT_X, LEFT_Y, 
@@ -26,6 +27,9 @@ public class ControlConstants {
     static enum POVDirs {
         UP, RIGHT, DOWN, LEFT 
     }
+    static enum Motors{
+        NO_MOTOR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15, M16;
+    }
     static enum DioPorts {
         Port0, Port1, Port2, Port3, Port4, Port5, Port6, Port7, Port8, Port9;
     }
@@ -33,6 +37,45 @@ public class ControlConstants {
     public static int limitSwitch = DioPorts.Port0.ordinal();
     public static int BB1 = DioPorts.Port1.ordinal();
     public static int BB2 = DioPorts.Port2.ordinal();
+
+    /*
+    Motors
+        M1: Left Drive
+        M2: Left Drive
+        M3: Left Drive
+        M4: Right Drive
+        M5: Right Drive
+        M6: Right Drive
+        M7: Intake Motor
+        M8: Lower Indexer Motor
+        M9: Upper Indexer Motor
+        M10: Hood
+        M11: Feeder Wheel
+        M12: Left Flywheel
+        M13: Right Flywheel
+        M14: Turret
+        M15: Left Climb
+        M16: Right Climb
+    */
+
+    // Motor
+    public static int leftDrive1M = Motors.M1.ordinal();
+    public static int leftDrive2M = Motors.M2.ordinal();
+    public static int leftDrive3M = Motors.M3.ordinal();
+    public static int rightDrive1M = Motors.M4.ordinal();
+    public static int rightDrive2M = Motors.M5.ordinal();
+    public static int rightDrive3M = Motors.M6.ordinal();
+    public static int intakeM = Motors.M7.ordinal();
+    public static int lowerIndexM = Motors.M8.ordinal();
+    public static int upperIndexM = Motors.M9.ordinal();
+    public static int hoodM = Motors.M10.ordinal();
+    public static int feederWheelM = Motors.M11.ordinal();
+    public static int leftFlyWheelM = Motors.M12.ordinal();
+    public static int rightFlyWheelM = Motors.M13.ordinal();
+    public static int turretM = Motors.M14.ordinal();
+    public static int leftClimbM = Motors.M15.ordinal();
+    public static int rightClimbM = Motors.M16.ordinal();
+
     // Driver
     public static int driverJoystick = 0;
     public static int throttle = AxisNums.LEFT_Y.ordinal();
@@ -63,7 +106,7 @@ public class ControlConstants {
 
     //Operator
     public static int operatorJoystick = 1;
-    public static int operatorLeftY = AxisNums.LEFT_Y.ordinal(); // Implement
+    public static int runIndexer = AxisNums.LEFT_Y.ordinal(); // Implement
     public static int operatorRightY = AxisNums.RIGHT_Y.ordinal(); // Implement
     public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
     public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();

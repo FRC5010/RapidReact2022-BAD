@@ -46,9 +46,9 @@ public class ControlConstants {
         M4: Right Drive
         M5: Right Drive
         M6: Right Drive
-        M7: Intake Motor
-        M8: Lower Indexer Motor
-        M9: Upper Indexer Motor
+        M7: Index Motor
+        M8: Index Motor
+        M9: Intake
         M10: Hood
         M11: Feeder Wheel
         M12: Left Flywheel
@@ -65,9 +65,9 @@ public class ControlConstants {
     public static int rightDrive1M = Motors.M4.ordinal();
     public static int rightDrive2M = Motors.M5.ordinal();
     public static int rightDrive3M = Motors.M6.ordinal();
-    public static int intakeM = Motors.M7.ordinal();
+    public static int intakeM = Motors.M9.ordinal();
     public static int lowerIndexM = Motors.M8.ordinal();
-    public static int upperIndexM = Motors.M9.ordinal();
+    public static int upperIndexM = Motors.M7.ordinal();
     public static int hoodM = Motors.M10.ordinal();
     public static int feederWheelM = Motors.M11.ordinal();
     public static int leftFlyWheelM = Motors.M12.ordinal();
@@ -144,6 +144,8 @@ public class ControlConstants {
 
     public static int autoNavButton = ButtonNums.X_BUTTON.ordinal();
     public static int driveTrainCurrentLimit = 38;
+    public static int babyNeoCurrentLimit = 20;
+    public static int neoCurrentLimit = 38;
     
     public static boolean setupSingleDriver(Joystick operator){
         if(operator.getType() == HIDType.kUnknown){

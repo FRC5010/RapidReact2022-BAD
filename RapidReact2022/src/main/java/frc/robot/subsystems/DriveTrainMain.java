@@ -35,9 +35,9 @@ public class DriveTrainMain extends SubsystemBase {
   private MotorController leftMaster;
   private MotorController rightMaster;
   
-  private DigitalInput limit = new DigitalInput(ControlConstants.limitSwitch);
-  private DigitalInput BB1 = new DigitalInput(ControlConstants.BB1);
-  private DigitalInput BB2 = new DigitalInput(ControlConstants.BB2);
+  //private DigitalInput limit = new DigitalInput(ControlConstants.limitSwitch);
+  //private DigitalInput BB1 = new DigitalInput(ControlConstants.BB1);
+  //private DigitalInput BB2 = new DigitalInput(ControlConstants.BB2);
 
   Pose pose;
   private DifferentialDrive diffDrive;
@@ -65,16 +65,16 @@ public class DriveTrainMain extends SubsystemBase {
       .withPosition(ControlConstants.driverColumn, 1);
 
   //  pdp = new PowerDistributionPanel();
-    setDefaultCommand(new ComboDrive(this, driver));
+    
    // setDefaultCommand(new FlickStick(this, driver, pose));
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("limit", limit.get());
-    SmartDashboard.putBoolean("BB1", BB1.get());
-    SmartDashboard.putBoolean("BB2", BB2.get());
+    //SmartDashboard.putBoolean("limit", limit.get());
+    //SmartDashboard.putBoolean("BB1", BB1.get());
+    //SmartDashboard.putBoolean("BB2", BB2.get());
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {

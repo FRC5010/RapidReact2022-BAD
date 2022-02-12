@@ -4,12 +4,19 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.vision.VisionSystem;
 
 public class TurretSubsystem extends SubsystemBase {
-  /** Creates a new TurretHead. */
-  public TurretSubsystem() {
-    
+  
+private CANSparkMax turretMotor;
+private VisionSystem shooterVision;
+
+  public TurretSubsystem(CANSparkMax turretMotor, VisionSystem shooterVision) {
+    this.turretMotor = turretMotor;
+    this.shooterVision = shooterVision;
   }
 
   @Override

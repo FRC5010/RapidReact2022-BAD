@@ -4,22 +4,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.DriveTrainMain;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunIndexer extends CommandBase {
-  /** Creates a new RunIndexer. */
-  IndexerSubsystem indexerSubsystem;
-  Joystick operator;
-
-  public RunIndexer(IndexerSubsystem indexerSubsystem, Joystick operator) {
-    this.indexerSubsystem = indexerSubsystem;
+public class Launcher extends CommandBase {
+  private ShooterSubsystem shooterSubsystem;
+  private Joystick operator;
+  public Launcher(ShooterSubsystem shooterSubsystem, Joystick operator) {
+    this.shooterSubsystem = shooterSubsystem;
     this.operator = operator;
-    addRequirements(indexerSubsystem);
+    addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,9 +28,9 @@ public class RunIndexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.runIndexer));
-    indexerSubsystem.setIndexM1(pow);
-    indexerSubsystem.setIndexM2(-pow);
+    double pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.operatorRightY));
+    SmartDashboard.putNumber("HoodPow", pow);
+    shooterSubsystem.spinHood(pow);
   }
 
   // Called once the command ends or is interrupted.

@@ -60,12 +60,12 @@ public abstract class VisionSystem extends SubsystemBase {
     // 2);
 
     visionLayout.addNumber(name + " Distance", this::getDistance).withSize(1, 1);
-    visionLayout.addNumber(name + " Cam Angle", this::getCamAngle).withSize(1, 1);
+    //visionLayout.addNumber(name + " Cam Angle", this::getCamAngle).withSize(1, 1);
     visionLayout.addNumber(name + " X Angle", this::getAngleX).withSize(1, 1);
     visionLayout.addNumber(name + " Y Angle", this::getAngleY).withSize(1, 1);
-    visionLayout.addNumber(name + " Horizontal", this::getHorizontal).withSize(1, 1);
-    visionLayout.addNumber(name + " Vertical", this::getVertical).withSize(1, 1);
-    visionLayout.addNumber(name + " Cal Angle", this::getCalAngle).withSize(1, 1);
+    //visionLayout.addNumber(name + " Horizontal", this::getHorizontal).withSize(1, 1);
+    //visionLayout.addNumber(name + " Vertical", this::getVertical).withSize(1, 1);
+    //visionLayout.addNumber(name + " Cal Angle", this::getCalAngle).withSize(1, 1);
     //visionLayout.addBoolean(name + " Driver Mode", RobotContainer::getDriverMode).withSize(1, 1);
   }
   public abstract void setPipeline(double pipeline);

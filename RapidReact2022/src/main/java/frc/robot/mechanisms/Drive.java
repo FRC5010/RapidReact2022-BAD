@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Robot;
+import frc.robot.commands.ComboDrive;
 import frc.robot.commands.RamseteFollower;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
@@ -97,8 +98,10 @@ public class Drive {
     if (RobotBase.isReal()) {
       lDrive1.setSmartCurrentLimit(currentLimit);
       lDrive2.setSmartCurrentLimit(currentLimit);
+      lDrive3.setSmartCurrentLimit(currentLimit);
       rDrive1.setSmartCurrentLimit(currentLimit);
       rDrive2.setSmartCurrentLimit(currentLimit);
+      rDrive3.setSmartCurrentLimit(currentLimit);
     }
   }
 
@@ -122,13 +125,16 @@ public class Drive {
 
     lDrive1.setInverted(false);
     lDrive2.follow(lDrive1, false);
-    lDrive3.follow(lDrive1,false);
-    
+    lDrive3.follow(lDrive1, false);
+
     rDrive1.setInverted(true);
     rDrive2.follow(rDrive1, false);
     rDrive2.setInverted(false);
-    rDrive3.follow(rDrive1,false);
+    rDrive3.follow(rDrive1, false);
     rDrive3.setInverted(false);
+
+    rDrive1.setOpenLoopRampRate(1.5);
+    lDrive1.setOpenLoopRampRate(1.5);
 
     lEncoder = lDrive1.getEncoder();
     rEncoder = rDrive1.getEncoder();
@@ -145,6 +151,11 @@ public class Drive {
     robotPose.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
     shooterCam = shooterVision;
     driveTrain = new DriveTrainMain(lDrive1, rDrive1, driver, robotPose);
+  }
+//Just sets up defalt commands (setUpDeftCom)
+  public void setUpDeftCom() {
+    driveTrain.setDefaultCommand(new ComboDrive(driveTrain, driver));
+
   }
 
   /**
@@ -177,7 +188,7 @@ public class Drive {
     return driveTrain;
   }
 
-  public Pose getPose(){
+  public Pose getPose() {
     return robotPose;
   }
 }

@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -69,7 +71,7 @@ public class RobotContainer {
     intakeVision = new VisionLimeLightH("limelight-intake", 24, -5, 6, ControlConstants.shooterVisionColumn);
 
     drive = new Drive(driver,shooterVision);
-    transport = new Transport(operator);
+    transport = new Transport(operator, shooterVision);
 
     
     //cameraSubsystem = new CameraSubsystem(operator);
@@ -115,9 +117,16 @@ public class RobotContainer {
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
     
     
+    
 
   }
-
+//Just sets up defalt commands (setUpDeftCom)
+public void setUpDeftCom(){
+if (!DriverStation.isTest()){
+  drive.setUpDeftCom();
+  transport.setUpDeftCom();
+}
+}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

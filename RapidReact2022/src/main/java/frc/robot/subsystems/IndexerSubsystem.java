@@ -15,7 +15,7 @@ public class IndexerSubsystem extends SubsystemBase {
   private CANSparkMax indexMotor2;
   private DigitalInput upperBB;
 
-  public IndexerSubsystem(CANSparkMax indexMotor1, DigitalInput upperBB, CANSparkMax indexMotor2) {
+  public IndexerSubsystem(CANSparkMax indexMotor1, CANSparkMax indexMotor2, DigitalInput upperBB) {
     this.upperBB = upperBB;
     this.indexMotor1 = indexMotor1;
     this.indexMotor2 = indexMotor2;

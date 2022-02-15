@@ -94,13 +94,13 @@ public class Transport {
         feederMotor = new CANSparkMax(ControlConstants.feederWheelM, MotorType.kBrushless);
 
         flyWheelLeft.follow(flyWheelRight, true);
-
+        flyWheelRight.setOpenLoopRampRate(0.5);
         shooterSubsystem = new ShooterSubsystem(flyWheelRight, hoodMotor, feederMotor, shooterVision);
         
 
         SmartDashboard.putData("Piston Retract", new PistonRetract(intakeSubsystem));
         SmartDashboard.putData("Piston Deploy", new PistonDeploy(intakeSubsystem));
-        SmartDashboard.putData("Shoot", new SpinShooter(shooterSubsystem, .6, -.5));
+        SmartDashboard.putData("Shoot", new SpinShooter(shooterSubsystem, -.6, .8));
         SmartDashboard.putData("Stop Shooter", new SpinShooter(shooterSubsystem, 0, 0));
     
         togglePiston.whenPressed(new InstantCommand(() -> intakeSubsystem.togglePiston(), intakeSubsystem));

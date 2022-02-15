@@ -30,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakePiston.set(Value.kForward);
   }
   public void deployIntake(){
-    intakePiston.set(Value.kReverse);
+    intakePiston.set(Value.kForward);
   }
 
   public void setIntakePow(double pow){

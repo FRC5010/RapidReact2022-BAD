@@ -31,7 +31,7 @@ public class RunIndexer extends CommandBase {
   @Override
   public void execute() {
     double pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.runIndexer));
-    indexerSubsystem.setIndexM1(pow);
+    indexerSubsystem.setIndexM1(-pow);
     indexerSubsystem.setIndexM2(-pow);
   }
 

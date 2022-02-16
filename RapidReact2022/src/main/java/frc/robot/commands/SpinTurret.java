@@ -4,22 +4,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.DriveTrainMain;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
-public class RunIndexer extends CommandBase {
-  /** Creates a new RunIndexer. */
-  IndexerSubsystem indexerSubsystem;
+public class SpinTurret extends CommandBase {
+  /** Creates a new SpinTurret. */
+  TurretSubsystem turretSubsystem;
   Joystick operator;
-
-  public RunIndexer(IndexerSubsystem indexerSubsystem, Joystick operator) {
-    this.indexerSubsystem = indexerSubsystem;
+  public SpinTurret(TurretSubsystem turretSubsystem, Joystick operator) {
+    this.turretSubsystem = turretSubsystem;
     this.operator = operator;
-    addRequirements(indexerSubsystem);
+    addRequirements(turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,10 +28,9 @@ public class RunIndexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pow = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.runIndexer));
-
-    indexerSubsystem.setLowerIndexer(pow);
-    indexerSubsystem.setUpperIndexer(pow);
+    double pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.operatorRightX));
+    
+    turretSubsystem.turnTurret(pow);
   }
 
   // Called once the command ends or is interrupted.

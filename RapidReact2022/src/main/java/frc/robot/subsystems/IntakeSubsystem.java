@@ -24,13 +24,13 @@ public class IntakeSubsystem extends SubsystemBase {
     intakePiston.toggle();
   }
   public void pistonOff(){
-    intakePiston.set(Value.kOff);
+    intakePiston.set(DoubleSolenoid.Value.kOff);
   }
   public void retractIntake(){
-    intakePiston.set(Value.kForward);
+    intakePiston.set(DoubleSolenoid.Value.kReverse);
   }
   public void deployIntake(){
-    intakePiston.set(Value.kForward);
+    intakePiston.set(DoubleSolenoid.Value.kForward);
   }
 
   public void setIntakePow(double pow){

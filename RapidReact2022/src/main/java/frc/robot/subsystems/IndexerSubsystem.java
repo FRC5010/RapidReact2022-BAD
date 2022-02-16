@@ -7,18 +7,30 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.constants.ControlConstants;
 
 public class IndexerSubsystem extends SubsystemBase {
   /** Creates a new Indexer. */
-  private CANSparkMax indexMotor1;
-  private CANSparkMax indexMotor2;
+  private CANSparkMax lowerMotor;
+  private CANSparkMax upperMotor;
   private DigitalInput upperBB;
 
-  public IndexerSubsystem(CANSparkMax indexMotor1, CANSparkMax indexMotor2, DigitalInput upperBB) {
+  private ShuffleboardLayout indexerLayout;
+
+  public IndexerSubsystem(CANSparkMax lowerMotor, CANSparkMax upperMotor, DigitalInput upperBB) {
     this.upperBB = upperBB;
-    this.indexMotor1 = indexMotor1;
-    this.indexMotor2 = indexMotor2;
+    this.lowerMotor = lowerMotor;
+    this.upperMotor = upperMotor;
+
+    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
+    indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.shooterIndex, 0).withSize(1, 5);
+    indexerLayout.addBoolean("Cargo Present", this::getUpperBB);
   }
 
   @Override
@@ -26,15 +38,15 @@ public class IndexerSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void setIndexM1(double speed){
-    indexMotor1.set(speed);
+  public void setLowerIndexer(double speed){
+    lowerMotor.set(speed);
   }
 
-  public void setIndexM2(double speed){
-    indexMotor2.set(speed);
+  public void setUpperIndexer(double speed){
+    upperMotor.set(speed);
   }
 
   public boolean getUpperBB(){
-    return upperBB.get();
+    return !upperBB.get();
   }
 }

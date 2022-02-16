@@ -8,16 +8,20 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.ShooterConstants;
+import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class SpinIntake extends CommandBase {
   /** Creates a new SpinIntake. */
   private Joystick operator;
   private IntakeSubsystem intakeSubsystem;
+  private IndexerSubsystem indexerSubsystem;
 
-  public SpinIntake(IntakeSubsystem intakeSubsystem, Joystick operator) {
+  public SpinIntake(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, Joystick operator) {
     this.operator = operator;
     this.intakeSubsystem = intakeSubsystem;
+    this.indexerSubsystem = indexerSubsystem;
     addRequirements(intakeSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,7 +29,6 @@ public class SpinIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intakeSubsystem.retractIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,6 +41,11 @@ public class SpinIntake extends CommandBase {
     double modPow = Math.pow(intakePow, 3) * 0.8;
 
     intakeSubsystem.setIntakePow(modPow);
+    if(modPow == 0){
+      indexerSubsystem.setLowerIndexer(0);
+    }else{
+      indexerSubsystem.setLowerIndexer(ShooterConstants.indexerPow);
+    }
   }
 
   // Called once the command ends or is interrupted.

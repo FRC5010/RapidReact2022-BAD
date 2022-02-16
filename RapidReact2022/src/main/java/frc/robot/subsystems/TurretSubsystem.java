@@ -19,6 +19,10 @@ private VisionSystem shooterVision;
     this.shooterVision = shooterVision;
   }
 
+  public void turnTurret(double speed){
+    turretMotor.set(speed);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

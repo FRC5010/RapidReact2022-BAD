@@ -35,8 +35,8 @@ public class ControlConstants {
     }
     //DIO Ports
     public static int limitSwitch = DioPorts.Port0.ordinal();
-    public static int BB1 = DioPorts.Port1.ordinal();
-    public static int BB2 = DioPorts.Port2.ordinal();
+    public static int BB1 = DioPorts.Port0.ordinal();
+    //public static int BB2 = DioPorts.Port2.ordinal();
 
     /*
     Motors
@@ -108,6 +108,7 @@ public class ControlConstants {
     public static int operatorJoystick = 1;
     public static int runIndexer = AxisNums.LEFT_Y.ordinal(); // Implement
     public static int operatorRightY = AxisNums.RIGHT_Y.ordinal(); // Implement
+    public static int operatorRightX = AxisNums.RIGHT_X.ordinal();
     public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
     public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 

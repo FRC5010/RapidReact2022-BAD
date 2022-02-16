@@ -25,6 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANSparkMax flyWheelRight, hoodMotor, feederMotor;
   private VisionSystem shooterVision;
   private RelativeEncoder hoodEncoder;
+  private RelativeEncoder flyWheelEncoder; 
   private ShuffleboardLayout shooterLayout;
   private SparkMaxPIDController pidController;
 
@@ -48,9 +49,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     hoodEncoder = hoodMotor.getEncoder(Type.kHallSensor, 42);
     hoodSetPoint = hoodEncoder.getPosition();
-    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabVisionDisplay);
+
+    flyWheelEncoder = flyWheelRight.getEncoder(Type.kHallSensor, 42);
+    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     shooterLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.shooterIndex, 0).withSize(1, 5);
     shooterLayout.addNumber("Hood Pos", this::getHoodSetPoint).withSize(1, 1);
+    shooterLayout.addNumber("Fly Wheel RPM", this::getRPM).withSize(1, 1);
+
   }
   
   public void spinUpWheelRPM() {
@@ -139,7 +144,9 @@ public class ShooterSubsystem extends SubsystemBase {
     return flyWheelCurrent;
   }
 
-
+  public double getRPM(){
+    return flyWheelEncoder.getVelocity();
+  } 
 
   public void setHoodSetPoint(double setPoint){
     this.hoodSetPoint = setPoint;

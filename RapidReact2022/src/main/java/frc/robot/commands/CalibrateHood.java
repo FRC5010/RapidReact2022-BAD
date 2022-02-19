@@ -5,17 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class MoveHood extends CommandBase {
-  /** Creates a new MoveHood. */
-  private ShooterSubsystem shooterSubsystem;
-  double moveNum;
-
-  public MoveHood(ShooterSubsystem shooterSubsystem, double moveNum) {
+public class CalibrateHood extends CommandBase {
+  /** Creates a new CalibrateHood. */
+  ShooterSubsystem shooterSubsystem;
+  private double currEncoderPos;
+  private double lastEncoderPos;
+  private int cycleCount = 0;
+  public CalibrateHood(ShooterSubsystem shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
-    this.moveNum = moveNum;
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,25 +22,37 @@ public class MoveHood extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double currPos = shooterSubsystem.getHoodSetPoint();
-    shooterSubsystem.setHoodSetPoint(currPos + moveNum);
+    shooterSubsystem.setHoodMotor(-0.3);
+    lastEncoderPos = 1000;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    shooterSubsystem.pidHood();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.stopHood();
+    shooterSubsystem.setHoodMotor(0);
+    shooterSubsystem.setHoodEncoder(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(shooterSubsystem.getHoodPos() - shooterSubsystem.getHoodSetPoint()) < ShooterConstants.HoodConstants.hoodTolerance;
+    currEncoderPos = shooterSubsystem.getHoodPos();
+    System.out.println("currEncoder" + currEncoderPos);
+    if(Math.abs(shooterSubsystem.getHoodPos() - lastEncoderPos) < 0.1){
+      if(cycleCount > 5){
+        return true;
+      }else{
+        cycleCount++;
+        return false;
+      }
+    }else{
+      lastEncoderPos = currEncoderPos;
+      cycleCount = 0;
+      return false;
+    }
   }
 }

@@ -35,13 +35,14 @@ public class VisionLimeLight extends VisionSystem {
     if (valid) {
       // LL is mounted sideways, thus we need to reverse values
       double angleX = -table.getTable(path).getEntry("ty").getDouble(0);
-      double angleY = table.getTable(path).getEntry("tx").getDouble(0);
+      double angleY = -table.getTable(path).getEntry("tx").getDouble(0);
       double area = table.getTable(path).getEntry("ta").getDouble(0);
       double vertical = table.getTable(path).getEntry("thor").getDouble(0);
       double horizontal = table.getTable(path).getEntry("tvert").getDouble(0);
 
 
       // calculating distance
+      // removed radians function
       double distance = (targetHeight - camHeight) / Math.tan(Math.toRadians(angleY + camAngle));
       rawValues = new VisionValues(valid, 0, 0, angleX, angleY, distance, horizontal, vertical);
     

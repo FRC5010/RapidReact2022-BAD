@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.AimAndShoot;
+import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
 import frc.robot.commands.Launcher;
 import frc.robot.commands.MoveHood;
@@ -26,6 +29,8 @@ import frc.robot.commands.RunIndexer;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -36,6 +41,7 @@ import frc.robot.subsystems.vision.VisionSystem;
 public class Transport {
 
     private Joystick operator;
+    private Joystick driver;
     private JoystickButton togglePiston;
 
     private VisionSystem shooterVision;
@@ -60,11 +66,14 @@ public class Transport {
 
     private JoystickButton hoodDown;
     private JoystickButton hoodUp;
-    private JoystickButton manualShoot; 
+    private JoystickButton manualShoot;
+    private JoystickButton calibrateHood;
+    private POVButton incFlyWheel;
+    private POVButton decFlyWheel; 
     
-    public Transport(Joystick operator, VisionSystem shooterVision){
+    public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
-        
+        this.driver = driver;
         this.operator = operator;
         togglePiston = new JoystickButton(operator, ControlConstants.intakeUpButton);
 
@@ -114,6 +123,9 @@ public class Transport {
 
         hoodMotor = new CANSparkMax(ControlConstants.hoodM, MotorType.kBrushless);
         hoodMotor.restoreFactoryDefaults();
+
+        // positive voltage moves hood up
+        hoodMotor.setInverted(true);
         feederMotor = new CANSparkMax(ControlConstants.feederWheelM, MotorType.kBrushless);
 
         // postive voltage is ball up 
@@ -138,28 +150,38 @@ public class Transport {
         intakeMotor.setSmartCurrentLimit(neoCurrentLimit);
         lowerIndexMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         upperIndexerMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
-        turretMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
+        turretMotor.setSmartCurrentLimit(80);
         flyWheelLeft.setSmartCurrentLimit(neoCurrentLimit);
         flyWheelRight.setSmartCurrentLimit(neoCurrentLimit);
         hoodMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
-        feederMotor.setSmartCurrentLimit(neoCurrentLimit);
+        feederMotor.setSmartCurrentLimit(60);
     }
 
     public void configureButtonBindings(){
         hoodDown = new JoystickButton(operator, ControlConstants.hoodDown);
         hoodUp = new JoystickButton(operator, ControlConstants.hoodUp);
 
-        hoodDown.whenPressed(new MoveHood(shooterSubsystem, -10));
-        hoodUp.whenPressed(new MoveHood(shooterSubsystem, 10));
+        hoodDown.whenPressed(new MoveHood(shooterSubsystem, -ShooterConstants.HoodConstants.hoodTolerance));
+        hoodUp.whenPressed(new MoveHood(shooterSubsystem, ShooterConstants.HoodConstants.hoodTolerance));
 
         manualShoot = new JoystickButton(operator, ControlConstants.launchButton);
-        manualShoot.whileHeld(new DefaultShoot(shooterSubsystem, indexerSubsystem), true);
+        //switched out DefaultShoot for AimAndShoot
+        manualShoot.whileHeld(new AimAndShoot(shooterSubsystem, indexerSubsystem, shooterVision), true);
+
+        incFlyWheel = new POVButton(operator, ControlConstants.incShooter);
+        incFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlywheelRPM += ShooterConstants.changeSetPoint));
+
+        decFlyWheel = new POVButton(operator, ControlConstants.decShooter);
+        decFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlywheelRPM -= ShooterConstants.changeSetPoint));
+
+        calibrateHood = new JoystickButton(driver, ControlConstants.calibrate);
+        calibrateHood.whenPressed(new CalibrateHood(shooterSubsystem));
     }
     public void setUpDeftCom(){
         shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
         indexerSubsystem.setDefaultCommand(new RunIndexer(indexerSubsystem, operator));
         intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, operator));
-        turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, operator));
+        turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator));
 
     }
 }

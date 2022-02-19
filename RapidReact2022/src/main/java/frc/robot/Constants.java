@@ -14,4 +14,6 @@ package frc.robot;
  */
 public final class Constants {
     public static int shooterIndex = 2;
+    public static int turretIndex = 1;
+    public static int indexerIndex = 0;
 }

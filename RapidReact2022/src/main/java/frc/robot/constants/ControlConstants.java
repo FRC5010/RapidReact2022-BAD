@@ -145,7 +145,7 @@ public class ControlConstants {
 
     public static int autoNavButton = ButtonNums.X_BUTTON.ordinal();
     public static int driveTrainCurrentLimit = 38;
-    public static int babyNeoCurrentLimit = 20;
+    public static int babyNeoCurrentLimit = 30;
     public static int neoCurrentLimit = 38;
     
     public static boolean setupSingleDriver(Joystick operator){

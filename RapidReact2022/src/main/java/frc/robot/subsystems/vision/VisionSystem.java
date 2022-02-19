@@ -53,14 +53,10 @@ public abstract class VisionSystem extends SubsystemBase {
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabVisionDisplay);
     visionLayout = driverTab.getLayout(name + " Vision", BuiltInLayouts.kGrid).withPosition(colIndex, 0).withSize(3, 5);
     table = NetworkTableInstance.getDefault();
-    // HttpCamera camera = new HttpCamera(path + " Cam",
-    // "http://opensight.local:1181/hooks/opsi.videoio/" + path + "cam.mjpeg",
-    // HttpCameraKind.kMJPGStreamer);
-    // visionLayout.add(camera).withWidget(BuiltInWidgets.kCameraStream).withSize(3,
-    // 2);
+
 
     visionLayout.addNumber(name + " Distance", this::getDistance).withSize(1, 1);
-    //visionLayout.addNumber(name + " Cam Angle", this::getCamAngle).withSize(1, 1);
+    visionLayout.addBoolean(name + " Has Target", this::isValidTarget).withSize(1, 1);
     visionLayout.addNumber(name + " X Angle", this::getAngleX).withSize(1, 1);
     visionLayout.addNumber(name + " Y Angle", this::getAngleY).withSize(1, 1);
     //visionLayout.addNumber(name + " Horizontal", this::getHorizontal).withSize(1, 1);

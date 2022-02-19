@@ -6,10 +6,18 @@ package frc.robot.constants;
 
 /** Add your docs here. */
 public class ShooterConstants {
+
+    // flywheel values
+
     // pid values
-    public static double flyWheelP = 0;
-    public static double flyWheelI = 0;
-    public static double flyWheelD = 0;
+    public static double kPC = 0.26749;
+    public static double kIC = 0;
+    public static double kDC = 0;
+
+    public static double kP = kPC / 60 / 10;
+    public static double kI = kIC / 60;
+    public static double kD = kDC / 60;
+
 
     // characterized values
     public static double kSC = 0.11361;
@@ -22,6 +30,40 @@ public class ShooterConstants {
 
     //Defaults
     public static double defaultFlywheelRPM = 1000;
-    public static double feederWheelPower = .5;
-    public static double indexerPow = 0.6;
+    public static double feederWheelPower = 0.8;
+    public static double indexerPow = 1;
+    public static double changeSetPoint = 25;
+
+    public static class HoodConstants{
+        public static double kPC = 2.1009;
+        public static double kIC = 0;
+        public static double kDC = 0;
+
+        public static double kP = kPC / 60;
+        public static double kI = kIC / 60;
+        public static double kD = kDC / 60;
+
+        public static double kSC = 0.27775;
+        public static double kVC = 1.7848;
+        public static double kAC = 0.12332;
+
+        public static double kS = kSC / 12;
+        public static double kV = kVC / 60 / 1 / (12 - kS);
+        public static double kA = kAC / 60 / 1 / (12 - kS);
+
+        public static double hoodInc = 1;
+        public static double hoodTolerance = 0.5;
+    }
+
+    public static class TurretConstants{
+        public static double limitPow = 0.75;
+
+        public static double kPVision = 1.0/70;
+
+        public static double kPEncoder = 0.2;
+
+        public static double leftLimit = -5;
+        public static double rightLimit = 5;
+    }
 }
+

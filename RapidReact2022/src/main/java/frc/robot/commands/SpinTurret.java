@@ -8,14 +8,18 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.vision.VisionSystem;
 
 public class SpinTurret extends CommandBase {
   /** Creates a new SpinTurret. */
   TurretSubsystem turretSubsystem;
+  VisionSystem shooterSystem;
   Joystick operator;
-  public SpinTurret(TurretSubsystem turretSubsystem, Joystick operator) {
+  public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem,Joystick operator) {
     this.turretSubsystem = turretSubsystem;
+    this.shooterSystem = shooterSystem;
     this.operator = operator;
     addRequirements(turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,8 +33,21 @@ public class SpinTurret extends CommandBase {
   @Override
   public void execute() {
     double pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.operatorRightX));
-    
-    turretSubsystem.turnTurret(pow);
+    if(pow == 0){
+      if(shooterSystem.isValidTarget()){
+        double angle = shooterSystem.getAngleX();
+        turretSubsystem.angleTurret(angle);
+        turretSubsystem.isOnTarget(angle);
+      }else{
+        turretSubsystem.centerTurret();
+        turretSubsystem.setOnTarget(false);
+      }
+    }else{
+      turretSubsystem.turnTurret(pow);
+      turretSubsystem.setOnTarget(false);
+    }
+
+
   }
 
   // Called once the command ends or is interrupted.

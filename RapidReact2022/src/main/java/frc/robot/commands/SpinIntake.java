@@ -22,7 +22,7 @@ public class SpinIntake extends CommandBase {
     this.operator = operator;
     this.intakeSubsystem = intakeSubsystem;
     this.indexerSubsystem = indexerSubsystem;
-    addRequirements(intakeSubsystem);
+    addRequirements(intakeSubsystem, indexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -38,14 +38,22 @@ public class SpinIntake extends CommandBase {
     double intakePow = operator.getRawAxis(ControlConstants.intakeAxis) - operator.getRawAxis(ControlConstants.outtakeAxis);
     
     // modifies intake power cubing it and then using a multiplier
-    double modPow = Math.pow(intakePow, 3) * 0.8;
+    double modPow = intakePow * 0.5;
 
     intakeSubsystem.setIntakePow(modPow);
-    if(modPow == 0){
-      indexerSubsystem.setLowerIndexer(0);
-    }else{
+    
+    if(Math.abs(modPow) > 0){
+      
       indexerSubsystem.setLowerIndexer(ShooterConstants.indexerPow);
+    }else{
+      //if(!indexerSubsystem.isLowerIndexerRunning()){
+      indexerSubsystem.setLowerIndexer(0);
+      //}
     }
+    
+    
+    
+
   }
 
   // Called once the command ends or is interrupted.

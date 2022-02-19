@@ -28,7 +28,7 @@ public class Launcher extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.operatorRightY));
+    double pow = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.operatorRightY));
     SmartDashboard.putNumber("HoodPow", pow);
     shooterSubsystem.spinHood(pow);
   }

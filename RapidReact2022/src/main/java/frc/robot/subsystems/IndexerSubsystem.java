@@ -29,7 +29,7 @@ public class IndexerSubsystem extends SubsystemBase {
     this.upperMotor = upperMotor;
 
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
-    indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.shooterIndex, 0).withSize(1, 5);
+    indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
     indexerLayout.addBoolean("Cargo Present", this::getUpperBB);
   }
 
@@ -44,6 +44,10 @@ public class IndexerSubsystem extends SubsystemBase {
 
   public void setUpperIndexer(double speed){
     upperMotor.set(speed);
+  }
+
+  public boolean isLowerIndexerRunning(){
+    return Math.abs(lowerMotor.get()) > 0;
   }
 
   public boolean getUpperBB(){

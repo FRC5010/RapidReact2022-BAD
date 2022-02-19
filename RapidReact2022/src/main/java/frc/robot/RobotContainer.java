@@ -52,7 +52,6 @@ public class RobotContainer {
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
   private VisionLimeLight shooterVision;
-  private VisionSystem intakeVision;
   private Transport transport;
 
   private CameraSubsystem cameraSubsystem;
@@ -67,11 +66,10 @@ public class RobotContainer {
     operator = new Joystick(ControlConstants.operatorJoystick);
 
 
-    shooterVision = new VisionLimeLight("limelight-shooter", 19.25, 14.562694, 102.559, ControlConstants.shooterVisionColumn);
-    intakeVision = new VisionLimeLightH("limelight-intake", 24, -5, 6, ControlConstants.shooterVisionColumn);
+    shooterVision = new VisionLimeLight("limelight-shooter", 36.5, 16.2, 102.559, ControlConstants.shooterVisionColumn);
 
     drive = new Drive(driver,shooterVision);
-    transport = new Transport(operator, shooterVision);
+    transport = new Transport(operator, driver, shooterVision);
 
     
     //cameraSubsystem = new CameraSubsystem(operator);

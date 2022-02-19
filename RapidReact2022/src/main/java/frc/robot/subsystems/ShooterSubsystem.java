@@ -27,14 +27,28 @@ public class ShooterSubsystem extends SubsystemBase {
   private RelativeEncoder hoodEncoder;
   private RelativeEncoder flyWheelEncoder; 
   private ShuffleboardLayout shooterLayout;
-  private SparkMaxPIDController pidController;
+  private SparkMaxPIDController flyWheelPidController;
+  private SparkMaxPIDController hoodPidController;
 
   private double hoodSetPoint, flyWheelSetPoint;
 
   private boolean readyToShoot;
 
-  private double[] flyWheelRPM = {0,0,0,0};
-  private double[] hoodPosition = {0,0,0,0};
+  private double[] flyWheelRPM = {0,0,0,0,0,0,2350,2500, 2600, 2550, 2625, 2700, 2800, 3025, 3150,0,0};
+  private double[] hoodPosition ={0,0,0,0,0,0,19.2,17.0, 19.6, 21.3, 21.3, 22.8, 24.3, 26.8, 29.0,0,0};
+  // 6(72) feet = 2350, 1.92
+  // 7(84) feet = 2500, 17.0
+  // 8(96) feet = 2600, 19.6
+  // 9(108) feet = 2550, 21.3
+  // 10(120) feet = 2625, 21.3
+  // 11(132) feet = 2700, 22.8
+  // 12(144) feet = 2800, 24.3
+  // 13(156) feet = 3025, 26.8
+  // 14(168) feet = 3150, 29.0
+  // 15(180) feet =
+  // 16(192) feet = 
+  // 17(204) feet =
+  
 
   public ShooterSubsystem(CANSparkMax flyWheelRight, CANSparkMax hoodMotor, CANSparkMax feederMotor, VisionSystem shooterVision) {
     this.flyWheelRight = flyWheelRight;
@@ -42,25 +56,37 @@ public class ShooterSubsystem extends SubsystemBase {
     this.feederMotor = feederMotor;
     this.shooterVision = shooterVision;
 
-    pidController = flyWheelRight.getPIDController();
-    pidController.setP(ShooterConstants.flyWheelP);
-    pidController.setI(ShooterConstants.flyWheelI);
-    pidController.setD(ShooterConstants.flyWheelD);
+    flyWheelPidController = flyWheelRight.getPIDController();
+    flyWheelPidController.setP(ShooterConstants.kP);
+    flyWheelPidController.setI(ShooterConstants.kI);
+    flyWheelPidController.setD(ShooterConstants.kD);
+
+    hoodPidController = hoodMotor.getPIDController();
+    hoodPidController.setP(ShooterConstants.HoodConstants.kP);
+    hoodPidController.setI(ShooterConstants.HoodConstants.kI);
+    hoodPidController.setD(ShooterConstants.HoodConstants.kD);
+
+    
 
     hoodEncoder = hoodMotor.getEncoder(Type.kHallSensor, 42);
-    hoodSetPoint = hoodEncoder.getPosition();
+    hoodEncoder.setPosition(0);
+    hoodSetPoint = 0;
 
     flyWheelEncoder = flyWheelRight.getEncoder(Type.kHallSensor, 42);
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     shooterLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.shooterIndex, 0).withSize(1, 5);
-    shooterLayout.addNumber("Hood Pos", this::getHoodSetPoint).withSize(1, 1);
+    shooterLayout.addNumber("Hood Setpoint", this::getHoodSetPoint).withSize(1, 1);
+    shooterLayout.addNumber("Hood Pos", this::getHoodPos).withSize(1, 1);
     shooterLayout.addNumber("Fly Wheel RPM", this::getRPM).withSize(1, 1);
+    shooterLayout.addNumber("Fly Wheel SetPoint", this::getFlywheelSetPoint).withSize(1, 1);
+    shooterLayout.addNumber("Default RPM Flywheel", () -> ShooterConstants.defaultFlywheelRPM).withSize(1, 1);
+
 
   }
   
   public void spinUpWheelRPM() {
-    pidController.setFF(ShooterConstants.kS / flyWheelSetPoint + ShooterConstants.kV);
-    pidController.setReference(flyWheelSetPoint, CANSparkMax.ControlType.kVelocity);
+    flyWheelPidController.setFF(ShooterConstants.kS / flyWheelSetPoint + ShooterConstants.kV);
+    flyWheelPidController.setReference(flyWheelSetPoint, CANSparkMax.ControlType.kVelocity);
   
   }
 
@@ -71,6 +97,14 @@ public class ShooterSubsystem extends SubsystemBase {
   // getters to check if hood or flywheel are in range
   public boolean getHoodReadyToShoot() {
     return true;
+  }
+
+  public void setHoodEncoder(double pos){
+    hoodEncoder.setPosition(pos);
+  }
+
+  public void setHoodMotor(double pow){
+    hoodMotor.set(pow);
   }
 
   public boolean getFlyWheelReadyToShoot() {
@@ -90,6 +124,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
 
+
   public void spinFlyWheel(double speed){
     flyWheelRight.set(speed);
   }
@@ -102,7 +137,7 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodMotor.set(speed);
   }
 
-  public boolean pidHood(){
+  public boolean oldPidHood(){
     double currPos = hoodEncoder.getPosition();
     double power = -(hoodSetPoint - currPos) * 0.008;
     power = Math.min(0.2, Math.max(-0.2, power));
@@ -112,6 +147,11 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("currPosHood", currPos);
     SmartDashboard.putNumber("SetPointHood", hoodSetPoint);
     return Math.abs(power) < 0.01;
+  }
+
+  public boolean pidHood(){
+    hoodPidController.setReference(hoodSetPoint, CANSparkMax.ControlType.kPosition);
+    return true;
   }
 
 
@@ -148,12 +188,20 @@ public class ShooterSubsystem extends SubsystemBase {
     return flyWheelEncoder.getVelocity();
   } 
 
+  public double getFlywheelSetPoint(){
+    return flyWheelSetPoint;
+  }
+
   public void setHoodSetPoint(double setPoint){
     this.hoodSetPoint = setPoint;
   }
 
   public double getHoodSetPoint(){
     return this.hoodSetPoint;
+  }
+
+  public double getHoodPos(){
+    return this.hoodEncoder.getPosition();
   }
 
   public void stopHood() {

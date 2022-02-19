@@ -6,17 +6,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.UpperIndexerSubsystem;
 
 public class DefaultShoot extends CommandBase {
   /** Creates a new DefaultShoot. */
   private ShooterSubsystem shooterSubsystem;
-  private IndexerSubsystem indexerSubsystem;
-
-  public DefaultShoot(ShooterSubsystem shooterSubsystem, IndexerSubsystem indexerSubsystem) {
+  private UpperIndexerSubsystem indexerSubsystem;
+  public DefaultShoot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
+
 
     addRequirements(shooterSubsystem);
   }
@@ -24,7 +25,7 @@ public class DefaultShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterSubsystem.setFlyWheelPoint(ShooterConstants.defaultFlywheelRPM);
+    shooterSubsystem.setFlyWheelPoint(ShooterConstants.defaultFlyWheelRPM);
     shooterSubsystem.spinFeeder(ShooterConstants.feederWheelPower);
   }
 
@@ -46,6 +47,7 @@ public class DefaultShoot extends CommandBase {
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
     indexerSubsystem.setUpperIndexer(0);
+
   }
 
   // Returns true when the command should end.

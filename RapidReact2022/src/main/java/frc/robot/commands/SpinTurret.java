@@ -17,6 +17,9 @@ public class SpinTurret extends CommandBase {
   TurretSubsystem turretSubsystem;
   VisionSystem shooterSystem;
   Joystick operator;
+
+  double lastAngle;
+  double lastTime;
   public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem,Joystick operator) {
     this.turretSubsystem = turretSubsystem;
     this.shooterSystem = shooterSystem;
@@ -27,7 +30,10 @@ public class SpinTurret extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    lastTime = System.currentTimeMillis();
+    lastAngle = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -36,8 +42,11 @@ public class SpinTurret extends CommandBase {
     if(pow == 0){
       if(shooterSystem.isValidTarget()){
         double angle = shooterSystem.getAngleX();
-        turretSubsystem.angleTurret(angle);
+        turretSubsystem.angleTurret(angle, lastTime, lastAngle);
         turretSubsystem.isOnTarget(angle);
+
+        lastAngle = angle;
+        lastTime = System.currentTimeMillis();
       }else{
         turretSubsystem.centerTurret();
         turretSubsystem.setOnTarget(false);

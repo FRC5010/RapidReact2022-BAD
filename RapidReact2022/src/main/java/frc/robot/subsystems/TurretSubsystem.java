@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.constants.ControlConstants;
@@ -40,6 +41,9 @@ private ShuffleboardLayout turretLayout;
     turretLayout.addNumber("Turret Pos", this::getTurretPos).withSize(1, 1);
     turretLayout.addBoolean("Turret Is On Target", this::getIsOnTarget).withSize(1, 1);
 
+    SmartDashboard.putNumber("TurretP", TurretConstants.kPVision);
+    SmartDashboard.putNumber("TurretD", TurretConstants.kDVision);
+
   }
 
   public void turnTurret(double speed){
@@ -52,15 +56,19 @@ private ShuffleboardLayout turretLayout;
     turretMotor.set(-limit);
   }
 
-  public void angleTurret(double angle){
-    double anglePow = angle * TurretConstants.kPVision;
+  public void angleTurret(double angle, double lastTime, double lastAngle){
+    double p = SmartDashboard.getNumber("TurretP", TurretConstants.kPVision);
+    double d = SmartDashboard.getNumber("TurretD", TurretConstants.kDVision);
+    double pVal = angle * p;
+    double dVal = d * ((angle - lastAngle) / ((System.currentTimeMillis() - lastTime) * 1000));
+    double anglePow = pVal + dVal;
     double limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));
 
     double currPos = turretEncoder.getPosition();
     if(currPos < TurretConstants.leftLimit || currPos > TurretConstants.rightLimit){
       limit = 0;
     }
-
+    SmartDashboard.putNumber("TurretPow", -limit);
     turretMotor.set(-limit);
   }
 

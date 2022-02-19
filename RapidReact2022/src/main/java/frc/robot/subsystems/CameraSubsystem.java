@@ -20,7 +20,7 @@ public class CameraSubsystem extends SubsystemBase {
 
   Joystick operator;
   /** Creates a new CameraSubsystem. */
-  public CameraSubsystem(Joystick operator) {
+  public CameraSubsystem() {
     
 
     camera1 = CameraServer.startAutomaticCapture(0);

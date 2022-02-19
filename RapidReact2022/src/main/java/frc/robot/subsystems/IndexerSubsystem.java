@@ -23,10 +23,9 @@ public class IndexerSubsystem extends SubsystemBase {
 
   private ShuffleboardLayout indexerLayout;
 
-  public IndexerSubsystem(CANSparkMax lowerMotor, CANSparkMax upperMotor, DigitalInput upperBB) {
+  public IndexerSubsystem(CANSparkMax lowerMotor, DigitalInput upperBB) {
     this.upperBB = upperBB;
     this.lowerMotor = lowerMotor;
-    this.upperMotor = upperMotor;
 
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
@@ -40,10 +39,6 @@ public class IndexerSubsystem extends SubsystemBase {
 
   public void setLowerIndexer(double speed){
     lowerMotor.set(speed);
-  }
-
-  public void setUpperIndexer(double speed){
-    upperMotor.set(speed);
   }
 
   public boolean isLowerIndexerRunning(){

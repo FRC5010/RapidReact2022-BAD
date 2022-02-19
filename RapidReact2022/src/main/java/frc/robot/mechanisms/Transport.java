@@ -6,21 +6,25 @@ package frc.robot.mechanisms;
 
 import java.util.ResourceBundle.Control;
 
+import javax.swing.JToggleButton;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
+import frc.robot.commands.FenderShot;
 import frc.robot.commands.Launcher;
 import frc.robot.commands.MoveHood;
 import frc.robot.commands.PistonDeploy;
@@ -30,11 +34,11 @@ import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.UpperIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 /** Add your docs here. */
@@ -54,6 +58,7 @@ public class Transport {
     private CANSparkMax upperIndexerMotor;
     private DigitalInput upperBB;
     private IndexerSubsystem indexerSubsystem;
+    private UpperIndexerSubsystem upperIndexerSubsystem;
 
     private CANSparkMax turretMotor;
     private TurretSubsystem turretSubsystem;
@@ -66,16 +71,20 @@ public class Transport {
 
     private JoystickButton hoodDown;
     private JoystickButton hoodUp;
-    private JoystickButton manualShoot;
+    private JoystickButton aimAndShoot;
     private JoystickButton calibrateHood;
+    private JoystickButton indexerUp;
+    private JoystickButton indexerDown;
     private POVButton incFlyWheel;
-    private POVButton decFlyWheel; 
+    private POVButton decFlyWheel;
+    private Button fenderShot;
+    private JoystickButton defaultShoot; 
     
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
         this.driver = driver;
         this.operator = operator;
-        togglePiston = new JoystickButton(operator, ControlConstants.intakeUpButton);
+        togglePiston = new JoystickButton(driver, ControlConstants.toggleIntake);
 
         // initializes intake
         intakeMotor = new CANSparkMax(ControlConstants.intakeM, MotorType.kBrushless);
@@ -100,7 +109,8 @@ public class Transport {
 
         upperBB = new DigitalInput(ControlConstants.BB1);
 
-        indexerSubsystem = new IndexerSubsystem(lowerIndexMotor, upperIndexerMotor, upperBB);
+        indexerSubsystem = new IndexerSubsystem(lowerIndexMotor, upperBB);
+        upperIndexerSubsystem = new UpperIndexerSubsystem(upperIndexerMotor);
         
         // initializes turret
         turretMotor = new CANSparkMax(ControlConstants.turretM, MotorType.kBrushless);
@@ -164,23 +174,36 @@ public class Transport {
         hoodDown.whenPressed(new MoveHood(shooterSubsystem, -ShooterConstants.HoodConstants.hoodTolerance));
         hoodUp.whenPressed(new MoveHood(shooterSubsystem, ShooterConstants.HoodConstants.hoodTolerance));
 
-        manualShoot = new JoystickButton(operator, ControlConstants.launchButton);
+        aimAndShoot = new JoystickButton(operator, ControlConstants.launchButton);
         //switched out DefaultShoot for AimAndShoot
-        manualShoot.whileHeld(new AimAndShoot(shooterSubsystem, indexerSubsystem, shooterVision), true);
+        aimAndShoot.whileHeld(new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision), true);
+
+        defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot);
+        defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem));
 
         incFlyWheel = new POVButton(operator, ControlConstants.incShooter);
-        incFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlywheelRPM += ShooterConstants.changeSetPoint));
+        incFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM += ShooterConstants.changeSetPoint));
 
         decFlyWheel = new POVButton(operator, ControlConstants.decShooter);
-        decFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlywheelRPM -= ShooterConstants.changeSetPoint));
+        decFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM -= ShooterConstants.changeSetPoint));
 
         calibrateHood = new JoystickButton(driver, ControlConstants.calibrate);
         calibrateHood.whenPressed(new CalibrateHood(shooterSubsystem));
+
+        indexerUp = new JoystickButton(operator, ControlConstants.indexerUp);   
+        indexerUp.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, 0.8), false);
+
+
+        indexerDown = new JoystickButton(operator, ControlConstants.indexerDown);
+        indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -0.8), false);
+
+        fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
+        fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, driver), false);
     }
     public void setUpDeftCom(){
         shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
-        indexerSubsystem.setDefaultCommand(new RunIndexer(indexerSubsystem, operator));
         intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, operator));
+        
         turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator));
 
     }

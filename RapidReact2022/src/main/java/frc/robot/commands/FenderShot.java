@@ -4,25 +4,23 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.UpperIndexerSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
 
-public class AimAndShoot extends CommandBase {
-  /** Creates a new AimAndShoot. */
+public class FenderShot extends CommandBase {
+  /** Creates a new FenderShot. */
   private ShooterSubsystem shooterSubsystem;
   private UpperIndexerSubsystem indexerSubsystem;
-  private VisionSystem visionSystem;
-
-  public AimAndShoot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem,
-      VisionSystem visionSystem) {
+  private Joystick driver;
+  public FenderShot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem, Joystick driver) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
-    this.visionSystem = visionSystem;
-
+    this.driver = driver;
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -30,27 +28,25 @@ public class AimAndShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    if (driver.getRawButton(ControlConstants.upperFender)){
+      shooterSubsystem.setFlyWheelPoint(ShooterConstants.highRPM);
+      shooterSubsystem.setHoodSetPoint(HoodConstants.highHood);
+    
+    } else {
+      shooterSubsystem.setFlyWheelPoint(ShooterConstants.lowRPM);
+      shooterSubsystem.setHoodSetPoint(HoodConstants.lowHood);
+    }
+    
     shooterSubsystem.spinFeeder(ShooterConstants.feederWheelPower);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double distance = visionSystem.getDistance() / 12.0;
-    if (visionSystem.isValidTarget()) {
-      double flyWheelPoint = shooterSubsystem.flyWheelCalculations(distance);
-      shooterSubsystem.setFlyWheelPoint(flyWheelPoint);
-      double hoodPoint = shooterSubsystem.hoodCalculations(distance);
-      shooterSubsystem.setHoodSetPoint(hoodPoint);
-      shooterSubsystem.spinUpWheelRPM();
-      shooterSubsystem.pidHood();
-    } 
-    
-
+    shooterSubsystem.spinUpWheelRPM();
+    shooterSubsystem.pidHood();
     shooterSubsystem.determineIfReadyToShoot();
-
-    if (shooterSubsystem.getReadyToShoot()) {
+    if(shooterSubsystem.getReadyToShoot()){
       indexerSubsystem.setUpperIndexer(ShooterConstants.indexerPow);
     }
   }
@@ -61,8 +57,8 @@ public class AimAndShoot extends CommandBase {
     shooterSubsystem.spinFeeder(0);
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
-    indexerSubsystem.setUpperIndexer(0);
     shooterSubsystem.stopHood();
+    indexerSubsystem.setUpperIndexer(0);
   }
 
   // Returns true when the command should end.

@@ -89,8 +89,8 @@ public class ControlConstants {
     public static int tarmatShoot = ButtonNums.RIGHT_BUMPER.ordinal();
     //public static int rotationControl = ButtonNums.X_BUTTON.ordinal();
     //public static int positionControl = ButtonNums.Y_BUTTON.ordinal();
-    //public static int startClimb = ButtonNums.LEFT_BUMPER.ordinal();
-    //public static int spinDeploy = ButtonNums.RIGHT_BUMPER.ordinal();
+    public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal();
+    public static int toggleIntake = ButtonNums.RIGHT_BUMPER.ordinal();
     public static int calibrate = ButtonNums.START_BUTTON.ordinal(); 
 
     //public static int startClimb = ButtonNums.BACK_BUTTON.ordinal();
@@ -106,23 +106,23 @@ public class ControlConstants {
 
     //Operator
     public static int operatorJoystick = 1;
-    public static int runIndexer = AxisNums.LEFT_Y.ordinal(); // Implement
+    public static int operatorLeftY = AxisNums.LEFT_Y.ordinal(); // Implement
     public static int operatorRightY = AxisNums.RIGHT_Y.ordinal(); // Implement
     public static int operatorRightX = AxisNums.RIGHT_X.ordinal();
     public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
     public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
-    public static int launchButton = ButtonNums.A_BUTTON.ordinal();
+    public static int indexerDown = ButtonNums.A_BUTTON.ordinal();
     public static int hoodDown = ButtonNums.B_BUTTON.ordinal(); 
-    //public static int lowGoalShoot = ButtonNums.X_BUTTON.ordinal(); // not used
+    public static int indexerUp = ButtonNums.X_BUTTON.ordinal(); // not used
     public static int hoodUp = ButtonNums.Y_BUTTON.ordinal(); 
-    public static int intakeUpButton = ButtonNums.LEFT_BUMPER.ordinal();
-    public static int intakeDownButton = ButtonNums.RIGHT_BUMPER.ordinal();
+    public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
+    public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
     //public static int startFlywheel = ButtonNums.LEFT_STICK_BUTT.ordinal();
     //public static int stopFlywheel = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 
-    public static int selCamera1 = ButtonNums.START_BUTTON.ordinal();
+    public static int defaultShoot = ButtonNums.START_BUTTON.ordinal();
     public static int selCamera2 = ButtonNums.BACK_BUTTON.ordinal();
 
     public static int incShooter = POVDirs.UP.ordinal() * 90;

@@ -67,6 +67,7 @@ public class RobotContainer {
 
 
     shooterVision = new VisionLimeLight("limelight-shooter", 36.5, 16.2, 102.559, ControlConstants.shooterVisionColumn);
+    cameraSubsystem = new CameraSubsystem();
 
     drive = new Drive(driver,shooterVision);
     transport = new Transport(operator, driver, shooterVision);

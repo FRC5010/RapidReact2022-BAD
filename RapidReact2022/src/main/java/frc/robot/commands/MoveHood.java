@@ -42,6 +42,6 @@ public class MoveHood extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(shooterSubsystem.getHoodPos() - shooterSubsystem.getHoodSetPoint()) < ShooterConstants.HoodConstants.hoodTolerance;
+    return Math.abs(shooterSubsystem.getHoodPos() - shooterSubsystem.getHoodSetPoint()) < ShooterConstants.HoodConstants.shootingHoodTolerance;
   }
 }

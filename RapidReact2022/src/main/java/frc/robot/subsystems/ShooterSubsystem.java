@@ -9,7 +9,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.vision.VisionSystem;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -29,20 +29,22 @@ public class ShooterSubsystem extends SubsystemBase {
   private ShuffleboardLayout shooterLayout;
   private SparkMaxPIDController flyWheelPidController;
   private SparkMaxPIDController hoodPidController;
-
-  private double hoodSetPoint, flyWheelSetPoint;
+  private double highRPM = ShooterConstants.highRPM;
+  private double highHood = HoodConstants.highHood;
+  private double hoodSetPoint = 0, flyWheelSetPoint = 0;
 
   private boolean readyToShoot;
 
-  private double[] flyWheelRPM = {0,0,0,0,0,0,2350,2500, 2600, 2550, 2625, 2700, 2800, 3025, 3150,0,0};
-  private double[] hoodPosition ={0,0,0,0,0,0,19.2,17.0, 19.6, 21.3, 21.3, 22.8, 24.3, 26.8, 29.0,0,0};
+  // funny array to store flywheel rpm and hood position to index, index values represent feet, ex index 0 is 0ft
+  private double[] flyWheelRPM = {highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,2350,2500, 2600, 2550, 2775, 2700, 2900, 3025, 3150, highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM};
+  private double[] hoodPosition= {highHood,highHood,highHood,highHood,highHood,highHood,19.2,17.0, 19.6, 21.3, 23.5, 22.8, 29.5, 26.8, 29.0,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
   // 6(72) feet = 2350, 1.92
   // 7(84) feet = 2500, 17.0
   // 8(96) feet = 2600, 19.6
   // 9(108) feet = 2550, 21.3
-  // 10(120) feet = 2625, 21.3
+  // 10(120) feet = 2775, 23.5
   // 11(132) feet = 2700, 22.8
-  // 12(144) feet = 2800, 24.3
+  // 12(144) feet = 2900, 29.5
   // 13(156) feet = 3025, 26.8
   // 14(168) feet = 3150, 29.0
   // 15(180) feet =
@@ -75,11 +77,13 @@ public class ShooterSubsystem extends SubsystemBase {
     flyWheelEncoder = flyWheelRight.getEncoder(Type.kHallSensor, 42);
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     shooterLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.shooterIndex, 0).withSize(1, 5);
+    shooterLayout.addBoolean("ReadyToShoot", this::getReadyToShoot).withSize(1, 1);
     shooterLayout.addNumber("Hood Setpoint", this::getHoodSetPoint).withSize(1, 1);
     shooterLayout.addNumber("Hood Pos", this::getHoodPos).withSize(1, 1);
     shooterLayout.addNumber("Fly Wheel RPM", this::getRPM).withSize(1, 1);
     shooterLayout.addNumber("Fly Wheel SetPoint", this::getFlywheelSetPoint).withSize(1, 1);
-    shooterLayout.addNumber("Default RPM Flywheel", () -> ShooterConstants.defaultFlywheelRPM).withSize(1, 1);
+    shooterLayout.addNumber("Default RPM Flywheel", () -> ShooterConstants.defaultFlyWheelRPM).withSize(1, 1);
+    
 
 
   }
@@ -96,7 +100,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // getters to check if hood or flywheel are in range
   public boolean getHoodReadyToShoot() {
-    return true;
+    if (Math.abs(hoodSetPoint - hoodEncoder.getPosition()) < HoodConstants.shootingHoodTolerance){
+      return true;
+    }
+    return false;
   }
 
   public void setHoodEncoder(double pos){
@@ -150,37 +157,49 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean pidHood(){
-    hoodPidController.setReference(hoodSetPoint, CANSparkMax.ControlType.kPosition);
-    return true;
+    if (HoodConstants.hoodMaxPos > hoodSetPoint && hoodSetPoint > 0){
+      hoodPidController.setReference(hoodSetPoint, CANSparkMax.ControlType.kPosition);
+      return true;
+    }
+    return false;
   }
 
 
 
   public double hoodCalculations(double distanceCurrent) {
     // Linear Interpolation Calculations using indexes as feet ex index 0 is 0ft
+    double hoodCurrent;
     double upperBound = Math.ceil(distanceCurrent);
     double lowerBound = Math.floor(distanceCurrent);
 
-    double hoodUpper = hoodPosition[(int) upperBound];
-    double hoodLower = hoodPosition[(int) lowerBound];
+    if(upperBound <= hoodPosition.length - 1 && lowerBound >= 0){
+      double hoodUpper = hoodPosition[(int) upperBound];
+      double hoodLower = hoodPosition[(int) lowerBound];
 
     
-    double hoodCurrent = (distanceCurrent - lowerBound) * (hoodUpper - hoodLower) / (upperBound - lowerBound) + hoodLower;
-
+      hoodCurrent = (distanceCurrent - lowerBound) * (hoodUpper - hoodLower) / (upperBound - lowerBound) + hoodLower;
+    }else{
+      hoodCurrent = hoodEncoder.getPosition();
+    }
+    
     return hoodCurrent;
   }
 
   public double flyWheelCalculations(double distanceCurrent) {
     // Linear Interpolation Calculations
+    double flyWheelCurrent;
     double upperBound = Math.ceil(distanceCurrent);
     double lowerBound = Math.floor(distanceCurrent);
 
-    double flyWheelUpper = flyWheelRPM[(int) upperBound];
-    double flyWheelLower = flyWheelRPM[(int) lowerBound];
+    if(upperBound <= hoodPosition.length - 1 && lowerBound >= 0){
+      double flyWheelUpper = flyWheelRPM[(int) upperBound];
+      double flyWheelLower = flyWheelRPM[(int) lowerBound];
 
     
-    double flyWheelCurrent = (distanceCurrent - lowerBound) * (flyWheelUpper - flyWheelLower) / (upperBound - lowerBound) + flyWheelLower;
-
+      flyWheelCurrent = (distanceCurrent - lowerBound) * (flyWheelUpper - flyWheelLower) / (upperBound - lowerBound) + flyWheelLower;
+    }else{
+      flyWheelCurrent = 0;
+    }
     return flyWheelCurrent;
   }
 
@@ -193,7 +212,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setHoodSetPoint(double setPoint){
-    this.hoodSetPoint = setPoint;
+    if (HoodConstants.hoodMaxPos > setPoint && setPoint > 0){
+      this.hoodSetPoint = setPoint;
+    }
   }
 
   public double getHoodSetPoint(){

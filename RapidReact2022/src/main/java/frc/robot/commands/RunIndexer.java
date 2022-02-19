@@ -4,22 +4,24 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.ControlConstants;
-import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.UpperIndexerSubsystem;
 
 public class RunIndexer extends CommandBase {
   /** Creates a new RunIndexer. */
   IndexerSubsystem indexerSubsystem;
+  UpperIndexerSubsystem upperIndexerSubsystem; 
   Joystick operator;
+  double power;
 
-  public RunIndexer(IndexerSubsystem indexerSubsystem, Joystick operator) {
+  public RunIndexer(UpperIndexerSubsystem upperIndexerSubsystem,IndexerSubsystem indexerSubsystem, double power) {
     this.indexerSubsystem = indexerSubsystem;
-    this.operator = operator;
+    this.upperIndexerSubsystem = upperIndexerSubsystem;
+    this.power = power;    
     addRequirements(indexerSubsystem);
+    addRequirements(upperIndexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,15 +32,17 @@ public class RunIndexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pow = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.runIndexer));
 
-    indexerSubsystem.setLowerIndexer(pow);
-    indexerSubsystem.setUpperIndexer(pow);
+    indexerSubsystem.setLowerIndexer(power);
+    upperIndexerSubsystem.setUpperIndexer(power);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    indexerSubsystem.setLowerIndexer(0);
+    upperIndexerSubsystem.setUpperIndexer(0);
+  }
 
   // Returns true when the command should end.
   @Override

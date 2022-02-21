@@ -17,6 +17,7 @@ public class FenderShot extends CommandBase {
   private ShooterSubsystem shooterSubsystem;
   private UpperIndexerSubsystem indexerSubsystem;
   private Joystick driver;
+  private boolean isUpperShot = true;
   public FenderShot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem, Joystick driver) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
@@ -25,10 +26,23 @@ public class FenderShot extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  public FenderShot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem, boolean isUpperShot) {
+    this.shooterSubsystem = shooterSubsystem;
+    this.indexerSubsystem = indexerSubsystem;
+    this.isUpperShot = isUpperShot;
+    this.driver = null;
+    addRequirements(shooterSubsystem);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (driver.getRawButton(ControlConstants.upperFender)){
+    if(driver != null)
+      isUpperShot = driver.getRawButton(ControlConstants.upperFender);
+
+    if (isUpperShot){
       shooterSubsystem.setFlyWheelPoint(ShooterConstants.highRPM);
       shooterSubsystem.setHoodSetPoint(HoodConstants.highHood);
     

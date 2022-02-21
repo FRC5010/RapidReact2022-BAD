@@ -207,4 +207,24 @@ public class Transport {
         turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator));
 
     }
+
+    public IntakeSubsystem getIntakeSubsystem(){
+        return intakeSubsystem;
+    }
+
+    public TurretSubsystem getTurretSubsystem(){
+        return turretSubsystem;
+    }
+
+    public IndexerSubsystem getIndexerSubsystem(){
+        return indexerSubsystem;
+    }
+
+    public UpperIndexerSubsystem getUpperIndexerSubsystem(){
+        return upperIndexerSubsystem;
+    }
+
+    public ShooterSubsystem getShooterSubsystem(){
+        return shooterSubsystem;
+    }
 }

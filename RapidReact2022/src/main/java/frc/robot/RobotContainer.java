@@ -22,6 +22,7 @@ import frc.robot.commands.LedColor;
 import frc.robot.commands.PistonRetract;
 import frc.robot.commands.PistonDeploy;
 import frc.robot.commands.SetPipeline;
+import frc.robot.commands.auto.AutoShootOnly;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.HubToBall2;
 import frc.robot.commands.auto.HubToBall3;
@@ -81,6 +82,7 @@ public class RobotContainer {
     command.addOption("HubBall2", new HubToBall2());
     command.addOption("HubBall3", new HubToBall3());
     command.addOption("ManyBall", new ManyBallAuto());
+    command.addOption("FenderShotNoMove", new AutoShootOnly(transport.getIntakeSubsystem(), transport.getIndexerSubsystem(), transport.getTurretSubsystem(), shooterVision, transport.getShooterSubsystem(), transport.getUpperIndexerSubsystem()));
     command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));

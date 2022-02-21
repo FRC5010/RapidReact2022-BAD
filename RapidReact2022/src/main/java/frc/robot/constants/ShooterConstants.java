@@ -37,7 +37,7 @@ public class ShooterConstants {
     public static double changeSetPoint = 25;
 
     public static class HoodConstants{
-        public static double kPC = 3.3141;
+        public static double kPC = 2.3541;
         public static double kIC = 0;
         public static double kDC = 0;
 
@@ -45,9 +45,9 @@ public class ShooterConstants {
         public static double kI = kIC / 60;
         public static double kD = kDC / 60;
 
-        public static double kSC = 2;
-        public static double kVC = 0.48768;
-        public static double kAC = 0.17361;
+        public static double kSC = 0.35779;
+        public static double kVC = 1.2718;
+        public static double kAC = 0.11975;
 
         public static double kS = kSC / 12;
         public static double kV = kVC / 60 / 1 / (12 - kS);
@@ -60,6 +60,7 @@ public class ShooterConstants {
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
         public static double highHood = 12;
+        public static double manualPow = 0.25;
     }
 
     public static class TurretConstants{

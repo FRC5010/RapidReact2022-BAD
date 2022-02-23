@@ -5,6 +5,7 @@
 package frc.robot.mechanisms;
 
 import java.util.ResourceBundle.Control;
+import java.util.logging.LogRecord;
 
 import javax.swing.JToggleButton;
 
@@ -55,6 +56,7 @@ public class Transport {
     private IntakeSubsystem intakeSubsystem;
 
     private CANSparkMax lowerIndexMotor;
+    private CANSparkMax lowerIndexMotor2;
     private CANSparkMax upperIndexerMotor;
     private DigitalInput upperBB;
     private IndexerSubsystem indexerSubsystem;
@@ -78,7 +80,8 @@ public class Transport {
     private POVButton incFlyWheel;
     private POVButton decFlyWheel;
     private Button fenderShot;
-    private JoystickButton defaultShoot; 
+    private JoystickButton defaultShoot;
+     
     
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
@@ -94,22 +97,25 @@ public class Transport {
 
         intakeSubsystem = new IntakeSubsystem(intakeMotor, intakePiston);
         
-
+        
         // initializes index
         lowerIndexMotor = new CANSparkMax(ControlConstants.lowerIndexM, MotorType.kBrushless);
         lowerIndexMotor.restoreFactoryDefaults();
         upperIndexerMotor = new CANSparkMax(ControlConstants.upperIndexM, MotorType.kBrushless);
-
-
         upperIndexerMotor.restoreFactoryDefaults();
+        lowerIndexMotor2 = new CANSparkMax(ControlConstants.lowerIndex2M, MotorType.kBrushless);
+        lowerIndexMotor2.restoreFactoryDefaults();
 
         // Postive voltage is in and up
         lowerIndexMotor.setInverted(false);
         upperIndexerMotor.setInverted(false);
+        lowerIndexMotor2.setInverted(false);
+
+        lowerIndexMotor2.follow(lowerIndexMotor, true);
 
         upperBB = new DigitalInput(ControlConstants.BB1);
 
-        indexerSubsystem = new IndexerSubsystem(lowerIndexMotor, upperBB);
+        indexerSubsystem = new IndexerSubsystem(lowerIndexMotor,upperBB);
         upperIndexerSubsystem = new UpperIndexerSubsystem(upperIndexerMotor);
         
         // initializes turret
@@ -165,6 +171,7 @@ public class Transport {
         flyWheelRight.setSmartCurrentLimit(neoCurrentLimit);
         hoodMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         feederMotor.setSmartCurrentLimit(60);
+        lowerIndexMotor2.setSmartCurrentLimit(babyNeoCurrentLimit);
     }
 
     public void configureButtonBindings(){

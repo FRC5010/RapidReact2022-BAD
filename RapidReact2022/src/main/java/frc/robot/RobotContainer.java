@@ -82,7 +82,7 @@ public class RobotContainer {
     command.addOption("HubBall2", new HubToBall2());
     command.addOption("HubBall3", new HubToBall3());
     command.addOption("ManyBall", new ManyBallAuto());
-    command.addOption("FenderShotNoMove", new AutoShootOnly(transport.getIntakeSubsystem(), transport.getIndexerSubsystem(), transport.getTurretSubsystem(), shooterVision, transport.getShooterSubsystem(), transport.getUpperIndexerSubsystem()));
+    command.addOption("FenderShotNoMove", new AutoShootOnly(transport, shooterVision, null));
     command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));

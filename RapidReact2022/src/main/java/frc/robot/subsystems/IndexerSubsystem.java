@@ -18,11 +18,9 @@ import frc.robot.constants.ControlConstants;
 public class IndexerSubsystem extends SubsystemBase {
   /** Creates a new Indexer. */
   private CANSparkMax lowerMotor;
-  private CANSparkMax upperMotor;
   private DigitalInput upperBB;
 
   private ShuffleboardLayout indexerLayout;
-
   public IndexerSubsystem(CANSparkMax lowerMotor, DigitalInput upperBB) {
     this.upperBB = upperBB;
     this.lowerMotor = lowerMotor;

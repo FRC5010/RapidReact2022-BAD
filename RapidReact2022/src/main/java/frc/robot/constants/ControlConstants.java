@@ -28,7 +28,7 @@ public class ControlConstants {
         UP, RIGHT, DOWN, LEFT 
     }
     static enum Motors{
-        NO_MOTOR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15, M16;
+        NO_MOTOR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15, M16, M17;
     }
     static enum DioPorts {
         Port0, Port1, Port2, Port3, Port4, Port5, Port6, Port7, Port8, Port9;
@@ -54,8 +54,9 @@ public class ControlConstants {
         M12: Left Flywheel
         M13: Right Flywheel
         M14: Turret
-        M15: Left Climb
-        M16: Right Climb
+        M15: Index Motor
+        M16: Left Climb
+        M17: Right Climb
     */
 
     // Motor
@@ -73,8 +74,9 @@ public class ControlConstants {
     public static int leftFlyWheelM = Motors.M12.ordinal();
     public static int rightFlyWheelM = Motors.M13.ordinal();
     public static int turretM = Motors.M14.ordinal();
-    public static int leftClimbM = Motors.M15.ordinal();
-    public static int rightClimbM = Motors.M16.ordinal();
+    public static int lowerIndex2M = Motors.M15.ordinal();
+    public static int leftClimbM = Motors.M16.ordinal();
+    public static int RightClimbM = Motors.M16.ordinal();
 
     // Driver
     public static int driverJoystick = 0;
@@ -145,7 +147,7 @@ public class ControlConstants {
 
     public static int autoNavButton = ButtonNums.X_BUTTON.ordinal();
     public static int driveTrainCurrentLimit = 38;
-    public static int babyNeoCurrentLimit = 30;
+    public static int babyNeoCurrentLimit = 20;
     public static int neoCurrentLimit = 38;
     
     public static boolean setupSingleDriver(Joystick operator){

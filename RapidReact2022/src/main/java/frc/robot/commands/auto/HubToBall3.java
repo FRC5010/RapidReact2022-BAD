@@ -20,10 +20,8 @@ public class HubToBall3 extends SequentialCommandGroup {
     String path1 = "paths/HubToBall3.wpilib.json";
     String path2 = "paths/Ball3ToHub.wpilib.json";
     addCommands(
-            // new AutoIntakeDown(intake),
-                new SequentialCommandGroup(
-                    Drive.getAutonomousCommand(path1, true),
-                    Drive.getAutonomousCommand(path2, false)));
+      Drive.getAutonomousCommand(path1, true)
+    );
   }
 }
 

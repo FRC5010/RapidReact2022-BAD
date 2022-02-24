@@ -19,9 +19,7 @@ public class ManyBallAuto extends SequentialCommandGroup {
     String path1 = "paths/LowestCargo.wpilib.json";
     String path2 = "paths/Ball1ToBall2.wpilib.json";
     addCommands(
-            // new AutoIntakeDown(intake),
-                new SequentialCommandGroup(
-                    Drive.getAutonomousCommand(path1, true),
-                    Drive.getAutonomousCommand(path2, false)));
+      Drive.getAutonomousCommand(path1, true)
+    );
   }
 }

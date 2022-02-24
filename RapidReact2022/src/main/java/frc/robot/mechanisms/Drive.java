@@ -167,7 +167,6 @@ public class Drive {
 
   public static Command getAutonomousCommand(String path, boolean reset) {
     // Create a voltage constraint to ensure we don't accelerate too fast
-    System.out.println("ran");
     String trajectoryJSON = path;
     Trajectory trajectory = new Trajectory();
     try {

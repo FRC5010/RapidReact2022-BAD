@@ -92,6 +92,7 @@ public class Transport {
         // initializes intake
         intakeMotor = new CANSparkMax(ControlConstants.intakeM, MotorType.kBrushless);
         intakeMotor.restoreFactoryDefaults();
+        //startcompetition unhandled exception??? robot hates us??
         intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
         intakePiston.set(Value.kReverse);
 

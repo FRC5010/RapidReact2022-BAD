@@ -7,6 +7,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.FenderShot;
 import frc.robot.commands.SpinIntake;
@@ -22,7 +23,7 @@ import frc.robot.subsystems.vision.VisionSystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoShootOnly extends SequentialCommandGroup {
+public class AutoMoveAndShoot extends SequentialCommandGroup {
   /** Creates a new AutoShootOnly. */
   IntakeSubsystem intakeSubsystem; 
   IndexerSubsystem indexerSubsystem; 
@@ -30,7 +31,7 @@ public class AutoShootOnly extends SequentialCommandGroup {
   VisionSystem shooterVision; 
   ShooterSubsystem shooterSubsystem; 
   UpperIndexerSubsystem upperIndexerSubsystem;
-  public AutoShootOnly(Transport transport, VisionSystem shooterVision, SequentialCommandGroup drivingGroup) {
+  public AutoMoveAndShoot(Transport transport, VisionSystem shooterVision, SequentialCommandGroup drivingGroup) {
     intakeSubsystem = transport.getIntakeSubsystem();
     indexerSubsystem = transport.getIndexerSubsystem();
     turretSubsystem = transport.getTurretSubsystem();
@@ -47,8 +48,8 @@ public class AutoShootOnly extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0),
         new SpinTurret(turretSubsystem, shooterVision),
-        new FenderShot(shooterSubsystem, upperIndexerSubsystem, true)//,
-        //drivingGroup
+        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision),
+        drivingGroup
     ));
 
   }

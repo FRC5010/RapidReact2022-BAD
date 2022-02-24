@@ -22,7 +22,7 @@ import frc.robot.commands.LedColor;
 import frc.robot.commands.PistonRetract;
 import frc.robot.commands.PistonDeploy;
 import frc.robot.commands.SetPipeline;
-import frc.robot.commands.auto.AutoShootOnly;
+import frc.robot.commands.auto.AutoMoveAndShoot;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.HubToBall2;
 import frc.robot.commands.auto.HubToBall3;
@@ -78,11 +78,14 @@ public class RobotContainer {
     //ledSubsystem = new LedSubsystem(0, 300);
 
 
-    command.addOption("LowerCargoToHub", new LowerCargoToHub());
+    /*command.addOption("LowerCargoToHub", new LowerCargoToHub());
     command.addOption("HubBall2", new HubToBall2());
     command.addOption("HubBall3", new HubToBall3());
-    command.addOption("ManyBall", new ManyBallAuto());
-    command.addOption("FenderShotNoMove", new AutoShootOnly(transport, shooterVision, null));
+    command.addOption("ManyBall", new ManyBallAuto());*/
+    command.addOption("LowerCargoToHub", new AutoMoveAndShoot(transport, shooterVision, new LowerCargoToHub()));
+    command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision, new HubToBall2()));
+    command.addOption("HubBall3", new AutoMoveAndShoot(transport, shooterVision, new HubToBall3()));
+    command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision, new ManyBallAuto()));
     command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));

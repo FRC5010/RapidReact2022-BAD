@@ -15,7 +15,7 @@ import frc.robot.commands.IntakeDefault;
 
 public class PneumaticSubsystem extends SubsystemBase {
   DoubleSolenoid piston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
-  CANSparkMax intake = new CANSparkMax(8, MotorType.kBrushless);
+  //CANSparkMax intake = new CANSparkMax(8, MotorType.kBrushless);
 
   public PneumaticSubsystem() {
 
@@ -34,7 +34,7 @@ public class PneumaticSubsystem extends SubsystemBase {
   }
   public void intake(double power)
   {
-    intake.set(power);
+    //intake.set(power);
   }
 
   @Override

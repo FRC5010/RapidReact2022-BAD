@@ -62,7 +62,7 @@ public class RobotContainer {
   private LedSubsystem ledSubsystem;
 
   private PneumaticSubsystem pneumaticSubsystem;
-  private CANSparkMax motor = new CANSparkMax(7, MotorType.kBrushless);
+  //private CANSparkMax motor = new CANSparkMax(7, MotorType.kBrushless);
 
 
   private Drive drive; 
@@ -72,8 +72,6 @@ public class RobotContainer {
     driver = new Joystick(ControlConstants.driverJoystick);
     operator = new Joystick(ControlConstants.operatorJoystick);
     
-
-
     shooterVision = new VisionLimeLight("limelight-shooter", 19.25, 14.562694, 102.559, ControlConstants.shooterVisionColumn);
     intakeVision = new VisionLimeLightH("limelight-intake", 24, -5, 6, ControlConstants.shooterVisionColumn);
 
@@ -82,8 +80,8 @@ public class RobotContainer {
     cameraSubsystem = new CameraSubsystem(operator);
     ledSubsystem = new LedSubsystem(0, 300);
 
-    pneumaticSubsystem = new PneumaticSubsystem();
-    pneumaticSubsystem.setDefaultCommand(new IntakeDefault(pneumaticSubsystem, driver));
+    //pneumaticSubsystem = new PneumaticSubsystem();
+    //pneumaticSubsystem.setDefaultCommand(new IntakeDefault(pneumaticSubsystem, driver));
 
     command.addOption("LowerCargoToHub", new LowerCargoToHub());
     command.addOption("HubBall2", new HubToBall2());
@@ -122,17 +120,17 @@ public class RobotContainer {
     SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
     SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
-    SmartDashboard.putData("Piston Forward", new PistonForward(pneumaticSubsystem));
+    /*SmartDashboard.putData("Piston Forward", new PistonForward(pneumaticSubsystem));
     SmartDashboard.putData("Piston Reverse", new PistonReverse(pneumaticSubsystem));
     togglePiston = new JoystickButton(driver, ControlConstants.launchButton);
     togglePiston.whenPressed(new InstantCommand(() -> pneumaticSubsystem.togglePiston(), pneumaticSubsystem));
-
-    SparkMaxLimitSwitch forward = motor.getForwardLimitSwitch(Type.kNormallyOpen);
-    SparkMaxLimitSwitch reverse = motor.getReverseLimitSwitch(Type.kNormallyOpen);
-    forward.enableLimitSwitch(true);
-    reverse.enableLimitSwitch(true);
-    babyNeoButton = new JoystickButton(operator, ControlConstants.ButtonNums.A_BUTTON.ordinal());
-    babyNeoButton.whileHeld(new BabyNeo(motor, operator));
+*/
+   // SparkMaxLimitSwitch forward = motor.getForwardLimitSwitch(Type.kNormallyOpen);
+   // SparkMaxLimitSwitch reverse = motor.getReverseLimitSwitch(Type.kNormallyOpen);
+   // forward.enableLimitSwitch(true);
+  //  reverse.enableLimitSwitch(true);
+   // babyNeoButton = new JoystickButton(operator, ControlConstants.ButtonNums.A_BUTTON.ordinal());
+   // babyNeoButton.whileHeld(new BabyNeo(motor, operator));
 
   }
 

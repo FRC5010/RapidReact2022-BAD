@@ -17,20 +17,23 @@ public class SpinTurret extends CommandBase {
   TurretSubsystem turretSubsystem;
   VisionSystem shooterSystem;
   Joystick operator = null;
-
+  boolean isSeek = false;
   double lastAngle;
   double lastTime;
-  public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem,Joystick operator) {
+  int seekDirection = 1; 
+  public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem,Joystick operator, boolean isSeek) {
     this.turretSubsystem = turretSubsystem;
     this.shooterSystem = shooterSystem;
     this.operator = operator;
+    this.isSeek = false; 
     addRequirements(turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem) {
+  public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem, boolean isSeek) {
     this.turretSubsystem = turretSubsystem;
     this.shooterSystem = shooterSystem;
+    this.isSeek = true; 
     addRequirements(turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -48,7 +51,7 @@ public class SpinTurret extends CommandBase {
   public void execute() {
     double pow = 0;
     if (null != operator) {
-      pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.operatorRightX)); 
+      pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.turnTurret)); 
     } 
     if(pow == 0){
       if(shooterSystem.isValidTarget()){
@@ -59,8 +62,19 @@ public class SpinTurret extends CommandBase {
         lastAngle = angle;
         lastTime = System.currentTimeMillis();
       }else{
-        turretSubsystem.centerTurret();
-        turretSubsystem.setOnTarget(false);
+        if (isSeek){
+          pow = 0.1; 
+          turretSubsystem.turnTurret(pow * seekDirection);
+          if (turretSubsystem.isAtRightLimit()){
+            seekDirection = -1;
+          }
+          if (turretSubsystem.isAtLeftLimit()){
+            seekDirection = 1; 
+          }
+        } else {
+          turretSubsystem.centerTurret();
+          turretSubsystem.setOnTarget(false);
+        }
       }
     }else{
       turretSubsystem.turnTurret(pow);

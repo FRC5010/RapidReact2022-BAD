@@ -32,13 +32,13 @@ public final class DriveConstants {
     public static double throttleFactor = 0.7;    
     public static double steerFactor = 0.6;    
     public static double drivingAdjustment = 0.05;
-    public static int driveInversion = -1;
+    public static int driveInversion = 1;
     
-    public static final double ksVolts = 0.16449; //0.2543;
-    public static final double kvVoltSecondsPerMeter = 1.0582; //1.1055;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.071957;//0.23628;
+    public static final double ksVolts = 0.14254; //0.2543;
+    public static final double kvVoltSecondsPerMeter = 1.341; //1.1055;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.17727;//0.23628;
     // 2.5 original
-    public static final double kPDriveVel = 1.1772; //3.0022;
+    public static final double kPDriveVel = 2.6535; //3.0022;
 
     public static final double kTrackwidthMeters = 0.616;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);

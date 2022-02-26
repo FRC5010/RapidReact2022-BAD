@@ -36,17 +36,17 @@ public class ShooterSubsystem extends SubsystemBase {
   private boolean readyToShoot;
 
   // funny array to store flywheel rpm and hood position to index, index values represent feet, ex index 0 is 0ft
-  private double[] flyWheelRPM = {highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,2350,2500, 2600, 2550, 2775, 2700, 2900, 3025, 3150, highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM};
-  private double[] hoodPosition= {highHood,highHood,highHood,highHood,highHood,highHood,19.2,17.0, 19.6, 21.3, 23.5, 22.8, 29.5, 26.8, 29.0,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
-  // 6(72) feet = 2350, 1.92
-  // 7(84) feet = 2500, 17.0
-  // 8(96) feet = 2600, 19.6
-  // 9(108) feet = 2550, 21.3
-  // 10(120) feet = 2775, 23.5
-  // 11(132) feet = 2700, 22.8
-  // 12(144) feet = 2900, 29.5
-  // 13(156) feet = 3025, 26.8
-  // 14(168) feet = 3150, 29.0
+  private double[] flyWheelRPM = {highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,2100,2175, 2350, 2500, 2575, 2700, 2950, 3575, 4650, highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM};
+  private double[] hoodPosition= {highHood,highHood,highHood,highHood,highHood,highHood,21.2,22.1, 21.5, 23.4, 28.2, 27.4, 32.2, 37.9, 37.7,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
+  // 6(72) feet = 2100, 21.2
+  // 7(84) feet = 2175, 22.1
+  // 8(96) feet = 2350, 21.5
+  // 9(108) feet = 2500, 23.4
+  // 10(120) feet = 2575, 28.2
+  // 11(132) feet = 2700, 27.4
+  // 12(144) feet = 2950, 32.2
+  // 13(156) feet = 3575, 37.8
+  // 14(168) feet = 4650, 37.7
   // 15(180) feet =
   // 16(192) feet = 
   // 17(204) feet =

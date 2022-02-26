@@ -93,7 +93,7 @@ public class Transport {
         intakeMotor = new CANSparkMax(ControlConstants.intakeM, MotorType.kBrushless);
         intakeMotor.restoreFactoryDefaults();
         //startcompetition unhandled exception??? robot hates us??
-        intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, 0, 1);
+        intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot0P, ControlConstants.slot1P);
         intakePiston.set(Value.kReverse);
 
         intakeSubsystem = new IntakeSubsystem(intakeMotor, intakePiston);
@@ -165,14 +165,14 @@ public class Transport {
 
     private void setBabyCurrentLimits(int neoCurrentLimit, int babyNeoCurrentLimit) {
         intakeMotor.setSmartCurrentLimit(neoCurrentLimit);
-        lowerIndexMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
+        lowerIndexMotor.setSmartCurrentLimit(neoCurrentLimit);
         upperIndexerMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         turretMotor.setSmartCurrentLimit(80);
         flyWheelLeft.setSmartCurrentLimit(neoCurrentLimit);
         flyWheelRight.setSmartCurrentLimit(neoCurrentLimit);
         hoodMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         feederMotor.setSmartCurrentLimit(60);
-        lowerIndexMotor2.setSmartCurrentLimit(babyNeoCurrentLimit);
+        lowerIndexMotor2.setSmartCurrentLimit(neoCurrentLimit);
     }
 
     public void configureButtonBindings(){
@@ -212,7 +212,7 @@ public class Transport {
         shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
         intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, operator));
         
-        turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator));
+        turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator, false));
 
     }
 

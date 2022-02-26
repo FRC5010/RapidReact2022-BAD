@@ -15,7 +15,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class SpinIntake extends CommandBase {
   /** Creates a new SpinIntake. */
   private Joystick operator = null;
-  private Double power = 0.0;
+  private double power = 0.0;
   private IntakeSubsystem intakeSubsystem;
   private IndexerSubsystem indexerSubsystem;
 
@@ -30,6 +30,7 @@ public class SpinIntake extends CommandBase {
   public SpinIntake(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, Double power) {
     this.intakeSubsystem = intakeSubsystem;
     this.indexerSubsystem = indexerSubsystem;
+    this.power = power;
     addRequirements(intakeSubsystem, indexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }

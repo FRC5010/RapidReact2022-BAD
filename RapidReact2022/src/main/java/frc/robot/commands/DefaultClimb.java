@@ -5,20 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
-import frc.robot.constants.ShooterConstants.HoodConstants;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class Launcher extends CommandBase {
-  private ShooterSubsystem shooterSubsystem;
+public class DefaultClimb extends CommandBase {
+  /** Creates a new DefaultClimb. */
+  private ClimbSubsystem climbSubsystem;
+  private Joystick driver;
   private Joystick operator;
-  public Launcher(ShooterSubsystem shooterSubsystem, Joystick operator) {
-    this.shooterSubsystem = shooterSubsystem;
+  public DefaultClimb(ClimbSubsystem climbSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem,Joystick operator) {
+    this.climbSubsystem = climbSubsystem;
     this.operator = operator;
-    addRequirements(shooterSubsystem);
+    addRequirements(climbSubsystem, intakeSubsystem, shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,9 +30,8 @@ public class Launcher extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pow = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.spinHood))* HoodConstants.manualPow;
-    SmartDashboard.putNumber("HoodPow", pow);
-    shooterSubsystem.spinHood(pow);
+    climbSubsystem.setStaticHookSpeed(operator.getRawAxis(ControlConstants.intakeAxis)-operator.getRawAxis(ControlConstants.outtakeAxis));
+    climbSubsystem.rightWinch((-operator.getRawAxis(ControlConstants.spinHood)));
   }
 
   // Called once the command ends or is interrupted.

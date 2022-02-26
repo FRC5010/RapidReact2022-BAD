@@ -6,12 +6,14 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.FenderShot;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
+import frc.robot.commands.Timer;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -23,15 +25,15 @@ import frc.robot.subsystems.vision.VisionSystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoMoveAndShoot extends SequentialCommandGroup {
-  /** Creates a new AutoShootOnly. */
+public class AutoFenderToMove extends SequentialCommandGroup {
+  /** Creates a new AutoFenderToMove. */
   IntakeSubsystem intakeSubsystem; 
   IndexerSubsystem indexerSubsystem; 
   TurretSubsystem turretSubsystem;   
   VisionSystem shooterVision; 
   ShooterSubsystem shooterSubsystem; 
   UpperIndexerSubsystem upperIndexerSubsystem;
-  public AutoMoveAndShoot(Transport transport, VisionSystem shooterVision, SequentialCommandGroup drivingGroup) {
+  public AutoFenderToMove(Transport transport, VisionSystem shooterVision, SequentialCommandGroup drivingGroup) {
     intakeSubsystem = transport.getIntakeSubsystem();
     indexerSubsystem = transport.getIndexerSubsystem();
     turretSubsystem = transport.getTurretSubsystem();
@@ -45,13 +47,17 @@ public class AutoMoveAndShoot extends SequentialCommandGroup {
         new CalibrateHood(shooterSubsystem),
         new InstantCommand(() -> intakeSubsystem.deployIntake()),
         new InstantCommand(() -> turretSubsystem.zeroTurret())
+      ), 
+      new ParallelDeadlineGroup(
+        new Timer(5000),
+        new FenderShot(shooterSubsystem, upperIndexerSubsystem, true)
       ),
       new ParallelCommandGroup(
         new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0),
         new SpinTurret(turretSubsystem, shooterVision, true),
         new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision),
         drivingGroup
-    ));
-
+      )
+    );
   }
 }

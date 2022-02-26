@@ -29,13 +29,13 @@ private boolean onTarget;
 
 private RelativeEncoder turretEncoder;
 
+
 private ShuffleboardLayout turretLayout;
 
   public TurretSubsystem(CANSparkMax turretMotor, VisionSystem shooterVision) {
     this.turretMotor = turretMotor;
     this.shooterVision = shooterVision;
     this.turretEncoder = turretMotor.getEncoder(Type.kHallSensor, 42);
-
     ShuffleboardTab turretTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     turretLayout = turretTab.getLayout("Turret", BuiltInLayouts.kGrid).withPosition(Constants.turretIndex, 0).withSize(1, 5);
     turretLayout.addNumber("Turret Pos", this::getTurretPos).withSize(1, 1);
@@ -81,6 +81,15 @@ private ShuffleboardLayout turretLayout;
     return turretEncoder.getPosition();
   }
 
+  public void zeroTurret(){
+    turretEncoder.setPosition(0);
+  }
+  public boolean isAtRightLimit(){
+    return this.getTurretPos() > TurretConstants.rightLimit; 
+  }
+  public boolean isAtLeftLimit(){
+    return this.getTurretPos() < TurretConstants.leftLimit; 
+  }
   public void setOnTarget(boolean onTarget){
     this.onTarget = onTarget;
   }

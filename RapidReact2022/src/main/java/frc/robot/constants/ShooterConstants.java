@@ -30,8 +30,8 @@ public class ShooterConstants {
 
     //Defaults
     public static double defaultFlyWheelRPM = 1000;
-    public static double lowRPM = 1000;
-    public static double highRPM = 2300;
+    public static double lowRPM = 750;
+    public static double highRPM = 2050;
     public static double feederWheelPower = 0.8;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;

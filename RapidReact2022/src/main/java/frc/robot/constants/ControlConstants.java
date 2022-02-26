@@ -28,7 +28,10 @@ public class ControlConstants {
         UP, RIGHT, DOWN, LEFT 
     }
     static enum Motors{
-        NO_MOTOR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15, M16, M17;
+        NO_MOTOR, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14, M15, M16, M17, M18;
+    }
+    static enum Pneumatics{
+        S0, S1, S2, S3, S4, S5, S6;
     }
     static enum DioPorts {
         Port0, Port1, Port2, Port3, Port4, Port5, Port6, Port7, Port8, Port9;
@@ -46,8 +49,8 @@ public class ControlConstants {
         M4: Right Drive
         M5: Right Drive
         M6: Right Drive
-        M7: Index Motor
-        M8: Index Motor
+        M7: Index Motor Upper
+        M8: Index Motor Lower
         M9: Intake
         M10: Hood
         M11: Feeder Wheel
@@ -55,17 +58,18 @@ public class ControlConstants {
         M13: Right Flywheel
         M14: Turret
         M15: Index Motor
-        M16: Left Climb
-        M17: Right Climb
+        M16: Static climb hooks
+        M17: Left winch
+        M18: Right winch
     */
 
     // Motor
-    public static int leftDrive1M = Motors.M1.ordinal();
-    public static int leftDrive2M = Motors.M2.ordinal();
-    public static int leftDrive3M = Motors.M3.ordinal();
-    public static int rightDrive1M = Motors.M4.ordinal();
-    public static int rightDrive2M = Motors.M5.ordinal();
-    public static int rightDrive3M = Motors.M6.ordinal();
+    public static int rightDrive1M = Motors.M1.ordinal();
+    public static int rightDrive2M = Motors.M2.ordinal();
+    public static int rightDrive3M = Motors.M3.ordinal();
+    public static int leftDrive1M = Motors.M4.ordinal();
+    public static int leftDrive2M = Motors.M5.ordinal();
+    public static int leftDrive3M = Motors.M6.ordinal();
     public static int intakeM = Motors.M9.ordinal();
     public static int lowerIndexM = Motors.M8.ordinal();
     public static int upperIndexM = Motors.M7.ordinal();
@@ -75,8 +79,25 @@ public class ControlConstants {
     public static int rightFlyWheelM = Motors.M13.ordinal();
     public static int turretM = Motors.M14.ordinal();
     public static int lowerIndex2M = Motors.M15.ordinal();
-    public static int leftClimbM = Motors.M16.ordinal();
-    public static int RightClimbM = Motors.M16.ordinal();
+    public static int StaticHooksM = Motors.M16.ordinal();
+    public static int LeftWinchM = Motors.M16.ordinal();
+    public static int RightWinchM = Motors.M17.ordinal();
+
+    /*
+        Intake Double Solonoid
+            Slots 0 and 1
+
+        Climb Double Solonoid
+            Slots 2 and 3
+    
+    */
+
+
+    // Pneumatics
+    public static int slot0P = Pneumatics.S0.ordinal();
+    public static int slot1P = Pneumatics.S1.ordinal();
+    public static int slot2P = Pneumatics.S2.ordinal();
+    public static int slot3P = Pneumatics.S3.ordinal();
 
     // Driver
     public static int driverJoystick = 0;
@@ -86,9 +107,8 @@ public class ControlConstants {
     //public static int winch1Axis = AxisNums.L_TRIGGER.ordinal();
     //public static int winch2Axis = AxisNums.R_TRIGGER.ordinal();
 
-    public static int manualShootButton = ButtonNums.A_BUTTON.ordinal();
-    public static int shooterAimButton = ButtonNums.B_BUTTON.ordinal();
-    public static int tarmatShoot = ButtonNums.RIGHT_BUMPER.ordinal();
+    public static int aButton = ButtonNums.A_BUTTON.ordinal();
+    public static int bButton = ButtonNums.B_BUTTON.ordinal();
     //public static int rotationControl = ButtonNums.X_BUTTON.ordinal();
     //public static int positionControl = ButtonNums.Y_BUTTON.ordinal();
     public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal();
@@ -97,7 +117,7 @@ public class ControlConstants {
 
     //public static int startClimb = ButtonNums.BACK_BUTTON.ordinal();
     //public static int toggleDrive = ButtonNums.LEFT_STICK_BUTT.ordinal();
-    public static int toggleLed = ButtonNums.RIGHT_STICK_BUTT.ordinal();
+    //public static int toggleLed = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     
     
 
@@ -109,8 +129,8 @@ public class ControlConstants {
     //Operator
     public static int operatorJoystick = 1;
     public static int operatorLeftY = AxisNums.LEFT_Y.ordinal(); // Implement
-    public static int operatorRightY = AxisNums.RIGHT_Y.ordinal(); // Implement
-    public static int operatorRightX = AxisNums.RIGHT_X.ordinal();
+    public static int spinHood = AxisNums.RIGHT_Y.ordinal(); // Implement
+    public static int turnTurret = AxisNums.RIGHT_X.ordinal();
     public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
     public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
@@ -125,7 +145,7 @@ public class ControlConstants {
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 
     public static int defaultShoot = ButtonNums.START_BUTTON.ordinal();
-    public static int selCamera2 = ButtonNums.BACK_BUTTON.ordinal();
+    //public static int selCamera2 = ButtonNums.BACK_BUTTON.ordinal();
 
     public static int incShooter = POVDirs.UP.ordinal() * 90;
     public static int decShooter = POVDirs.DOWN.ordinal() * 90;

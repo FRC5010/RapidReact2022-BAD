@@ -31,6 +31,8 @@ public class ComboDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+
     double throttle = DriveTrainMain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle));
     double steer = DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer));
     SmartDashboard.putNumber("Throttle", throttle);

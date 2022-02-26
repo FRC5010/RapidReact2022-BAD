@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -16,12 +15,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
-import frc.robot.commands.PistonRetract;
-import frc.robot.commands.PistonDeploy;
 import frc.robot.commands.SetPipeline;
+import frc.robot.commands.auto.AutoFenderToMove;
 import frc.robot.commands.auto.AutoMoveAndShoot;
 import frc.robot.commands.auto.GalacticSearch;
 import frc.robot.commands.auto.HubToBall2;
@@ -33,11 +30,7 @@ import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.Pose;
 import frc.robot.subsystems.vision.VisionLimeLight;
-import frc.robot.subsystems.vision.VisionLimeLightH;
-import frc.robot.subsystems.vision.VisionSystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -84,7 +77,7 @@ public class RobotContainer {
     command.addOption("ManyBall", new ManyBallAuto());*/
     command.addOption("LowerCargoToHub", new AutoMoveAndShoot(transport, shooterVision, new LowerCargoToHub()));
     command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision, new HubToBall2()));
-    command.addOption("HubBall3", new AutoMoveAndShoot(transport, shooterVision, new HubToBall3()));
+    command.addOption("HubBall3", new AutoFenderToMove(transport, shooterVision, new HubToBall3()));
     command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision, new ManyBallAuto()));
     command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 

@@ -10,8 +10,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DefaultClimb;
+import frc.robot.commands.DefaultShoot;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /** Add your docs here. */
 public class Climb {
@@ -23,7 +28,12 @@ public class Climb {
 
     private Joystick driver;
     private Joystick operator;
-    private ClimbSubsystem ClimbSubsystem;
+    private ClimbSubsystem climbSubsystem;
+
+    private ShooterSubsystem shooterSubsystem;
+
+    private JoystickButton climbTime;
+    private JoystickButton climbToggle;
 
 
     public Climb(Joystick driver, Joystick operator){
@@ -49,10 +59,11 @@ public class Climb {
 
 
         // make ClimbSubsystem
-        ClimbSubsystem = new ClimbSubsystem(leftWinch, rightWinch, staticHooks, climbSolenoid);
+        climbSubsystem = new ClimbSubsystem(leftWinch, rightWinch, staticHooks, climbSolenoid);
 
         setBabyCurrentLimits(ControlConstants.neoCurrentLimit, ControlConstants.babyNeoCurrentLimit);
         configureButtonBindings();
+
     }
 
     private void setBabyCurrentLimits(int neoCurrentLimit, int babyNeoCurrentLimit){
@@ -62,6 +73,12 @@ public class Climb {
     }
 
     private void configureButtonBindings(){
+        climbTime = new JoystickButton(operator, ControlConstants.climbTime);
+        climbTime.whileHeld(new DefaultClimb(climbSubsystem, driver), true);
+        climbToggle = new JoystickButton(driver, ControlConstants.toggleClimb);
+        climbToggle.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem, shooterSubsystem));
+
+        
 
 
     }

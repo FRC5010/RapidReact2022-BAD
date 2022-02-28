@@ -29,26 +29,27 @@ public class ClimbSubsystem extends SubsystemBase {
   }
 
   public void setStaticHookSpeed(double speed) {
-
     staticHooks.set(speed);
   } 
   
-  public void leftWinch(double speed) {
-
+  public void setLeftWinchSpeed(double speed) {
     leftWinch.set(speed);
   }
-  public void rightWinch(double speed) {
-
+  public void setRightWinchSpeed(double speed) {
     rightWinch.set(speed);
   }
-
- public void armUp(){
-
+//should be called extendo arms
+//by Truman
+//this is my contribution to the programming team
+ public void setClimbArmsVertical(){
   climbSolenoid.set(DoubleSolenoid.Value.kForward);
  }
   
- public void armDown(){
-
+ public void setClimbArmsDiagonal(){
   climbSolenoid.set(DoubleSolenoid.Value.kReverse);
+ }
+
+ public void toggleClimbArm() {
+  climbSolenoid.toggle();
  }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.ResourceBundle.Control;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
 import frc.robot.commands.SetPipeline;
@@ -52,7 +55,9 @@ public class RobotContainer {
   private LedSubsystem ledSubsystem;
 
 
-  private Drive drive; 
+  private Drive drive;
+
+  private JoystickButton toggleLL; 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -113,7 +118,8 @@ public class RobotContainer {
     SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
     
-    
+    toggleLL = new JoystickButton(operator, ControlConstants.toggleLL);
+    toggleLL.whenPressed(new InstantCommand(()-> shooterVision.toggleLight(), shooterVision));
     
 
   }

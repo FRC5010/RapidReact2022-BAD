@@ -70,4 +70,9 @@ public class VisionLimeLight extends VisionSystem {
   public boolean isLightOn() {
     return 1 != table.getTable(name).getEntry("ledMode").getNumber(0).intValue();
   }
+
+  public void toggleLight() {
+    Number lightVal = table.getTable(name).getEntry("ledMode").getNumber(3);
+    table.getTable(name).getEntry("ledMode").setNumber(lightVal.intValue() == 3 ? 1 : 3);
+  }
 }

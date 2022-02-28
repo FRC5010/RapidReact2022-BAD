@@ -44,10 +44,10 @@ public class ControlConstants {
     /*
     Motors
         M1: Left Drive
-        M2: Left Drive
+        M2: Left Drive (GONE as of 02/28 for weight)
         M3: Left Drive
         M4: Right Drive
-        M5: Right Drive
+        M5: Right Drive (GONE as of 02/28 for weight)
         M6: Right Drive
         M7: Index Motor Upper
         M8: Index Motor Lower
@@ -65,10 +65,10 @@ public class ControlConstants {
 
     // Motor
     public static int rightDrive1M = Motors.M1.ordinal();
-    public static int rightDrive2M = Motors.M2.ordinal();
+    //public static int rightDrive2M = Motors.M2.ordinal();
     public static int rightDrive3M = Motors.M3.ordinal();
     public static int leftDrive1M = Motors.M4.ordinal();
-    public static int leftDrive2M = Motors.M5.ordinal();
+    //public static int leftDrive2M = Motors.M5.ordinal();
     public static int leftDrive3M = Motors.M6.ordinal();
     public static int intakeM = Motors.M9.ordinal();
     public static int lowerIndexM = Motors.M8.ordinal();
@@ -104,18 +104,18 @@ public class ControlConstants {
     public static int throttle = AxisNums.LEFT_Y.ordinal();
     public static int steer = AxisNums.RIGHT_X.ordinal();
     public static int steerY = AxisNums.RIGHT_Y.ordinal();
-    //public static int winch1Axis = AxisNums.L_TRIGGER.ordinal();
-    //public static int winch2Axis = AxisNums.R_TRIGGER.ordinal();
+    public static int staticHookDown = AxisNums.L_TRIGGER.ordinal();
+    public static int staticHookUp = AxisNums.R_TRIGGER.ordinal();
 
-    public static int aButton = ButtonNums.A_BUTTON.ordinal();
-    public static int bButton = ButtonNums.B_BUTTON.ordinal();
-    //public static int rotationControl = ButtonNums.X_BUTTON.ordinal();
-    //public static int positionControl = ButtonNums.Y_BUTTON.ordinal();
+    public static int rightClimbArmDown = ButtonNums.A_BUTTON.ordinal();
+    public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
+    public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
+    public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();
     public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal();
     public static int toggleIntake = ButtonNums.RIGHT_BUMPER.ordinal();
     public static int calibrate = ButtonNums.START_BUTTON.ordinal(); 
 
-    //public static int startClimb = ButtonNums.BACK_BUTTON.ordinal();
+    public static int toggleClimb = ButtonNums.BACK_BUTTON.ordinal();
     //public static int toggleDrive = ButtonNums.LEFT_STICK_BUTT.ordinal();
     //public static int toggleLed = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     
@@ -141,11 +141,11 @@ public class ControlConstants {
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
     //public static int startFlywheel = ButtonNums.LEFT_STICK_BUTT.ordinal();
-    //public static int stopFlywheel = ButtonNums.RIGHT_STICK_BUTT.ordinal();
+    public static int toggleLL = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 
     public static int defaultShoot = ButtonNums.START_BUTTON.ordinal();
-    //public static int selCamera2 = ButtonNums.BACK_BUTTON.ordinal();
+    public static int climbTime = ButtonNums.BACK_BUTTON.ordinal();
 
     public static int incShooter = POVDirs.UP.ordinal() * 90;
     public static int decShooter = POVDirs.DOWN.ordinal() * 90;

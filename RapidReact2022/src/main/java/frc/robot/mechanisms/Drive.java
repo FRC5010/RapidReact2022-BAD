@@ -45,11 +45,11 @@ public class Drive {
 
   public static Joystick driver;
   public static CANSparkMax lDrive1;
-  public static CANSparkMax lDrive2;
+  //public static CANSparkMax lDrive2;
   public static CANSparkMax lDrive3;
 
   public static CANSparkMax rDrive1;
-  public static CANSparkMax rDrive2;
+  //public static CANSparkMax rDrive2;
   public static CANSparkMax rDrive3;
 
   public static RelativeEncoder lEncoder;
@@ -97,10 +97,10 @@ public class Drive {
   public static void setCurrentLimits(int currentLimit) {
     if (RobotBase.isReal()) {
       lDrive1.setSmartCurrentLimit(currentLimit);
-      lDrive2.setSmartCurrentLimit(currentLimit);
+      //lDrive2.setSmartCurrentLimit(currentLimit);
       lDrive3.setSmartCurrentLimit(currentLimit);
       rDrive1.setSmartCurrentLimit(currentLimit);
-      rDrive2.setSmartCurrentLimit(currentLimit);
+      //rDrive2.setSmartCurrentLimit(currentLimit);
       rDrive3.setSmartCurrentLimit(currentLimit);
     }
   }
@@ -109,27 +109,27 @@ public class Drive {
     this.driver = driver;
     // Neos HAVE to be in brushless
     lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
-    lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);
+    //lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);
     lDrive3 = new CANSparkMax(ControlConstants.leftDrive3M, MotorType.kBrushless);
 
     rDrive1 = new CANSparkMax(ControlConstants.rightDrive1M, MotorType.kBrushless);
-    rDrive2 = new CANSparkMax(ControlConstants.rightDrive2M, MotorType.kBrushless);
+    //rDrive2 = new CANSparkMax(ControlConstants.rightDrive2M, MotorType.kBrushless);
     rDrive3 = new CANSparkMax(ControlConstants.rightDrive3M, MotorType.kBrushless);
 
     lDrive1.restoreFactoryDefaults();
-    lDrive2.restoreFactoryDefaults();
+    //lDrive2.restoreFactoryDefaults();
     lDrive3.restoreFactoryDefaults();
     rDrive1.restoreFactoryDefaults();
-    rDrive2.restoreFactoryDefaults();
+    //rDrive2.restoreFactoryDefaults();
     rDrive3.restoreFactoryDefaults();
 
     lDrive1.setInverted(false);
-    lDrive2.follow(lDrive1, false);
+    //lDrive2.follow(lDrive1, false);
     lDrive3.follow(lDrive1, false);
 
     rDrive1.setInverted(true);
-    rDrive2.follow(rDrive1, false);
-    rDrive2.setInverted(false);
+    //rDrive2.follow(rDrive1, false);
+    //rDrive2.setInverted(false);
     rDrive3.follow(rDrive1, false);
     rDrive3.setInverted(false);
 

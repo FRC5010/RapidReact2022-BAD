@@ -29,6 +29,7 @@ import frc.robot.commands.auto.HubToBall3;
 import frc.robot.commands.auto.LowerCargoToHub;
 import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
+import frc.robot.mechanisms.Climb;
 import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
@@ -50,6 +51,7 @@ public class RobotContainer {
 
   private VisionLimeLight shooterVision;
   private Transport transport;
+  private Climb climb;
 
   private CameraSubsystem cameraSubsystem;
   private LedSubsystem ledSubsystem;
@@ -70,6 +72,7 @@ public class RobotContainer {
 
     drive = new Drive(driver,shooterVision);
     transport = new Transport(operator, driver, shooterVision);
+    climb = new Climb(driver, operator);
 
     
     //cameraSubsystem = new CameraSubsystem(operator);
@@ -127,6 +130,8 @@ public class RobotContainer {
 public void setUpDeftCom(){
 if (!DriverStation.isTest()){
   drive.setUpDeftCom();
+  transport.setUpDeftCom();
+}else{
   transport.setUpDeftCom();
 }
 }

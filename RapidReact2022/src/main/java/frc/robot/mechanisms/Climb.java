@@ -5,6 +5,7 @@
 package frc.robot.mechanisms;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -24,13 +25,15 @@ public class Climb {
     private CANSparkMax rightWinch;
     private CANSparkMax staticHooks;
 
+    private RelativeEncoder leftEncoder;
+    private RelativeEncoder rightEncoder;
+    private RelativeEncoder staticEncoder;
+
     private DoubleSolenoid climbSolenoid;
 
     private Joystick driver;
     private Joystick operator;
     private ClimbSubsystem climbSubsystem;
-
-    private ShooterSubsystem shooterSubsystem;
 
     private JoystickButton climbTime;
     private JoystickButton climbToggle;
@@ -41,21 +44,28 @@ public class Climb {
         this.operator = operator;
 
         // defined motors
-        leftWinch = new CANSparkMax(ControlConstants.LeftWinchM,MotorType.kBrushless);
-        rightWinch = new CANSparkMax(ControlConstants.RightWinchM,MotorType.kBrushless);
-        staticHooks = new CANSparkMax(ControlConstants.StaticHooksM,MotorType.kBrushless);
+        leftWinch = new CANSparkMax(ControlConstants.leftWinchM,MotorType.kBrushless);
+        rightWinch = new CANSparkMax(ControlConstants.rightWinchM,MotorType.kBrushless);
+        staticHooks = new CANSparkMax(ControlConstants.staticHooksM,MotorType.kBrushless);
+
+        
+
+
 
         leftWinch.restoreFactoryDefaults();
         rightWinch.restoreFactoryDefaults();
         staticHooks.restoreFactoryDefaults();
 
-        // positive pow is up
+        // positive pow is counter-clockwise left side
         leftWinch.setInverted(false);
-        rightWinch.setInverted(false);
+        // positive pow is clockwise right side
+        rightWinch.setInverted(true);
+        // positive pow is clockwise right side
         staticHooks.setInverted(false);
 
         // define solonoid
         climbSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot2P, ControlConstants.slot3P);
+        climbSolenoid.set(DoubleSolenoid.Value.kReverse);
 
 
         // make ClimbSubsystem
@@ -75,11 +85,8 @@ public class Climb {
     private void configureButtonBindings(){
         climbTime = new JoystickButton(operator, ControlConstants.climbTime);
         climbTime.whileHeld(new DefaultClimb(climbSubsystem, driver), true);
-        climbToggle = new JoystickButton(driver, ControlConstants.toggleClimb);
-        climbToggle.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem, shooterSubsystem));
-
         
-
-
+        climbToggle = new JoystickButton(driver, ControlConstants.toggleClimb);
+        climbToggle.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));
     }
 }

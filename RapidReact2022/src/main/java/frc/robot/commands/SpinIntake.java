@@ -51,7 +51,7 @@ public class SpinIntake extends CommandBase {
     }
     
     // modifies intake power cubing it and then using a multiplier
-    double modPow = intakePow * 0.5;
+    double modPow = intakePow * 1.0;
 
     intakeSubsystem.setIntakePow(modPow);
     

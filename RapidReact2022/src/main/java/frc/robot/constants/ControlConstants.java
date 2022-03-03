@@ -79,9 +79,9 @@ public class ControlConstants {
     public static int rightFlyWheelM = Motors.M13.ordinal();
     public static int turretM = Motors.M14.ordinal();
     public static int lowerIndex2M = Motors.M15.ordinal();
-    public static int StaticHooksM = Motors.M16.ordinal();
-    public static int LeftWinchM = Motors.M16.ordinal();
-    public static int RightWinchM = Motors.M17.ordinal();
+    public static int staticHooksM = Motors.M16.ordinal();
+    public static int leftWinchM = Motors.M18.ordinal();
+    public static int rightWinchM = Motors.M17.ordinal();
 
     /*
         Intake Double Solonoid
@@ -111,7 +111,9 @@ public class ControlConstants {
     public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
     public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
     public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();
-    public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal();
+    public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal(); // unused
+    public static int driveYEET = ButtonNums.LEFT_BUMPER.ordinal();
+    
     public static int toggleIntake = ButtonNums.RIGHT_BUMPER.ordinal();
     public static int calibrate = ButtonNums.START_BUTTON.ordinal(); 
 
@@ -155,6 +157,7 @@ public class ControlConstants {
     // Shuffleboard constants
     public static String SBTabDriverDisplay = "Driver Display";
     public static String SBTabVisionDisplay = "Vision Display";
+    public static String SBTabClimbDisplay = "Climb Display";
     public static String SBTabDiagnostics = "Diagnostics";
     public static int shooterColumn = 0;
     public static int hoodColumn = 2;

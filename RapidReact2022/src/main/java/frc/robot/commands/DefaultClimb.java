@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 
@@ -33,19 +34,22 @@ public class DefaultClimb extends CommandBase {
   //x and a go down
   @Override
   public void execute() {
+    // static arms up and down
     climbSubsystem.setStaticHookSpeed(driver.getRawAxis(ControlConstants.staticHookUp)-driver.getRawAxis(ControlConstants.staticHookDown));
-    
+    // right arm climb
     if(driver.getRawButton(ControlConstants.rightClimbArmUp)){
-      climbSubsystem.setRightWinchSpeed(1);
+      climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedUp);
     }else if(driver.getRawButton(ControlConstants.rightClimbArmDown)){
-      climbSubsystem.setRightWinchSpeed(-1);
+      climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedDown);
     }else{
       climbSubsystem.setRightWinchSpeed(0);
     }
+
+    // left arm climb
     if(driver.getRawButton(ControlConstants.leftClimbArmUp)){
-      climbSubsystem.setLeftWinchSpeed(1);
+      climbSubsystem.setLeftWinchSpeed(ClimbConstants.climbSpeedUp);
     }else if(driver.getRawButton(ControlConstants.leftClimbArmDown)){
-      climbSubsystem.setLeftWinchSpeed(-1);
+      climbSubsystem.setLeftWinchSpeed(ClimbConstants.climbSpeedDown);
     }else{
       climbSubsystem.setLeftWinchSpeed(0);
     }

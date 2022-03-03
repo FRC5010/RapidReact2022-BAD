@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
+import frc.robot.commands.DriveTrainYEET;
 import frc.robot.commands.FenderShot;
 import frc.robot.commands.Launcher;
 import frc.robot.commands.MoveHood;
@@ -79,8 +80,9 @@ public class Transport {
     private JoystickButton indexerDown;
     private POVButton incFlyWheel;
     private POVButton decFlyWheel;
-    private Button fenderShot;
+    private JoystickButton fenderShot;
     private JoystickButton defaultShoot;
+    private JoystickButton driveYEET;
      
     
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
@@ -206,7 +208,12 @@ public class Transport {
         indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -0.8), false);
 
         fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
-        fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, driver), false);
+        fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, true), false);
+
+        driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
+        driveYEET.whileHeld(new DriveTrainYEET());
+
+
     }
     public void setUpDeftCom(){
         shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));

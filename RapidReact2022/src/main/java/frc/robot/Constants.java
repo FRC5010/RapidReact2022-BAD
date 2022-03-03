@@ -13,7 +13,11 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // driver Tab
     public static int shooterIndex = 2;
     public static int turretIndex = 1;
     public static int indexerIndex = 0;
+
+    // climbTab
+    public static int climbIndex = 0;
 }

@@ -5,19 +5,23 @@
 package frc.robot.mechanisms;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.DefaultClimb;
-import frc.robot.commands.DefaultShoot;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 
 /** Add your docs here. */
 public class Climb {
@@ -37,7 +41,7 @@ public class Climb {
 
     private JoystickButton climbTime;
     private JoystickButton climbToggle;
-
+    private ShuffleboardLayout climbEncoderLayout;
 
     public Climb(Joystick driver, Joystick operator){
         this.driver = driver;
@@ -47,9 +51,6 @@ public class Climb {
         leftWinch = new CANSparkMax(ControlConstants.leftWinchM,MotorType.kBrushless);
         rightWinch = new CANSparkMax(ControlConstants.rightWinchM,MotorType.kBrushless);
         staticHooks = new CANSparkMax(ControlConstants.staticHooksM,MotorType.kBrushless);
-
-        
-
 
 
         leftWinch.restoreFactoryDefaults();
@@ -71,6 +72,19 @@ public class Climb {
         // make ClimbSubsystem
         climbSubsystem = new ClimbSubsystem(leftWinch, rightWinch, staticHooks, climbSolenoid);
 
+        // smartdashboard tab
+        int colIndex = 0;
+        ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabClimbDisplay);
+        climbEncoderLayout = driverTab.getLayout("Climb Encoders", BuiltInLayouts.kGrid).withPosition(colIndex, 0).withSize(3, 5);
+
+        climbEncoderLayout.addBoolean("Is Climb Arms Horizontal", climbSubsystem::isClimbArmHorizontal);
+        climbEncoderLayout.addNumber("Left Encoder Value", climbSubsystem::getLeftEncoderValue);
+        climbEncoderLayout.addNumber("Right Encoder Value", climbSubsystem::getRightEncoderValue);
+        climbEncoderLayout.addNumber("Static Encoder Value", climbSubsystem::getStaticEncoderValue);
+        climbEncoderLayout.add("Calibrate Arms Down", new CalibrateDynamicArms(climbSubsystem));
+
+        SmartDashboard.putData("Calibrate Dynamic Arms", new CalibrateDynamicArms(climbSubsystem));
+
         setBabyCurrentLimits(ControlConstants.neoCurrentLimit, ControlConstants.babyNeoCurrentLimit);
         configureButtonBindings();
 
@@ -88,5 +102,7 @@ public class Climb {
         
         climbToggle = new JoystickButton(driver, ControlConstants.toggleClimb);
         climbToggle.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));
+    
+        SmartDashboard.putData("Calibrate Dynamic Arms", new CalibrateDynamicArms(climbSubsystem));
     }
 }

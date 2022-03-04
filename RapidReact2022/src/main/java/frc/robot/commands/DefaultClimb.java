@@ -37,8 +37,10 @@ public class DefaultClimb extends CommandBase {
     // static arms up and down
     climbSubsystem.setStaticHookSpeed(driver.getRawAxis(ControlConstants.staticHookUp)-driver.getRawAxis(ControlConstants.staticHookDown));
     // right arm climb
-    if(driver.getRawButton(ControlConstants.rightClimbArmUp)){
-      climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedUp);
+
+    if(driver.getRawButton(ControlConstants.rightClimbArmUp) && 
+    climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax){
+        climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedUp);
     }else if(driver.getRawButton(ControlConstants.rightClimbArmDown)){
       climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedDown);
     }else{
@@ -46,7 +48,8 @@ public class DefaultClimb extends CommandBase {
     }
 
     // left arm climb
-    if(driver.getRawButton(ControlConstants.leftClimbArmUp)){
+    if(driver.getRawButton(ControlConstants.leftClimbArmUp) &&
+    climbSubsystem.getLeftEncoderValue() < ClimbConstants.climbBothMax){
       climbSubsystem.setLeftWinchSpeed(ClimbConstants.climbSpeedUp);
     }else if(driver.getRawButton(ControlConstants.leftClimbArmDown)){
       climbSubsystem.setLeftWinchSpeed(ClimbConstants.climbSpeedDown);

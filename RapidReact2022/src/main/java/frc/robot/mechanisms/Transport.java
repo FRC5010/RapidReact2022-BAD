@@ -29,8 +29,6 @@ import frc.robot.commands.DriveTrainYEET;
 import frc.robot.commands.FenderShot;
 import frc.robot.commands.Launcher;
 import frc.robot.commands.MoveHood;
-import frc.robot.commands.PistonDeploy;
-import frc.robot.commands.PistonRetract;
 import frc.robot.commands.RunIndexer;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
@@ -155,10 +153,6 @@ public class Transport {
         flyWheelLeft.follow(flyWheelRight, true);
         flyWheelRight.setOpenLoopRampRate(0.5);
         shooterSubsystem = new ShooterSubsystem(flyWheelRight, hoodMotor, feederMotor, shooterVision);
-        
-
-        SmartDashboard.putData("Piston Retract", new PistonRetract(intakeSubsystem));
-        SmartDashboard.putData("Piston Deploy", new PistonDeploy(intakeSubsystem));
     
         togglePiston.whenPressed(new InstantCommand(() -> intakeSubsystem.togglePiston(), intakeSubsystem));
         setBabyCurrentLimits(ControlConstants.neoCurrentLimit, ControlConstants.babyNeoCurrentLimit);

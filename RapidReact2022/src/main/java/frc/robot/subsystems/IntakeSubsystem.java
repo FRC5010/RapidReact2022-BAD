@@ -33,6 +33,10 @@ public class IntakeSubsystem extends SubsystemBase {
     intakePiston.set(DoubleSolenoid.Value.kForward);
   }
 
+  public boolean isIntakeDeployed(){
+    return intakePiston.get().equals(DoubleSolenoid.Value.kForward);
+  }
+
   public void setIntakePow(double pow){
     intakeMotor.set(pow);
   }

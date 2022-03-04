@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ControlConstants;
 
@@ -37,17 +38,9 @@ public class ClimbSubsystem extends SubsystemBase {
   this.leftEncoder = leftWinch.getEncoder(Type.kHallSensor, 42);
   this.rightEncoder = rightWinch.getEncoder(Type.kHallSensor, 42);
   this.staticEncoder = staticHooks.getEncoder(Type.kHallSensor, 42);
-
-
-  int colIndex = 0;
-  ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabClimbDisplay);
-  climbEncoderLayout = driverTab.getLayout("Climb Encoders", BuiltInLayouts.kGrid).withPosition(colIndex, 0).withSize(3, 5);
-
-  climbEncoderLayout.addBoolean("Is Climb Arms Horizontal", this::isClimbArmHorizontal);
-  climbEncoderLayout.addNumber("Left Encoder Value", this::getLeftEncoderValue);
-  climbEncoderLayout.addNumber("Right Encoder Value", this::getRightEncoderValue);
-  climbEncoderLayout.addNumber("Static Encoder Value", this::getStaticEncoderValue);
-  
+  leftEncoder.setPosition(0);
+  rightEncoder.setPosition(0);
+  staticEncoder.setPosition(0);
   }
 
   @Override
@@ -83,7 +76,7 @@ public class ClimbSubsystem extends SubsystemBase {
  }
 
  public boolean isClimbArmHorizontal(){
-   return climbSolenoid.get().equals(DoubleSolenoid.Value.kForward) ? true : false;
+   return climbSolenoid.get().equals(DoubleSolenoid.Value.kForward);
  }
 
  public double getLeftEncoderValue(){

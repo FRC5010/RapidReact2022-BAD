@@ -44,10 +44,14 @@ public class SpinIntake extends CommandBase {
   public void execute() {
     // gets intake pow from each analog trigger
     double intakePow;
-    if (null != operator) { 
-      intakePow = operator.getRawAxis(ControlConstants.intakeAxis) - operator.getRawAxis(ControlConstants.outtakeAxis);
-    } else {
-      intakePow = power;
+    if(intakeSubsystem.isIntakeDeployed()){
+      if (null != operator) { 
+        intakePow = operator.getRawAxis(ControlConstants.intakeAxis) - operator.getRawAxis(ControlConstants.outtakeAxis);
+      } else {
+        intakePow = power;
+      }
+    }else{
+      intakePow = 0;
     }
     
     // modifies intake power cubing it and then using a multiplier

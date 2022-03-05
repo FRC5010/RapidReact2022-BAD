@@ -35,6 +35,7 @@ public class ShooterConstants {
     public static double feederWheelPower = 0.8;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
+    public static double shotAdjustment = 0;
 
     public static class HoodConstants{
         public static double kPC = 2.3541;
@@ -67,12 +68,12 @@ public class ShooterConstants {
         public static double limitPow = 0.75;
 
         public static double kPVision = 0.007;
-        public static double kDVision = 0.9;
+        public static double kDVision = 1.05;
 
         public static double kPEncoder = 0.02;
 
-        public static double leftLimit = -5;
-        public static double rightLimit = 5;
+        public static double leftLimit = -12;
+        public static double rightLimit = 8;
     }
 }
 

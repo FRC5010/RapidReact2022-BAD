@@ -95,7 +95,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setFlyWheelPoint(double setPoint){
-    flyWheelSetPoint = setPoint;
+    flyWheelSetPoint = setPoint + ShooterConstants.shotAdjustment;
   }
 
   // getters to check if hood or flywheel are in range

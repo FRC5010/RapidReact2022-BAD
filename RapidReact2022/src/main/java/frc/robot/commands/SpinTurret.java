@@ -25,7 +25,7 @@ public class SpinTurret extends CommandBase {
     this.turretSubsystem = turretSubsystem;
     this.shooterSystem = shooterSystem;
     this.operator = operator;
-    this.isSeek = false; 
+    this.isSeek = isSeek; 
     addRequirements(turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -33,7 +33,7 @@ public class SpinTurret extends CommandBase {
   public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem, boolean isSeek) {
     this.turretSubsystem = turretSubsystem;
     this.shooterSystem = shooterSystem;
-    this.isSeek = true; 
+    this.isSeek = isSeek; 
     addRequirements(turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -63,7 +63,7 @@ public class SpinTurret extends CommandBase {
         lastTime = System.currentTimeMillis();
       }else{
         if (isSeek){
-          pow = 0.1; 
+          pow = 0.13; 
           turretSubsystem.turnTurret(pow * seekDirection);
           if (turretSubsystem.isAtRightLimit()){
             seekDirection = -1;

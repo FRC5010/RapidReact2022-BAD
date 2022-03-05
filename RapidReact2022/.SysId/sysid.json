@@ -8,7 +8,7 @@
     },
     "AnalyzerJSONLocation": "",
     "NetworkTables Settings": {
-      "serverTeam": "10.50.10.2"
+      "serverTeam": "5010"
     },
     "Program Log": {
       "window": {
@@ -16,6 +16,6 @@
       }
     },
     "mode": "Client",
-    "serverTeam": "10.50.10.2"
+    "serverTeam": "5010"
   }
 }

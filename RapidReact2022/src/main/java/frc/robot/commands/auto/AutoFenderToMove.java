@@ -50,7 +50,7 @@ public class AutoFenderToMove extends SequentialCommandGroup {
       ), 
       new ParallelDeadlineGroup(
         new Timer(5000),
-        new FenderShot(shooterSubsystem, upperIndexerSubsystem, true)
+        new FenderShot(shooterSubsystem, upperIndexerSubsystem, false)
       ),
       new ParallelCommandGroup(
         new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0),

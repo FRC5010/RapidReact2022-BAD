@@ -104,8 +104,8 @@ public class ControlConstants {
     public static int throttle = AxisNums.LEFT_Y.ordinal();
     public static int steer = AxisNums.RIGHT_X.ordinal();
     public static int steerY = AxisNums.RIGHT_Y.ordinal();
-    public static int staticHookDown = AxisNums.L_TRIGGER.ordinal();
-    public static int staticHookUp = AxisNums.R_TRIGGER.ordinal();
+    public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal();
+    public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
     public static int rightClimbArmDown = ButtonNums.A_BUTTON.ordinal();
     public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
@@ -114,7 +114,9 @@ public class ControlConstants {
     public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal(); // unused
     public static int driveYEET = ButtonNums.LEFT_BUMPER.ordinal();
     
-    public static int toggleIntake = ButtonNums.RIGHT_BUMPER.ordinal();
+    //public static int toggleIntake = ButtonNums.RIGHT_BUMPER.ordinal();
+    //automatically raises and lowers intake whenever we intake or outtake
+
     public static int calibrate = ButtonNums.START_BUTTON.ordinal(); 
 
     public static int toggleClimb = ButtonNums.BACK_BUTTON.ordinal();
@@ -133,8 +135,8 @@ public class ControlConstants {
     public static int operatorLeftY = AxisNums.LEFT_Y.ordinal(); // Implement
     public static int spinHood = AxisNums.RIGHT_Y.ordinal(); // Implement
     public static int turnTurret = AxisNums.RIGHT_X.ordinal();
-    public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
-    public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
+    //public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
+    //public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
     public static int indexerDown = ButtonNums.A_BUTTON.ordinal();
     public static int hoodDown = ButtonNums.B_BUTTON.ordinal(); 
@@ -142,6 +144,7 @@ public class ControlConstants {
     public static int hoodUp = ButtonNums.Y_BUTTON.ordinal(); 
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
+    public static int fenderButton2 = ButtonNums.LEFT_STICK_BUTT.ordinal();
     //public static int startFlywheel = ButtonNums.LEFT_STICK_BUTT.ordinal();
     public static int toggleLL = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
@@ -172,6 +175,7 @@ public class ControlConstants {
     public static int driveTrainCurrentLimit = 38;
     public static int babyNeoCurrentLimit = 20;
     public static int neoCurrentLimit = 38;
+    
     
     public static boolean setupSingleDriver(Joystick operator){
         if(operator.getType() == HIDType.kUnknown){

@@ -6,12 +6,15 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.FenderShot;
+import frc.robot.commands.RunIndexer;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
+import frc.robot.commands.Timer;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -46,12 +49,22 @@ public class AutoMoveAndShoot extends SequentialCommandGroup {
         new InstantCommand(() -> intakeSubsystem.deployIntake()),
         new InstantCommand(() -> turretSubsystem.zeroTurret())
       ),
+      new ParallelDeadlineGroup(
+        drivingGroup,
+        new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0)
+        
+      ),
+      new ParallelDeadlineGroup(
+        new Timer(450),
+        new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -.5)
+      ),
       new ParallelCommandGroup(
-        new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0),
-        new SpinTurret(turretSubsystem, shooterVision, true),
-        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision),
-        drivingGroup
-    ));
+        new SpinTurret(turretSubsystem, shooterVision, false),
+        new SequentialCommandGroup(new Timer(2000),new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0)),
+        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision)
+      )
+    
+    );
 
   }
 }

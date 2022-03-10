@@ -31,11 +31,33 @@ public class ShooterConstants {
     //Defaults
     public static double defaultFlyWheelRPM = 1000;
     public static double lowRPM = 750;
-    public static double highRPM = 2050;
+    public static double highRPM = 2025;
     public static double feederWheelPower = 0.8;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
     public static double shotAdjustment = 0;
+
+    public static class FeederConstants{
+        public static double feederWheelPower = 1;
+        // pid values
+        public static double kPC = 0;
+        public static double kIC = 0;
+        public static double kDC = 0;
+
+        public static double kP = kPC / 60 / 10;
+        public static double kI = kIC / 60;
+        public static double kD = kDC / 60;
+
+
+        // characterized values
+        public static double kSC = 0;
+        public static double kVC = 0;
+        public static double kAC = 0;
+
+        public static double kS = kSC / 12;
+        public static double kV = kVC / 60 / 1 / (12 - kS);
+        public static double kA = kAC / 60 / 1 / (12 - kS);
+    }
 
     public static class HoodConstants{
         public static double kPC = 2.3541;
@@ -60,7 +82,7 @@ public class ShooterConstants {
         public static double hoodMaxPos = 40;
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
-        public static double highHood = 12;
+        public static double highHood = 12; //4 is what this was during 1st comp
         public static double manualPow = 0.25;
     }
 
@@ -72,8 +94,8 @@ public class ShooterConstants {
 
         public static double kPEncoder = 0.02;
 
-        public static double leftLimit = -12;
-        public static double rightLimit = 8;
+        public static double leftLimit = -3;
+        public static double rightLimit = 2;
     }
 }
 

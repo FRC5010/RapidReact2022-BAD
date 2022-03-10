@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import java.util.ResourceBundle.Control;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
@@ -13,7 +16,12 @@ import frc.robot.subsystems.DriveTrainMain;
 public class DriveTrainYEET extends CommandBase {
   /** Creates a new DriveTrainYEET. */
   double currTrottle;
-  public DriveTrainYEET() {
+  private DriveTrainMain driveTrainMain;
+  private Joystick driver;
+  public DriveTrainYEET(DriveTrainMain driveTrainMain, Joystick driver) {
+    this.driveTrainMain = driveTrainMain;
+    this.driver = driver;
+    addRequirements(driveTrainMain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -27,7 +35,9 @@ public class DriveTrainYEET extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    driveTrainMain.driverCurvatureDrive(driver.getRawAxis(ControlConstants.throttle), driver.getRawAxis(ControlConstants.steer));
+  }
 
   // Called once the command ends or is interrupted.
   @Override

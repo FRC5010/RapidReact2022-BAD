@@ -10,9 +10,9 @@ public class ClimbConstants {
     public static double climbSpeedDown = -1;
     public static double encoderMax = 0;
 
-    public static double climbRightMax = 290; //
-    public static double climbLeftMax = 290; // 
-    public static double climbBothMax = 290;
+    public static double climbRightMax = 100; //
+    public static double climbLeftMax = 100; // 
+    public static double climbBothMax = 100;
     public static double climbStaticMax = 0; //
     public static double calibrateDown = -0.6;
 

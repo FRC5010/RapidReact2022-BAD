@@ -33,6 +33,7 @@ import frc.robot.mechanisms.Climb;
 import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.vision.VisionLimeLight;
 
@@ -68,11 +69,12 @@ public class RobotContainer {
 
 
     shooterVision = new VisionLimeLight("limelight-shooter", 36.5, 16.2, 102.559, ControlConstants.shooterVisionColumn);
+    shooterVision.setPiPMode(2);
     cameraSubsystem = new CameraSubsystem();
 
     drive = new Drive(driver,shooterVision);
     transport = new Transport(operator, driver, shooterVision);
-    climb = new Climb(driver, operator);
+    climb = new Climb(driver, operator, transport);
 
     
     //cameraSubsystem = new CameraSubsystem(operator);
@@ -83,11 +85,11 @@ public class RobotContainer {
     command.addOption("HubBall2", new HubToBall2());
     command.addOption("HubBall3", new HubToBall3());
     command.addOption("ManyBall", new ManyBallAuto());*/
-    command.addOption("LowerCargoToHub", new AutoMoveAndShoot(transport, shooterVision, new LowerCargoToHub()));
-    command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision, new HubToBall2()));
-    command.addOption("HubBall3", new AutoFenderToMove(transport, shooterVision, new HubToBall3()));
-    command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision, new ManyBallAuto()));
-    command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
+    command.addOption("MoveAndShoot", new AutoMoveAndShoot(transport, shooterVision, new LowerCargoToHub()));
+   // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision, new HubToBall2()));
+    command.addOption("FenderMoveAndShoot", new AutoFenderToMove(transport, shooterVision, new HubToBall3()));
+    //command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision, new ManyBallAuto()));
+    //command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));
     teamColor.addOption("Red", new InstantCommand(() -> shooterVision.setPipeline(1)));

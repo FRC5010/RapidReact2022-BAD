@@ -22,6 +22,7 @@ import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.DefaultClimb;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /** Add your docs here. */
 public class Climb {
@@ -43,10 +44,15 @@ public class Climb {
     private JoystickButton climbToggle;
     private ShuffleboardLayout climbEncoderLayout;
 
-    public Climb(Joystick driver, Joystick operator){
+    public IntakeSubsystem intakeSubsystem;
+    public Transport transport;
+
+    public Climb(Joystick driver, Joystick operator, Transport transport){
         this.driver = driver;
         this.operator = operator;
+        this.transport = transport;
 
+        intakeSubsystem = transport.getIntakeSubsystem();
         // defined motors
         leftWinch = new CANSparkMax(ControlConstants.leftWinchM,MotorType.kBrushless);
         rightWinch = new CANSparkMax(ControlConstants.rightWinchM,MotorType.kBrushless);
@@ -91,14 +97,14 @@ public class Climb {
     }
 
     private void setBabyCurrentLimits(int neoCurrentLimit, int babyNeoCurrentLimit){
-        leftWinch.setSmartCurrentLimit(neoCurrentLimit);
-        rightWinch.setSmartCurrentLimit(neoCurrentLimit);
+        leftWinch.setSmartCurrentLimit(80);
+        rightWinch.setSmartCurrentLimit(80);
         staticHooks.setSmartCurrentLimit(neoCurrentLimit);
     }
 
     private void configureButtonBindings(){
         climbTime = new JoystickButton(operator, ControlConstants.climbTime);
-        climbTime.whileHeld(new DefaultClimb(climbSubsystem, driver), true);
+        climbTime.whileHeld(new DefaultClimb(climbSubsystem, driver, intakeSubsystem), true);
         
         climbToggle = new JoystickButton(driver, ControlConstants.toggleClimb);
         climbToggle.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));

@@ -5,8 +5,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -14,16 +16,23 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.IndexerConstants;
 
 public class IndexerSubsystem extends SubsystemBase {
   /** Creates a new Indexer. */
   private CANSparkMax lowerMotor;
   private DigitalInput upperBB;
 
+  private SparkMaxPIDController indexerPIDController;
+
   private ShuffleboardLayout indexerLayout;
+  private double indexerSetPoint;
+  
   public IndexerSubsystem(CANSparkMax lowerMotor, DigitalInput upperBB) {
     this.upperBB = upperBB;
     this.lowerMotor = lowerMotor;
+    this.indexerPIDController = lowerMotor.getPIDController();
+
 
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
@@ -33,6 +42,16 @@ public class IndexerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void spinUpIndexerRPM() {
+    indexerPIDController.setFF(IndexerConstants.kS / indexerSetPoint + IndexerConstants.kV);
+    indexerPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
+  
+  }
+
+  public void setIndexerPoint(double setPoint){
+    indexerSetPoint = setPoint;
   }
 
   public void setLowerIndexer(double speed){

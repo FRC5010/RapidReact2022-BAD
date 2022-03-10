@@ -34,6 +34,7 @@ import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -81,18 +82,20 @@ public class Transport {
     private JoystickButton fenderShot;
     private JoystickButton defaultShoot;
     private JoystickButton driveYEET;
+    private JoystickButton fenderShot2;
+    private JoystickButton climbTime;
      
     
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
         this.driver = driver;
         this.operator = operator;
-        togglePiston = new JoystickButton(driver, ControlConstants.toggleIntake);
+        //togglePiston = new JoystickButton(driver, ControlConstants.toggleIntake);
 
         // initializes intake
         intakeMotor = new CANSparkMax(ControlConstants.intakeM, MotorType.kBrushless);
         intakeMotor.restoreFactoryDefaults();
-        //startcompetition unhandled exception??? robot hates us??
+        intakeMotor.setOpenLoopRampRate(0.5);
         intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot0P, ControlConstants.slot1P);
         intakePiston.set(Value.kReverse);
 
@@ -153,22 +156,22 @@ public class Transport {
         flyWheelLeft.follow(flyWheelRight, true);
         flyWheelRight.setOpenLoopRampRate(0.5);
         shooterSubsystem = new ShooterSubsystem(flyWheelRight, hoodMotor, feederMotor, shooterVision);
-    
-        togglePiston.whenPressed(new InstantCommand(() -> intakeSubsystem.togglePiston(), intakeSubsystem));
+        
+        //climbTime.whileHeld(new InstantCommand(() -> intakeSubsystem.deployIntake(), intakeSubsystem));
         setBabyCurrentLimits(ControlConstants.neoCurrentLimit, ControlConstants.babyNeoCurrentLimit);
         configureButtonBindings();
     }
 
     private void setBabyCurrentLimits(int neoCurrentLimit, int babyNeoCurrentLimit) {
-        intakeMotor.setSmartCurrentLimit(neoCurrentLimit);
-        lowerIndexMotor.setSmartCurrentLimit(neoCurrentLimit);
+        intakeMotor.setSmartCurrentLimit(60);
+        lowerIndexMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         upperIndexerMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
-        turretMotor.setSmartCurrentLimit(80);
+        turretMotor.setSmartCurrentLimit(25);
         flyWheelLeft.setSmartCurrentLimit(neoCurrentLimit);
         flyWheelRight.setSmartCurrentLimit(neoCurrentLimit);
         hoodMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         feederMotor.setSmartCurrentLimit(60);
-        lowerIndexMotor2.setSmartCurrentLimit(neoCurrentLimit);
+        lowerIndexMotor2.setSmartCurrentLimit(babyNeoCurrentLimit);
     }
 
     public void configureButtonBindings(){
@@ -204,14 +207,17 @@ public class Transport {
         fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
         fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, true), false);
 
-        driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
-        driveYEET.whileHeld(new DriveTrainYEET());
+        
+        fenderShot2 = new JoystickButton(operator, ControlConstants.fenderButton2);
+        fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, false), false);
+
+
 
 
     }
     public void setUpDeftCom(){
         shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
-        intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, operator));
+        intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));
         
         turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator, false));
 

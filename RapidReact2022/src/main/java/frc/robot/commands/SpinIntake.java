@@ -14,13 +14,13 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class SpinIntake extends CommandBase {
   /** Creates a new SpinIntake. */
-  private Joystick operator = null;
+  private Joystick driver = null;
   private double power = 0.0;
   private IntakeSubsystem intakeSubsystem;
   private IndexerSubsystem indexerSubsystem;
 
-  public SpinIntake(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, Joystick operator) {
-    this.operator = operator;
+  public SpinIntake(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, Joystick driver) {
+    this.driver = driver;
     this.intakeSubsystem = intakeSubsystem;
     this.indexerSubsystem = indexerSubsystem;
     addRequirements(intakeSubsystem, indexerSubsystem);
@@ -44,33 +44,25 @@ public class SpinIntake extends CommandBase {
   public void execute() {
     // gets intake pow from each analog trigger
     double intakePow;
-    if(intakeSubsystem.isIntakeDeployed()){
-      if (null != operator) { 
-        intakePow = operator.getRawAxis(ControlConstants.intakeAxis) - operator.getRawAxis(ControlConstants.outtakeAxis);
+      if (null != driver) { 
+        intakePow = driver.getRawAxis(ControlConstants.intakeAxis) - driver.getRawAxis(ControlConstants.outtakeAxis);
+        if(Math.abs(intakePow) != 0){
+          intakeSubsystem.deployIntake();
+        }else{
+          intakeSubsystem.retractIntake();
+        }
       } else {
         intakePow = power;
       }
-    }else{
-      intakePow = 0;
-    }
-    
     // modifies intake power cubing it and then using a multiplier
     double modPow = intakePow * 1.0;
-
     intakeSubsystem.setIntakePow(modPow);
     
     if(Math.abs(modPow) > 0){
-      
       indexerSubsystem.setLowerIndexer(ShooterConstants.indexerPow);
     }else{
-      //if(!indexerSubsystem.isLowerIndexerRunning()){
       indexerSubsystem.setLowerIndexer(0);
-      //}
     }
-    
-    
-    
-
   }
 
   // Called once the command ends or is interrupted.

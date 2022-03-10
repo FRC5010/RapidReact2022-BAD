@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.ShooterConstants.FeederConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.vision.VisionSystem;
 
@@ -25,13 +26,15 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANSparkMax flyWheelRight, hoodMotor, feederMotor;
   private VisionSystem shooterVision;
   private RelativeEncoder hoodEncoder;
-  private RelativeEncoder flyWheelEncoder; 
+  private RelativeEncoder flyWheelEncoder;
+  private RelativeEncoder feederEncoder;
   private ShuffleboardLayout shooterLayout;
   private SparkMaxPIDController flyWheelPidController;
   private SparkMaxPIDController hoodPidController;
+  private SparkMaxPIDController feederPidController;
   private double highRPM = ShooterConstants.highRPM;
   private double highHood = HoodConstants.highHood;
-  private double hoodSetPoint = 0, flyWheelSetPoint = 0;
+  private double hoodSetPoint = 0, flyWheelSetPoint = 0,feederSetPoint = 0;
 
   private boolean readyToShoot;
 
@@ -68,11 +71,17 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodPidController.setI(ShooterConstants.HoodConstants.kI);
     hoodPidController.setD(ShooterConstants.HoodConstants.kD);
 
+    feederPidController = feederMotor.getPIDController();
+
     
 
     hoodEncoder = hoodMotor.getEncoder(Type.kHallSensor, 42);
     hoodEncoder.setPosition(0);
     hoodSetPoint = 0;
+
+    feederEncoder = feederMotor.getEncoder(Type.kHallSensor, 42);
+    feederEncoder.setPosition(0);
+    feederSetPoint = 0;
 
     flyWheelEncoder = flyWheelRight.getEncoder(Type.kHallSensor, 42);
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
@@ -83,8 +92,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterLayout.addNumber("Fly Wheel RPM", this::getRPM).withSize(1, 1);
     shooterLayout.addNumber("Fly Wheel SetPoint", this::getFlywheelSetPoint).withSize(1, 1);
     shooterLayout.addNumber("Default RPM Flywheel", () -> ShooterConstants.defaultFlyWheelRPM).withSize(1, 1);
-    
-
+    shooterLayout.addNumber("Feeder RPM", this::getFeederRPM);
 
   }
   
@@ -139,6 +147,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void spinFeeder(double speed){
     feederMotor.set(speed);
   }
+
 
   public void spinHood(double speed){
     hoodMotor.set(speed);
@@ -217,6 +226,16 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
+  public void spinUpFeederRPM() {
+    feederPidController.setFF(FeederConstants.kS / flyWheelSetPoint + FeederConstants.kV);
+    feederPidController.setReference(feederSetPoint, CANSparkMax.ControlType.kVelocity);
+  
+  }
+
+  public void setFlyFeederPoint(double setPoint){
+    feederSetPoint = setPoint;
+  }
+
   public double getHoodSetPoint(){
     return this.hoodSetPoint;
   }
@@ -227,6 +246,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void stopHood() {
     hoodMotor.set(0);
+  }
+
+  public double getFeederRPM(){
+    return feederEncoder.getVelocity();
   }
 
   @Override

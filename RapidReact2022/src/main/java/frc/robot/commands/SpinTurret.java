@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -77,8 +78,21 @@ public class SpinTurret extends CommandBase {
         }
       }
     }else{
-      turretSubsystem.turnTurret(pow);
+      // turretSubsystem.turnTurret(pow);
+      double turretPosition = 0;
+      double angle = shooterSystem.getAngleX();
+
+      if (pow < 0){
+        turretPosition = pow * ShooterConstants.TurretConstants.leftLimit;
+      }
+      else if (pow > 0){
+        turretPosition = pow * ShooterConstants.TurretConstants.rightLimit;
+      }
+      turretSubsystem.angleTurret(turretPosition, lastTime, lastAngle);
       turretSubsystem.setOnTarget(false);
+      lastAngle = angle;
+      lastTime = System.currentTimeMillis();
+      
     }
 
 

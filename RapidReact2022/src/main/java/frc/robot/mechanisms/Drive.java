@@ -28,7 +28,8 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Robot;
-import frc.robot.commands.ComboDrive;
+import frc.robot.commands.DriveTrainYEET;
+import frc.robot.commands.Driving;
 import frc.robot.commands.RamseteFollower;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
@@ -69,6 +70,7 @@ public class Drive {
 
   public JoystickButton intakeDriveButton;
   public JoystickButton autoNavButton;
+  public JoystickButton driveYEET;
 
   public Drive(Joystick driver, VisionSystem shooterVision) {
     init(driver, shooterVision);
@@ -92,6 +94,9 @@ public class Drive {
     decSteerFactor = new POVButton(driver, ControlConstants.decSteerFactor);
     decSteerFactor.whenPressed(new InstantCommand(
         () -> DriveConstants.steerFactor = Math.max(0, DriveConstants.steerFactor - DriveConstants.drivingAdjustment)));
+
+    driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
+    driveYEET.whileHeld(new DriveTrainYEET(driveTrain, driver));
   }
 
   public static void setCurrentLimits(int currentLimit) {
@@ -133,8 +138,8 @@ public class Drive {
     rDrive3.follow(rDrive1, false);
     rDrive3.setInverted(false);
 
-    rDrive1.setOpenLoopRampRate(0.5);
-    lDrive1.setOpenLoopRampRate(0.5);
+    rDrive1.setOpenLoopRampRate(0.25);
+    lDrive1.setOpenLoopRampRate(0.25);
 
     lEncoder = lDrive1.getEncoder();
     rEncoder = rDrive1.getEncoder();
@@ -154,7 +159,7 @@ public class Drive {
   }
 //Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
-    driveTrain.setDefaultCommand(new ComboDrive(driveTrain, driver));
+    driveTrain.setDefaultCommand(new Driving(driveTrain, driver));
 
   }
 

@@ -9,16 +9,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class DefaultClimb extends CommandBase {
   /** Creates a new DefaultClimb. */
   private ClimbSubsystem climbSubsystem;
   private Joystick driver;
+  private IntakeSubsystem intakeSubsystem;
 
-  public DefaultClimb(ClimbSubsystem climbSubsystem, Joystick driver) {
+  public DefaultClimb(ClimbSubsystem climbSubsystem, Joystick driver, IntakeSubsystem intakeSubsystem) {
     this.climbSubsystem = climbSubsystem;
     this.driver = driver;
-    addRequirements(climbSubsystem);
+    this.intakeSubsystem = intakeSubsystem;
+    addRequirements(climbSubsystem, intakeSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -35,9 +38,12 @@ public class DefaultClimb extends CommandBase {
   @Override
   public void execute() {
     // static arms up and down
-    climbSubsystem.setStaticHookSpeed(driver.getRawAxis(ControlConstants.staticHookUp)-driver.getRawAxis(ControlConstants.staticHookDown));
-    // right arm climb
+    //climbSubsystem.setStaticHookSpeed(driver.getRawAxis(ControlConstants.staticHookUp)-driver.getRawAxis(ControlConstants.staticHookDown));
+    //static hooks are remaining up since they kept getting stuck
+    //driver triggers are now set to outtake and intake
 
+    // right arm climb
+    intakeSubsystem.deployIntake();
     if(driver.getRawButton(ControlConstants.rightClimbArmUp) && 
     climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax){
         climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedUp);

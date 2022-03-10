@@ -26,6 +26,7 @@ public abstract class VisionSystem extends SubsystemBase {
   protected ShuffleboardLayout visionLayout;
   protected boolean updateValues = false;
   protected double CAMERA_CAL_ANGLE = 0;
+  protected ShuffleboardLayout driverLayout;
   // variables needed to process new variables, plus the new variables
   // angles
 
@@ -50,8 +51,8 @@ public abstract class VisionSystem extends SubsystemBase {
     this.targetHeight = targetHeight;
     updateValues = true;
     CAMERA_CAL_ANGLE = Math.toDegrees(Math.tanh((targetHeight - camHeight) / VisionConstants.CAMERA_CAL_DISTANCE));
-    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabVisionDisplay);
-    visionLayout = driverTab.getLayout(name + " Vision", BuiltInLayouts.kGrid).withPosition(colIndex, 0).withSize(3, 5);
+    ShuffleboardTab visionTab = Shuffleboard.getTab(ControlConstants.SBTabVisionDisplay);
+    visionLayout = visionTab.getLayout(name + " Vision", BuiltInLayouts.kGrid).withPosition(colIndex, 0).withSize(3, 5);
     table = NetworkTableInstance.getDefault();
 
 
@@ -63,6 +64,12 @@ public abstract class VisionSystem extends SubsystemBase {
     //visionLayout.addNumber(name + " Vertical", this::getVertical).withSize(1, 1);
     //visionLayout.addNumber(name + " Cal Angle", this::getCalAngle).withSize(1, 1);
     //visionLayout.addBoolean(name + " Driver Mode", RobotContainer::getDriverMode).withSize(1, 1);
+
+    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
+    driverLayout = driverTab.getLayout(name + " Vision", BuiltInLayouts.kGrid).withPosition(colIndex + 1, 0).withSize(1, 1);
+    driverLayout.addBoolean("Limelight On", this::isLightOn);
+    
+    
   }
   public abstract void setPipeline(double pipeline);
 

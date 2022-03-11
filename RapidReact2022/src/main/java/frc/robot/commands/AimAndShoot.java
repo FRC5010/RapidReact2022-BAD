@@ -46,7 +46,6 @@ public class AimAndShoot extends CommandBase {
       shooterSubsystem.spinUpWheelRPM();
       shooterSubsystem.pidHood();
     } 
-    
 
     shooterSubsystem.determineIfReadyToShoot();
 

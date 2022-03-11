@@ -4,6 +4,8 @@
 
 package frc.robot.constants;
 
+import edu.wpi.first.wpilibj.util.Color;
+
 /** Add your docs here. */
 public class IndexerConstants {
     public static double kSC = 0.11361;
@@ -13,4 +15,9 @@ public class IndexerConstants {
     public static double kS = kSC / 12;
     public static double kV = kVC / 60 / 1 / (12 - kS);
     public static double kA = kAC / 60 / 1 / (12 - kS);
+
+    public static Color kBlueTarget = new Color(0.143, 0.427, 0.429);
+   // public static Color kGreenTarget = new Color(0.197, 0.561, 0.240);
+    public static Color kRedTarget = new Color(0.561, 0.232, 0.114);
+    // public static Color kYellowTarget = new Color(0.361, 0.524, 0.113);
 }

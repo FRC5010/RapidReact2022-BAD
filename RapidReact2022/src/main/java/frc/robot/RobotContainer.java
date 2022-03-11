@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -29,6 +31,7 @@ import frc.robot.commands.auto.HubToBall3;
 import frc.robot.commands.auto.LowerCargoToHub;
 import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.IndexerConstants;
 import frc.robot.mechanisms.Climb;
 import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
@@ -38,14 +41,17 @@ import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.vision.VisionLimeLight;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
   private Joystick driver;
-  
+
   private Joystick operator;
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
@@ -57,39 +63,42 @@ public class RobotContainer {
   private CameraSubsystem cameraSubsystem;
   private LedSubsystem ledSubsystem;
 
-
   private Drive drive;
 
-  private JoystickButton toggleLL; 
+  private JoystickButton toggleLL;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     driver = new Joystick(ControlConstants.driverJoystick);
     operator = new Joystick(ControlConstants.operatorJoystick);
-
 
     shooterVision = new VisionLimeLight("limelight-shooter", 36.5, 16.2, 102.559, ControlConstants.shooterVisionColumn);
     shooterVision.setPiPMode(2);
     cameraSubsystem = new CameraSubsystem();
 
-    drive = new Drive(driver,shooterVision);
+    drive = new Drive(driver, shooterVision);
     transport = new Transport(operator, driver, shooterVision);
     climb = new Climb(driver, operator, transport);
 
-    
-    //cameraSubsystem = new CameraSubsystem(operator);
-    //ledSubsystem = new LedSubsystem(0, 300);
+    // cameraSubsystem = new CameraSubsystem(operator);
+    // ledSubsystem = new LedSubsystem(0, 300);
 
-
-    /*command.addOption("LowerCargoToHub", new LowerCargoToHub());
-    command.addOption("HubBall2", new HubToBall2());
-    command.addOption("HubBall3", new HubToBall3());
-    command.addOption("ManyBall", new ManyBallAuto());*/
+    /*
+     * command.addOption("LowerCargoToHub", new LowerCargoToHub());
+     * command.addOption("HubBall2", new HubToBall2());
+     * command.addOption("HubBall3", new HubToBall3());
+     * command.addOption("ManyBall", new ManyBallAuto());
+     */
     command.addOption("MoveAndShoot", new AutoMoveAndShoot(transport, shooterVision, new LowerCargoToHub()));
-   // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision, new HubToBall2()));
+    // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision,
+    // new HubToBall2()));
     command.addOption("FenderMoveAndShoot", new AutoFenderToMove(transport, shooterVision, new HubToBall3()));
-    //command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision, new ManyBallAuto()));
-    //command.addOption("Galactic Search", new GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
+    // command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision,
+    // new ManyBallAuto()));
+    // command.addOption("Galactic Search", new
+    // GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
 
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));
     teamColor.addOption("Red", new InstantCommand(() -> shooterVision.setPipeline(1)));
@@ -100,16 +109,18 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
     Command red = new InstantCommand(() -> shooterVision.setPipeline(1));
     Command blue = new InstantCommand(() -> shooterVision.setPipeline(0));
     Command vTargets = new InstantCommand(() -> shooterVision.setPipeline(2));
-    Command ledOrange = new InstantCommand(()-> ledSubsystem.setSolidColor(255, 20, 0));
+    Command ledOrange = new InstantCommand(() -> ledSubsystem.setSolidColor(255, 20, 0));
     // this adds auto selections in SmartDashboard
     Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay).getLayout("Auto", BuiltInLayouts.kList)
         .withPosition(ControlConstants.autoColumn, 0).withSize(3, 1).add("Choose an Auto Mode", command)
@@ -122,21 +133,32 @@ public class RobotContainer {
     SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
     SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
-    
+
     toggleLL = new JoystickButton(operator, ControlConstants.toggleLL);
-    toggleLL.whenPressed(new InstantCommand(()-> shooterVision.toggleLight(), shooterVision));
-    
+    toggleLL.whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
 
   }
-//Just sets up defalt commands (setUpDeftCom)
-public void setUpDeftCom(){
-if (!DriverStation.isTest()){
-  drive.setUpDeftCom();
-  transport.setUpDeftCom();
-}else{
-  transport.setUpDeftCom();
-}
-}
+
+  // Just sets up defalt commands (setUpDeftCom)
+  public void setUpDeftCom() {
+    Alliance color = DriverStation.getAlliance();
+    if (Alliance.Red.equals(color)){
+      ControlConstants.allianceColor = IndexerConstants.kRedTarget;
+      ControlConstants.opposingColor = IndexerConstants.kBlueTarget;
+    } else if (Alliance.Blue.equals(color)){
+      ControlConstants.allianceColor = IndexerConstants.kBlueTarget;
+      ControlConstants.opposingColor = IndexerConstants.kRedTarget;
+    } else {
+      ControlConstants.allianceColor = Color.kBlack;
+    }
+    if (!DriverStation.isTest()) {
+      drive.setUpDeftCom();
+      transport.setUpDeftCom();
+    } else {
+      transport.setUpDeftCom();
+    }
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

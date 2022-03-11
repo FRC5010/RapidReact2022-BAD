@@ -6,7 +6,6 @@ package frc.robot.mechanisms;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,12 +27,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class Climb {
     private CANSparkMax leftWinch;
     private CANSparkMax rightWinch;
-    private CANSparkMax staticHooks;
-
-    private RelativeEncoder leftEncoder;
-    private RelativeEncoder rightEncoder;
-    private RelativeEncoder staticEncoder;
-
+    
     private DoubleSolenoid climbSolenoid;
 
     private Joystick driver;
@@ -56,19 +50,17 @@ public class Climb {
         // defined motors
         leftWinch = new CANSparkMax(ControlConstants.leftWinchM,MotorType.kBrushless);
         rightWinch = new CANSparkMax(ControlConstants.rightWinchM,MotorType.kBrushless);
-        staticHooks = new CANSparkMax(ControlConstants.staticHooksM,MotorType.kBrushless);
 
 
         leftWinch.restoreFactoryDefaults();
         rightWinch.restoreFactoryDefaults();
-        staticHooks.restoreFactoryDefaults();
+
 
         // positive pow is counter-clockwise left side
         leftWinch.setInverted(false);
         // positive pow is clockwise right side
         rightWinch.setInverted(true);
-        // positive pow is clockwise right side
-        staticHooks.setInverted(false);
+
 
         // define solonoid
         climbSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot2P, ControlConstants.slot3P);
@@ -76,7 +68,7 @@ public class Climb {
 
 
         // make ClimbSubsystem
-        climbSubsystem = new ClimbSubsystem(leftWinch, rightWinch, staticHooks, climbSolenoid);
+        climbSubsystem = new ClimbSubsystem(leftWinch, rightWinch, climbSolenoid);
 
         // smartdashboard tab
         int colIndex = 0;
@@ -86,7 +78,6 @@ public class Climb {
         climbEncoderLayout.addBoolean("Is Climb Arms Horizontal", climbSubsystem::isClimbArmHorizontal);
         climbEncoderLayout.addNumber("Left Encoder Value", climbSubsystem::getLeftEncoderValue);
         climbEncoderLayout.addNumber("Right Encoder Value", climbSubsystem::getRightEncoderValue);
-        climbEncoderLayout.addNumber("Static Encoder Value", climbSubsystem::getStaticEncoderValue);
         climbEncoderLayout.add("Calibrate Arms Down", new CalibrateDynamicArms(climbSubsystem));
 
         SmartDashboard.putData("Calibrate Dynamic Arms", new CalibrateDynamicArms(climbSubsystem));
@@ -99,7 +90,6 @@ public class Climb {
     private void setBabyCurrentLimits(int neoCurrentLimit, int babyNeoCurrentLimit){
         leftWinch.setSmartCurrentLimit(80);
         rightWinch.setSmartCurrentLimit(80);
-        staticHooks.setSmartCurrentLimit(neoCurrentLimit);
     }
 
     private void configureButtonBindings(){

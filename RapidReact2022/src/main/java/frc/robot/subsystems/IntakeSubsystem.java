@@ -5,20 +5,30 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.IndexerConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   DoubleSolenoid intakePiston;
+  ColorSensorV3 colorSensor;
+  ColorMatch m_colorMatcher;
   CANSparkMax intakeMotor;
   
-  public IntakeSubsystem(CANSparkMax intakeMotor, DoubleSolenoid intakePiston) {
+  public IntakeSubsystem(CANSparkMax intakeMotor, DoubleSolenoid intakePiston, ColorSensorV3 colorSensor) {
     this.intakeMotor = intakeMotor;
+    this.colorSensor = colorSensor;
     this.intakePiston = intakePiston;
+    this.m_colorMatcher = new ColorMatch();
+    m_colorMatcher.addColorMatch(IndexerConstants.kRedTarget);
+    m_colorMatcher.addColorMatch(IndexerConstants.kBlueTarget);
+  }
+  public Color getColor(){
+    return m_colorMatcher.matchClosestColor(colorSensor.getColor()).color;
   }
   public void togglePiston(){
     intakePiston.toggle();

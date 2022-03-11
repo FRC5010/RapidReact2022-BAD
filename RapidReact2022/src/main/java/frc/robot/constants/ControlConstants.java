@@ -7,8 +7,10 @@
 
 package frc.robot.constants;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.HIDType;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * Add your docs here.
@@ -39,49 +41,46 @@ public class ControlConstants {
     //DIO Ports
     public static int limitSwitch = DioPorts.Port0.ordinal();
     public static int BB1 = DioPorts.Port0.ordinal();
+    public static I2C.Port i2cPort = I2C.Port.kOnboard;
     //public static int BB2 = DioPorts.Port2.ordinal();
 
     /*
     Motors
         M1: Left Drive
-        M2: Left Drive (GONE as of 02/28 for weight)
+        M2: Right Drive
         M3: Left Drive
         M4: Right Drive
-        M5: Right Drive (GONE as of 02/28 for weight)
-        M6: Right Drive
-        M7: Index Motor Upper
-        M8: Index Motor Lower
-        M9: Intake
-        M10: Hood
-        M11: Feeder Wheel
-        M12: Left Flywheel
-        M13: Right Flywheel
-        M14: Turret
-        M15: Index Motor
-        M16: Static climb hooks
-        M17: Left winch
-        M18: Right winch
+        M5: Right Winch
+        M6: Left Winch
+        M7: Intake Motor Upper
+        M8: Diagonal Upper Indexer
+        M9: Diagonal Lower Indexer
+        M10: Vertical Long Indexer
+        M11: Vertical Short Indexer
+        M12: Hood
+        M13: Feeder Left Flywheel
+        M14: Left Flywheel
+        M15: Right Flywheel
+        M16: Turret
     */
 
     // Motor
-    public static int rightDrive1M = Motors.M1.ordinal();
-    //public static int rightDrive2M = Motors.M2.ordinal();
-    public static int rightDrive3M = Motors.M3.ordinal();
-    public static int leftDrive1M = Motors.M4.ordinal();
-    //public static int leftDrive2M = Motors.M5.ordinal();
-    public static int leftDrive3M = Motors.M6.ordinal();
-    public static int intakeM = Motors.M9.ordinal();
-    public static int lowerIndexM = Motors.M8.ordinal();
-    public static int upperIndexM = Motors.M7.ordinal();
-    public static int hoodM = Motors.M10.ordinal();
-    public static int feederWheelM = Motors.M11.ordinal();
-    public static int leftFlyWheelM = Motors.M12.ordinal();
-    public static int rightFlyWheelM = Motors.M13.ordinal();
-    public static int turretM = Motors.M14.ordinal();
-    public static int lowerIndex2M = Motors.M15.ordinal();
-    public static int staticHooksM = Motors.M16.ordinal();
-    public static int leftWinchM = Motors.M18.ordinal();
-    public static int rightWinchM = Motors.M17.ordinal();
+    public static int leftDrive1M = Motors.M1.ordinal();
+    public static int rightDrive1M = Motors.M2.ordinal();
+    public static int leftDrive3M = Motors.M3.ordinal();
+    public static int rightDrive3M = Motors.M4.ordinal();
+    public static int rightWinchM = Motors.M5.ordinal();
+    public static int leftWinchM = Motors.M6.ordinal();
+    public static int intakeM = Motors.M7.ordinal();
+    public static int diagonalUpperM = Motors.M8.ordinal();
+    public static int diagonalLowerM = Motors.M9.ordinal();
+    public static int verticalLongM = Motors.M10.ordinal();
+    public static int verticalShortM = Motors.M11.ordinal();
+    public static int hoodM = Motors.M12.ordinal();
+    public static int feederWheelM = Motors.M13.ordinal();
+    public static int leftFlyWheelM = Motors.M14.ordinal();
+    public static int rightFlyWheelM = Motors.M15.ordinal();
+    public static int turretM = Motors.M16.ordinal();
 
     /*
         Intake Double Solonoid
@@ -175,6 +174,8 @@ public class ControlConstants {
     public static int driveTrainCurrentLimit = 38;
     public static int babyNeoCurrentLimit = 20;
     public static int neoCurrentLimit = 38;
+    public static Color allianceColor = Color.kBlack;
+    public static Color opposingColor = Color.kBlack;
     
     
     public static boolean setupSingleDriver(Joystick operator){

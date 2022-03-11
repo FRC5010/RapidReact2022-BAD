@@ -4,28 +4,21 @@
 
 package frc.robot.mechanisms;
 
-import java.util.ResourceBundle.Control;
-import java.util.logging.LogRecord;
-
-import javax.swing.JToggleButton;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
-import frc.robot.commands.DriveTrainYEET;
 import frc.robot.commands.FenderShot;
 import frc.robot.commands.Launcher;
 import frc.robot.commands.MoveHood;
@@ -34,7 +27,6 @@ import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -53,12 +45,15 @@ public class Transport {
 
     private CANSparkMax intakeMotor;
     private DoubleSolenoid intakePiston;
+    private ColorSensorV3 colorSensor;
     private IntakeSubsystem intakeSubsystem;
 
-    private CANSparkMax lowerIndexMotor;
-    private CANSparkMax lowerIndexMotor2;
-    private CANSparkMax upperIndexerMotor;
+    private CANSparkMax diagonalLowerMotor;
+    private CANSparkMax diagonalUpperMotor;
+    private CANSparkMax verticalLongMotor;
+    private CANSparkMax verticalShortMotor;
     private DigitalInput upperBB;
+    
     private IndexerSubsystem indexerSubsystem;
     private UpperIndexerSubsystem upperIndexerSubsystem;
 
@@ -84,7 +79,6 @@ public class Transport {
     private JoystickButton driveYEET;
     private JoystickButton fenderShot2;
     private JoystickButton climbTime;
-     
     
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
@@ -98,29 +92,32 @@ public class Transport {
         intakeMotor.setOpenLoopRampRate(0.5);
         intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot0P, ControlConstants.slot1P);
         intakePiston.set(Value.kReverse);
-
-        intakeSubsystem = new IntakeSubsystem(intakeMotor, intakePiston);
+        colorSensor = new ColorSensorV3(ControlConstants.i2cPort);
+        intakeSubsystem = new IntakeSubsystem(intakeMotor, intakePiston, colorSensor);
         
         
         // initializes index
-        lowerIndexMotor = new CANSparkMax(ControlConstants.lowerIndexM, MotorType.kBrushless);
-        lowerIndexMotor.restoreFactoryDefaults();
-        upperIndexerMotor = new CANSparkMax(ControlConstants.upperIndexM, MotorType.kBrushless);
-        upperIndexerMotor.restoreFactoryDefaults();
-        lowerIndexMotor2 = new CANSparkMax(ControlConstants.lowerIndex2M, MotorType.kBrushless);
-        lowerIndexMotor2.restoreFactoryDefaults();
-
+        diagonalLowerMotor = new CANSparkMax(ControlConstants.diagonalLowerM, MotorType.kBrushless);
+        diagonalLowerMotor.restoreFactoryDefaults();
+        verticalLongMotor = new CANSparkMax(ControlConstants.verticalLongM, MotorType.kBrushless);
+        verticalLongMotor.restoreFactoryDefaults();
+        diagonalUpperMotor = new CANSparkMax(ControlConstants.diagonalUpperM, MotorType.kBrushless);
+        diagonalUpperMotor.restoreFactoryDefaults();
+        verticalShortMotor = new CANSparkMax(ControlConstants.verticalShortM, MotorType.kBrushless);
+        verticalShortMotor.restoreFactoryDefaults();
         // Postive voltage is in and up
-        lowerIndexMotor.setInverted(false);
-        upperIndexerMotor.setInverted(false);
-        lowerIndexMotor2.setInverted(false);
+        diagonalLowerMotor.setInverted(false);
+        verticalLongMotor.setInverted(false);
+        diagonalUpperMotor.setInverted(false);
+        verticalShortMotor.setInverted(false);
 
-        lowerIndexMotor2.follow(lowerIndexMotor, true);
+        diagonalUpperMotor.follow(diagonalLowerMotor, true);
+        verticalLongMotor.follow(verticalShortMotor, true);
 
         upperBB = new DigitalInput(ControlConstants.BB1);
 
-        indexerSubsystem = new IndexerSubsystem(lowerIndexMotor,upperBB);
-        upperIndexerSubsystem = new UpperIndexerSubsystem(upperIndexerMotor);
+        indexerSubsystem = new IndexerSubsystem(diagonalLowerMotor,upperBB);
+        upperIndexerSubsystem = new UpperIndexerSubsystem(verticalLongMotor);
         
         // initializes turret
         turretMotor = new CANSparkMax(ControlConstants.turretM, MotorType.kBrushless);
@@ -164,14 +161,14 @@ public class Transport {
 
     private void setBabyCurrentLimits(int neoCurrentLimit, int babyNeoCurrentLimit) {
         intakeMotor.setSmartCurrentLimit(60);
-        lowerIndexMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
-        upperIndexerMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
+        diagonalLowerMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
+        verticalLongMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         turretMotor.setSmartCurrentLimit(25);
         flyWheelLeft.setSmartCurrentLimit(neoCurrentLimit);
         flyWheelRight.setSmartCurrentLimit(neoCurrentLimit);
         hoodMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         feederMotor.setSmartCurrentLimit(60);
-        lowerIndexMotor2.setSmartCurrentLimit(babyNeoCurrentLimit);
+        diagonalUpperMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
     }
 
     public void configureButtonBindings(){

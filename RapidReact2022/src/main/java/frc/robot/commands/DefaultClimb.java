@@ -69,7 +69,6 @@ public class DefaultClimb extends CommandBase {
   public void end(boolean interrupted) {
     climbSubsystem.setLeftWinchSpeed(0);
     climbSubsystem.setRightWinchSpeed(0);
-    climbSubsystem.setStaticHookSpeed(0);
   }
 
   // Returns true when the command should end.

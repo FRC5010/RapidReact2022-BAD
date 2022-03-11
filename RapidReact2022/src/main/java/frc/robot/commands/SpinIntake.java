@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.ResourceBundle.Control;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -58,7 +60,8 @@ public class SpinIntake extends CommandBase {
     double modPow = intakePow * 1.0;
     intakeSubsystem.setIntakePow(modPow);
     
-    if(Math.abs(modPow) > 0){
+    boolean opposingColor = intakeSubsystem.getColor().equals(ControlConstants.opposingColor);
+    if(Math.abs(modPow) > 0 && !opposingColor){
       indexerSubsystem.setLowerIndexer(ShooterConstants.indexerPow);
     }else{
       indexerSubsystem.setLowerIndexer(0);

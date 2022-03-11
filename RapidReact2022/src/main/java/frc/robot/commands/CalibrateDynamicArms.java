@@ -11,12 +11,10 @@ import frc.robot.subsystems.ClimbSubsystem;
 
 public class CalibrateDynamicArms extends CommandBase {
   /** Creates a new CalibrateArms. */
-  ClimbSubsystem climbSubsystem;
-
+  ClimbSubsystem climbSubsystem; 
   private double startRight;
   private double startLeft;
-
-  private boolean doneRight = false;
+  private boolean doneRight = false; 
   private boolean doneLeft = false;
 
   public CalibrateDynamicArms(ClimbSubsystem climbSubsystem) {
@@ -45,8 +43,8 @@ public class CalibrateDynamicArms extends CommandBase {
     if(Math.abs(currRight - startRight) > ClimbConstants.climbBothMax - 5){
       climbSubsystem.setRightWinchSpeed(0);
       doneRight = true;
-    }
 
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -20,27 +20,25 @@ import frc.robot.constants.ControlConstants;
 public class ClimbSubsystem extends SubsystemBase {
   private CANSparkMax leftWinch;
   private CANSparkMax rightWinch;
-  private CANSparkMax staticHooks;
   private DoubleSolenoid climbSolenoid;
   private RelativeEncoder rightEncoder;
   private RelativeEncoder leftEncoder;
-  private RelativeEncoder staticEncoder;
+
 
   ShuffleboardLayout climbEncoderLayout;
 
 
-  public ClimbSubsystem(CANSparkMax leftWinch, CANSparkMax rightWinch, CANSparkMax staticHooks, DoubleSolenoid climbSolenoid) {
+  public ClimbSubsystem(CANSparkMax leftWinch, CANSparkMax rightWinch, DoubleSolenoid climbSolenoid) {
   this.leftWinch = leftWinch;
   this.rightWinch = rightWinch;
-  this.staticHooks = staticHooks;
+
   this.climbSolenoid = climbSolenoid;
 
   this.leftEncoder = leftWinch.getEncoder(Type.kHallSensor, 42);
   this.rightEncoder = rightWinch.getEncoder(Type.kHallSensor, 42);
-  this.staticEncoder = staticHooks.getEncoder(Type.kHallSensor, 42);
   leftEncoder.setPosition(0);
   rightEncoder.setPosition(0);
-  staticEncoder.setPosition(0);
+
   }
 
   @Override
@@ -49,10 +47,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
     // This method will be called once per scheduler run
   }
-
-  public void setStaticHookSpeed(double speed) {
-    staticHooks.set(speed);
-  } 
   
   public void setLeftWinchSpeed(double speed) {
     leftWinch.set(speed);
@@ -87,7 +81,4 @@ public class ClimbSubsystem extends SubsystemBase {
    return rightEncoder.getPosition();
  }
 
- public double getStaticEncoderValue(){
-   return staticEncoder.getPosition();
- }
 }

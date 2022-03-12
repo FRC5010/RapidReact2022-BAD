@@ -41,6 +41,7 @@ public class ControlConstants {
     //DIO Ports
     public static int limitSwitch = DioPorts.Port0.ordinal();
     public static int BB1 = DioPorts.Port0.ordinal();
+    public static int BB2 = DioPorts.Port1.ordinal();
     public static I2C.Port i2cPort = I2C.Port.kOnboard;
     //public static int BB2 = DioPorts.Port2.ordinal();
 

@@ -10,15 +10,15 @@ import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class FenderShot extends CommandBase {
   /** Creates a new FenderShot. */
   private ShooterSubsystem shooterSubsystem;
-  private UpperIndexerSubsystem indexerSubsystem;
+  private VerticalIndexerSubsystem indexerSubsystem;
   private Joystick driver;
   private boolean isUpperShot = true;
-  public FenderShot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem, Joystick driver) {
+  public FenderShot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, Joystick driver) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
     this.driver = driver;
@@ -26,7 +26,7 @@ public class FenderShot extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public FenderShot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem, boolean isUpperShot) {
+  public FenderShot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, boolean isUpperShot) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
     this.isUpperShot = isUpperShot;
@@ -61,7 +61,7 @@ public class FenderShot extends CommandBase {
     shooterSubsystem.pidHood();
     shooterSubsystem.determineIfReadyToShoot();
     if(shooterSubsystem.getReadyToShoot()){
-      indexerSubsystem.setUpperIndexer(ShooterConstants.indexerPow);
+      indexerSubsystem.setVerticalIndexer(ShooterConstants.indexerPow);
     }
   }
 
@@ -72,7 +72,7 @@ public class FenderShot extends CommandBase {
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
     shooterSubsystem.stopHood();
-    indexerSubsystem.setUpperIndexer(0);
+    indexerSubsystem.setVerticalIndexer(0);
   }
 
   // Returns true when the command should end.

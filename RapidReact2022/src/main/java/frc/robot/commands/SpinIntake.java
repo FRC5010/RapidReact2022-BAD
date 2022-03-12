@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class SpinIntake extends CommandBase {
@@ -19,9 +19,9 @@ public class SpinIntake extends CommandBase {
   private Joystick driver = null;
   private double power = 0.0;
   private IntakeSubsystem intakeSubsystem;
-  private IndexerSubsystem indexerSubsystem;
+  private DiagonalIndexerSubsystem indexerSubsystem;
 
-  public SpinIntake(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, Joystick driver) {
+  public SpinIntake(IntakeSubsystem intakeSubsystem, DiagonalIndexerSubsystem indexerSubsystem, Joystick driver) {
     this.driver = driver;
     this.intakeSubsystem = intakeSubsystem;
     this.indexerSubsystem = indexerSubsystem;
@@ -29,7 +29,7 @@ public class SpinIntake extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public SpinIntake(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexerSubsystem, Double power) {
+  public SpinIntake(IntakeSubsystem intakeSubsystem, DiagonalIndexerSubsystem indexerSubsystem, Double power) {
     this.intakeSubsystem = intakeSubsystem;
     this.indexerSubsystem = indexerSubsystem;
     this.power = power;
@@ -61,10 +61,15 @@ public class SpinIntake extends CommandBase {
     intakeSubsystem.setIntakePow(modPow);
     
     boolean opposingColor = intakeSubsystem.getColor().equals(ControlConstants.opposingColor);
-    if(Math.abs(modPow) > 0 && !opposingColor){
-      indexerSubsystem.setLowerIndexer(ShooterConstants.indexerPow);
+    if(Math.abs(modPow) > 0){
+      if(!opposingColor){
+        indexerSubsystem.setDiagonalIndexer(ShooterConstants.indexerPow);
+      }else{
+        indexerSubsystem.setDiagonalIndexer(-ShooterConstants.indexerPow);
+      } 
+      
     }else{
-      indexerSubsystem.setLowerIndexer(0);
+      indexerSubsystem.setDiagonalIndexer(0);
     }
   }
 

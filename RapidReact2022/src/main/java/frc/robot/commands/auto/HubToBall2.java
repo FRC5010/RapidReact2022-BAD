@@ -20,11 +20,11 @@ import frc.robot.commands.FenderShot;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.mechanisms.Drive;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -33,11 +33,11 @@ import frc.robot.subsystems.vision.VisionSystem;
 public class HubToBall2 extends SequentialCommandGroup {
   /** Creates a new HubToBall2. */
   IntakeSubsystem intakeSubsystem;
-  IndexerSubsystem indexerSubsystem;
+  DiagonalIndexerSubsystem indexerSubsystem;
   ShooterSubsystem shooterSubsystem;
   TurretSubsystem turretSubsystem;
   VisionSystem shooterVision;
-  UpperIndexerSubsystem upperIndexerSubsystem;
+  VerticalIndexerSubsystem upperIndexerSubsystem;
   public HubToBall2() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());

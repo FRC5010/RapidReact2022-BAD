@@ -78,20 +78,8 @@ public class SpinTurret extends CommandBase {
         }
       }
     }else{
-      // turretSubsystem.turnTurret(pow);
-      double turretPosition = 0;
-      double angle = shooterSystem.getAngleX();
-
-      if (pow < 0){
-        turretPosition = pow * ShooterConstants.TurretConstants.leftLimit;
-      }
-      else if (pow > 0){
-        turretPosition = pow * ShooterConstants.TurretConstants.rightLimit;
-      }
-      turretSubsystem.angleTurret(turretPosition, lastTime, lastAngle);
+      turretSubsystem.turnTurret(pow);
       turretSubsystem.setOnTarget(false);
-      lastAngle = angle;
-      lastTime = System.currentTimeMillis();
       
     }
 

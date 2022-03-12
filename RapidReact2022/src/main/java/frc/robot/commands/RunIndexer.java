@@ -6,17 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class RunIndexer extends CommandBase {
   /** Creates a new RunIndexer. */
-  IndexerSubsystem indexerSubsystem;
-  UpperIndexerSubsystem upperIndexerSubsystem; 
+  DiagonalIndexerSubsystem indexerSubsystem;
+  VerticalIndexerSubsystem upperIndexerSubsystem; 
   Joystick operator;
   double power;
 
-  public RunIndexer(UpperIndexerSubsystem upperIndexerSubsystem,IndexerSubsystem indexerSubsystem, double power) {
+  public RunIndexer(VerticalIndexerSubsystem upperIndexerSubsystem,DiagonalIndexerSubsystem indexerSubsystem, double power) {
     this.indexerSubsystem = indexerSubsystem;
     this.upperIndexerSubsystem = upperIndexerSubsystem;
     this.power = power;    
@@ -33,15 +33,15 @@ public class RunIndexer extends CommandBase {
   @Override
   public void execute() {
 
-    indexerSubsystem.setLowerIndexer(power);
-    upperIndexerSubsystem.setUpperIndexer(power);
+    indexerSubsystem.setDiagonalIndexer(power);
+    upperIndexerSubsystem.setVerticalIndexer(power);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexerSubsystem.setLowerIndexer(0);
-    upperIndexerSubsystem.setUpperIndexer(0);
+    indexerSubsystem.setDiagonalIndexer(0);
+    upperIndexerSubsystem.setVerticalIndexer(0);
   }
 
   // Returns true when the command should end.

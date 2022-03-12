@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class DefaultShoot extends CommandBase {
   /** Creates a new DefaultShoot. */
   private ShooterSubsystem shooterSubsystem;
-  private UpperIndexerSubsystem indexerSubsystem;
-  public DefaultShoot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem) {
+  private VerticalIndexerSubsystem indexerSubsystem;
+  public DefaultShoot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
 
@@ -35,7 +35,7 @@ public class DefaultShoot extends CommandBase {
       shooterSubsystem.spinUpWheelRPM();
       shooterSubsystem.determineIfReadyToShoot();
       if(shooterSubsystem.getReadyToShoot()){
-        indexerSubsystem.setUpperIndexer(ShooterConstants.indexerPow);
+        indexerSubsystem.setVerticalIndexer(ShooterConstants.indexerPow);
       }
     
   }
@@ -46,7 +46,7 @@ public class DefaultShoot extends CommandBase {
     shooterSubsystem.spinFeeder(0);
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
-    indexerSubsystem.setUpperIndexer(0);
+    indexerSubsystem.setVerticalIndexer(0);
 
   }
 

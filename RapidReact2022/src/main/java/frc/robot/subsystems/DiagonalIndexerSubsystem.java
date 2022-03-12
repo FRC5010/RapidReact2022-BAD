@@ -18,25 +18,25 @@ import frc.robot.Constants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 
-public class IndexerSubsystem extends SubsystemBase {
+public class DiagonalIndexerSubsystem extends SubsystemBase {
   /** Creates a new Indexer. */
   private CANSparkMax lowerMotor;
-  private DigitalInput upperBB;
+  private DigitalInput lowerBB;
 
   private SparkMaxPIDController indexerPIDController;
 
   private ShuffleboardLayout indexerLayout;
   private double indexerSetPoint;
   
-  public IndexerSubsystem(CANSparkMax lowerMotor, DigitalInput upperBB) {
-    this.upperBB = upperBB;
+  public DiagonalIndexerSubsystem(CANSparkMax lowerMotor, DigitalInput upperBB) {
+    this.lowerBB = upperBB;
     this.lowerMotor = lowerMotor;
     this.indexerPIDController = lowerMotor.getPIDController();
 
 
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
-    indexerLayout.addBoolean("Cargo Present", this::getUpperBB);
+    indexerLayout.addBoolean("Lower Cargo Present", this::getLowerBB);
   }
 
   @Override
@@ -44,25 +44,25 @@ public class IndexerSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void spinUpIndexerRPM() {
+  public void spinUpDiagonalIndexerRPM() {
     indexerPIDController.setFF(IndexerConstants.kS / indexerSetPoint + IndexerConstants.kV);
     indexerPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
   
   }
 
-  public void setIndexerPoint(double setPoint){
+  public void setDiagonalIndexerPoint(double setPoint){
     indexerSetPoint = setPoint;
   }
 
-  public void setLowerIndexer(double speed){
+  public void setDiagonalIndexer(double speed){
     lowerMotor.set(speed);
   }
 
-  public boolean isLowerIndexerRunning(){
+  public boolean isDiagonalIndexerRunning(){
     return Math.abs(lowerMotor.get()) > 0;
   }
 
-  public boolean getUpperBB(){
-    return !upperBB.get();
+  public boolean getLowerBB(){
+    return !lowerBB.get();
   }
 }

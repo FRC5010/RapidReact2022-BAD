@@ -9,8 +9,14 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -18,6 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
   ColorSensorV3 colorSensor;
   ColorMatch m_colorMatcher;
   CANSparkMax intakeMotor;
+  ShuffleboardLayout intakeLayout;
   
   public IntakeSubsystem(CANSparkMax intakeMotor, DoubleSolenoid intakePiston, ColorSensorV3 colorSensor) {
     this.intakeMotor = intakeMotor;
@@ -26,10 +33,30 @@ public class IntakeSubsystem extends SubsystemBase {
     this.m_colorMatcher = new ColorMatch();
     m_colorMatcher.addColorMatch(IndexerConstants.kRedTarget);
     m_colorMatcher.addColorMatch(IndexerConstants.kBlueTarget);
+    m_colorMatcher.addColorMatch(Color.kBlack);
+    m_colorMatcher.addColorMatch(Color.kWhite);
+    m_colorMatcher.addColorMatch(Color.kGreen);
+    m_colorMatcher.addColorMatch(Color.kOrange);
+
+    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
+    intakeLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
+    intakeLayout.addString("Color", this::getColorString);
   }
   public Color getColor(){
     return m_colorMatcher.matchClosestColor(colorSensor.getColor()).color;
   }
+
+  public String getColorString(){
+    Color color = m_colorMatcher.matchClosestColor(colorSensor.getColor()).color;
+    if(color.equals(IndexerConstants.kBlueTarget)){
+      return "blue";
+    }else if(color.equals(IndexerConstants.kRedTarget)){
+      return "red";
+    }else{
+      return "unknown";
+    }
+  }
+
   public void togglePiston(){
     intakePiston.toggle();
   }

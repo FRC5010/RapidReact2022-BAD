@@ -27,11 +27,11 @@ import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 /** Add your docs here. */
@@ -52,10 +52,11 @@ public class Transport {
     private CANSparkMax diagonalUpperMotor;
     private CANSparkMax verticalLongMotor;
     private CANSparkMax verticalShortMotor;
+    private DigitalInput lowerBB;
     private DigitalInput upperBB;
     
-    private IndexerSubsystem indexerSubsystem;
-    private UpperIndexerSubsystem upperIndexerSubsystem;
+    private DiagonalIndexerSubsystem indexerSubsystem;
+    private VerticalIndexerSubsystem upperIndexerSubsystem;
 
     private CANSparkMax turretMotor;
     private TurretSubsystem turretSubsystem;
@@ -114,10 +115,12 @@ public class Transport {
         diagonalUpperMotor.follow(diagonalLowerMotor, true);
         verticalLongMotor.follow(verticalShortMotor, true);
 
-        upperBB = new DigitalInput(ControlConstants.BB1);
+        lowerBB = new DigitalInput(ControlConstants.BB1);
+        upperBB = new DigitalInput(ControlConstants.BB2);
 
-        indexerSubsystem = new IndexerSubsystem(diagonalLowerMotor,upperBB);
-        upperIndexerSubsystem = new UpperIndexerSubsystem(verticalLongMotor);
+
+        indexerSubsystem = new DiagonalIndexerSubsystem(diagonalLowerMotor,lowerBB);
+        upperIndexerSubsystem = new VerticalIndexerSubsystem(verticalShortMotor, upperBB);
         
         // initializes turret
         turretMotor = new CANSparkMax(ControlConstants.turretM, MotorType.kBrushless);
@@ -228,11 +231,11 @@ public class Transport {
         return turretSubsystem;
     }
 
-    public IndexerSubsystem getIndexerSubsystem(){
+    public DiagonalIndexerSubsystem getIndexerSubsystem(){
         return indexerSubsystem;
     }
 
-    public UpperIndexerSubsystem getUpperIndexerSubsystem(){
+    public VerticalIndexerSubsystem getUpperIndexerSubsystem(){
         return upperIndexerSubsystem;
     }
 

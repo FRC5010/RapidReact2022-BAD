@@ -8,16 +8,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 public class AimAndShoot extends CommandBase {
   /** Creates a new AimAndShoot. */
   private ShooterSubsystem shooterSubsystem;
-  private UpperIndexerSubsystem indexerSubsystem;
+  private VerticalIndexerSubsystem indexerSubsystem;
   private VisionSystem visionSystem;
 
-  public AimAndShoot(ShooterSubsystem shooterSubsystem, UpperIndexerSubsystem indexerSubsystem,
+  public AimAndShoot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem,
       VisionSystem visionSystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
@@ -50,7 +50,7 @@ public class AimAndShoot extends CommandBase {
     shooterSubsystem.determineIfReadyToShoot();
 
     if (shooterSubsystem.getReadyToShoot()) {
-      indexerSubsystem.setUpperIndexer(ShooterConstants.indexerPow);
+      indexerSubsystem.setVerticalIndexer(ShooterConstants.indexerPow);
     }
   }
 
@@ -60,7 +60,7 @@ public class AimAndShoot extends CommandBase {
     shooterSubsystem.spinFeeder(0);
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
-    indexerSubsystem.setUpperIndexer(0);
+    indexerSubsystem.setVerticalIndexer(0);
     shooterSubsystem.stopHood();
   }
 

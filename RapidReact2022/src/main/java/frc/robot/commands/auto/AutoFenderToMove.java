@@ -15,11 +15,11 @@ import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.commands.Timer;
 import frc.robot.mechanisms.Transport;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.UpperIndexerSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -28,11 +28,11 @@ import frc.robot.subsystems.vision.VisionSystem;
 public class AutoFenderToMove extends SequentialCommandGroup {
   /** Creates a new AutoFenderToMove. */
   IntakeSubsystem intakeSubsystem; 
-  IndexerSubsystem indexerSubsystem; 
+  DiagonalIndexerSubsystem indexerSubsystem; 
   TurretSubsystem turretSubsystem;   
   VisionSystem shooterVision; 
   ShooterSubsystem shooterSubsystem; 
-  UpperIndexerSubsystem upperIndexerSubsystem;
+  VerticalIndexerSubsystem upperIndexerSubsystem;
   public AutoFenderToMove(Transport transport, VisionSystem shooterVision, SequentialCommandGroup drivingGroup) {
     intakeSubsystem = transport.getIntakeSubsystem();
     indexerSubsystem = transport.getIndexerSubsystem();

@@ -107,19 +107,20 @@ public class ControlConstants {
     public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal();
     public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
-    public static int rightClimbArmDown = ButtonNums.A_BUTTON.ordinal();
-    public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
-    public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
-    public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();
+    //public static int rightClimbArmDown = ButtonNums.A_BUTTON.ordinal();
+    //public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
+    //public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
+    //public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();
     public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal(); // unused
     public static int driveYEET = ButtonNums.LEFT_BUMPER.ordinal();
     
     //public static int toggleIntake = ButtonNums.RIGHT_BUMPER.ordinal();
     //automatically raises and lowers intake whenever we intake or outtake
 
-    public static int calibrate = ButtonNums.START_BUTTON.ordinal(); 
+    public static int calibrate = ButtonNums.START_BUTTON.ordinal();
+    public static int climbTime = ButtonNums.BACK_BUTTON.ordinal();
 
-    public static int toggleClimb = ButtonNums.BACK_BUTTON.ordinal();
+    
     //public static int toggleDrive = ButtonNums.LEFT_STICK_BUTT.ordinal();
     //public static int toggleLed = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     
@@ -132,15 +133,16 @@ public class ControlConstants {
 
     //Operator
     public static int operatorJoystick = 1;
-    public static int operatorLeftY = AxisNums.LEFT_Y.ordinal(); // Implement
-    public static int spinHood = AxisNums.RIGHT_Y.ordinal(); // Implement
+    public static int leftClimbArm = AxisNums.LEFT_Y.ordinal(); 
+    public static int rightClimbArm = AxisNums.RIGHT_Y.ordinal();
+    public static int spinHood = AxisNums.RIGHT_Y.ordinal();
     public static int turnTurret = AxisNums.RIGHT_X.ordinal();
     //public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
     //public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
     public static int indexerDown = ButtonNums.A_BUTTON.ordinal();
     public static int hoodDown = ButtonNums.B_BUTTON.ordinal(); 
-    public static int indexerUp = ButtonNums.X_BUTTON.ordinal(); // not used
+    public static int indexerUp = ButtonNums.X_BUTTON.ordinal();
     public static int hoodUp = ButtonNums.Y_BUTTON.ordinal(); 
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
@@ -150,7 +152,8 @@ public class ControlConstants {
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 
     public static int defaultShoot = ButtonNums.START_BUTTON.ordinal();
-    public static int climbTime = ButtonNums.BACK_BUTTON.ordinal();
+    public static int toggleClimb = ButtonNums.BACK_BUTTON.ordinal();
+    
 
     public static int incShooter = POVDirs.UP.ordinal() * 90;
     public static int decShooter = POVDirs.DOWN.ordinal() * 90;

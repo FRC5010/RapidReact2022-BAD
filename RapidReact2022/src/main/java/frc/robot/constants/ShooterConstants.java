@@ -40,7 +40,7 @@ public class ShooterConstants {
     public static class FeederConstants{
         public static double feederWheelPower = 1;
         // pid values
-        public static double kPC = 0;
+        public static double kPC = 0.044696;
         public static double kIC = 0;
         public static double kDC = 0;
 
@@ -50,9 +50,9 @@ public class ShooterConstants {
 
 
         // characterized values
-        public static double kSC = 0;
-        public static double kVC = 0;
-        public static double kAC = 0;
+        public static double kSC = 0.08335;
+        public static double kVC = 0.12194;
+        public static double kAC = 0.0022566;
 
         public static double kS = kSC / 12;
         public static double kV = kVC / 60 / 1 / (12 - kS);

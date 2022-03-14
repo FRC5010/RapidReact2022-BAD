@@ -10,24 +10,35 @@ import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.vision.VisionSystem;
 
 public class DefaultClimb extends CommandBase {
   /** Creates a new DefaultClimb. */
   private ClimbSubsystem climbSubsystem;
-  private Joystick driver;
+  private Joystick operator;
   private IntakeSubsystem intakeSubsystem;
+  private VisionSystem shooterVision;
+  private ShooterSubsystem shooterSubsystem;
+  private TurretSubsystem turretSubsystem;
 
-  public DefaultClimb(ClimbSubsystem climbSubsystem, Joystick driver, IntakeSubsystem intakeSubsystem) {
+  public DefaultClimb(ClimbSubsystem climbSubsystem, Joystick driver, IntakeSubsystem intakeSubsystem, VisionSystem shooterVision, ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem) {
     this.climbSubsystem = climbSubsystem;
-    this.driver = driver;
+    this.operator = driver;
     this.intakeSubsystem = intakeSubsystem;
-    addRequirements(climbSubsystem, intakeSubsystem);
+    this.shooterVision = shooterVision;
+    this.shooterSubsystem = shooterSubsystem;
+    this.turretSubsystem = turretSubsystem;
+    addRequirements(climbSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    shooterVision.setLight(false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
 
@@ -44,24 +55,35 @@ public class DefaultClimb extends CommandBase {
 
     // right arm climb
     intakeSubsystem.deployIntake();
-    if(driver.getRawButton(ControlConstants.rightClimbArmUp) && 
+
+    // right climb
+    climbSubsystem.setRightWinchSpeed(-operator.getRawAxis(ControlConstants.rightClimbArm));
+
+    // left climb
+    climbSubsystem.setLeftWinchSpeed(-operator.getRawAxis(ControlConstants.leftClimbArm));
+
+
+    /*
+    if(operator.getRawButton(ControlConstants.rightClimbArmUp) && 
     climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax){
         climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedUp);
-    }else if(driver.getRawButton(ControlConstants.rightClimbArmDown)){
+    }else if(operator.getRawButton(ControlConstants.rightClimbArmDown)){
       climbSubsystem.setRightWinchSpeed(ClimbConstants.climbSpeedDown);
     }else{
       climbSubsystem.setRightWinchSpeed(0);
     }
 
     // left arm climb
-    if(driver.getRawButton(ControlConstants.leftClimbArmUp) &&
+    if(operator.getRawButton(ControlConstants.leftClimbArmUp) &&
     climbSubsystem.getLeftEncoderValue() < ClimbConstants.climbBothMax){
       climbSubsystem.setLeftWinchSpeed(ClimbConstants.climbSpeedUp);
-    }else if(driver.getRawButton(ControlConstants.leftClimbArmDown)){
+    }else if(operator.getRawButton(ControlConstants.leftClimbArmDown)){
       climbSubsystem.setLeftWinchSpeed(ClimbConstants.climbSpeedDown);
     }else{
       climbSubsystem.setLeftWinchSpeed(0);
     }
+
+    */
   }
 
   // Called once the command ends or is interrupted.

@@ -54,6 +54,11 @@ public class ClimbSubsystem extends SubsystemBase {
   public void setRightWinchSpeed(double speed) {
     rightWinch.set(speed);
   }
+
+  public void zeroArms(){
+    rightEncoder.setPosition(0);
+    leftEncoder.setPosition(0);
+  }
 //should be called extendo arms
 //by Truman
 //this is my contribution to the programming team

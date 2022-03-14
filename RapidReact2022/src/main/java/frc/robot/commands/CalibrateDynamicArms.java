@@ -52,6 +52,7 @@ public class CalibrateDynamicArms extends CommandBase {
   public void end(boolean interrupted) {
     climbSubsystem.setRightWinchSpeed(0);
     climbSubsystem.setLeftWinchSpeed(0);
+    climbSubsystem.zeroArms();
   }
 
   // Returns true when the command should end.

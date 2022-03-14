@@ -16,12 +16,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CalibrateDynamicArms;
+import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultClimb;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.vision.VisionSystem;
 
 /** Add your docs here. */
 public class Climb {
@@ -35,10 +39,11 @@ public class Climb {
     private ClimbSubsystem climbSubsystem;
 
     private JoystickButton climbTime;
-    private JoystickButton climbToggle;
+    private JoystickButton climbTogglePistons;
     private ShuffleboardLayout climbEncoderLayout;
 
     public IntakeSubsystem intakeSubsystem;
+    public VisionSystem shooterVision;
     public Transport transport;
 
     public Climb(Joystick driver, Joystick operator, Transport transport){
@@ -46,7 +51,6 @@ public class Climb {
         this.operator = operator;
         this.transport = transport;
 
-        intakeSubsystem = transport.getIntakeSubsystem();
         // defined motors
         leftWinch = new CANSparkMax(ControlConstants.leftWinchM,MotorType.kBrushless);
         rightWinch = new CANSparkMax(ControlConstants.rightWinchM,MotorType.kBrushless);
@@ -93,11 +97,16 @@ public class Climb {
     }
 
     private void configureButtonBindings(){
-        climbTime = new JoystickButton(operator, ControlConstants.climbTime);
-        climbTime.whileHeld(new DefaultClimb(climbSubsystem, driver, intakeSubsystem), true);
+
+        climbTime = new JoystickButton(driver, ControlConstants.climbTime);
+    
+        climbTime.whileHeld(new ParallelCommandGroup(
+                new DefaultClimb(climbSubsystem, operator, transport.getIntakeSubsystem(), transport.getShooterVision(), transport.getShooterSubsystem(), transport.getTurretSubsystem()), 
+                new CalibrateHood(transport.getShooterSubsystem())), true
+            );
         
-        climbToggle = new JoystickButton(driver, ControlConstants.toggleClimb);
-        climbToggle.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));
+        climbTogglePistons = new JoystickButton(operator, ControlConstants.toggleClimb);
+        climbTogglePistons.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));
     
         SmartDashboard.putData("Calibrate Dynamic Arms", new CalibrateDynamicArms(climbSubsystem));
     }

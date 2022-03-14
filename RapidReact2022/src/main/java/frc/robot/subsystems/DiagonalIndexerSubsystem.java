@@ -45,7 +45,7 @@ public class DiagonalIndexerSubsystem extends SubsystemBase {
   }
 
   public void spinUpDiagonalIndexerRPM() {
-    indexerPIDController.setFF(IndexerConstants.kS / indexerSetPoint + IndexerConstants.kV);
+    indexerPIDController.setFF(IndexerConstants.DiagonalUpper.kS / indexerSetPoint + IndexerConstants.DiagonalUpper.kV);
     indexerPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
   
   }

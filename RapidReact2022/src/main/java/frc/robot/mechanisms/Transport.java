@@ -216,7 +216,7 @@ public class Transport {
 
     }
     public void setUpDeftCom(){
-        shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
+        //shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
         intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));
         
         turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator, false));
@@ -241,5 +241,9 @@ public class Transport {
 
     public ShooterSubsystem getShooterSubsystem(){
         return shooterSubsystem;
+    }
+
+    public VisionSystem getShooterVision(){
+        return shooterVision;
     }
 }

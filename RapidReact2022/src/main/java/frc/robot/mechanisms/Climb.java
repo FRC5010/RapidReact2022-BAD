@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.CalibrateHood;
@@ -100,10 +101,10 @@ public class Climb {
 
         climbTime = new JoystickButton(driver, ControlConstants.climbTime);
     
-        climbTime.whileHeld(new ParallelCommandGroup(
-                new DefaultClimb(climbSubsystem, operator, transport.getIntakeSubsystem(), transport.getShooterVision(), transport.getShooterSubsystem(), transport.getTurretSubsystem()), 
-                new CalibrateHood(transport.getShooterSubsystem())), true
-            );
+        climbTime.whileHeld(new SequentialCommandGroup(
+                new CalibrateHood(transport.getShooterSubsystem()),
+                new DefaultClimb(climbSubsystem, operator, transport.getIntakeSubsystem(), transport.getShooterVision(), transport.getShooterSubsystem(), transport.getTurretSubsystem())), 
+            true);
         
         climbTogglePistons = new JoystickButton(operator, ControlConstants.toggleClimb);
         climbTogglePistons.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));

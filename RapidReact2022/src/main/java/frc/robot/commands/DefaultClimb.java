@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -53,14 +54,14 @@ public class DefaultClimb extends CommandBase {
     //static hooks are remaining up since they kept getting stuck
     //driver triggers are now set to outtake and intake
 
-    // right arm climb
+    
     intakeSubsystem.deployIntake();
 
     // right climb
-    climbSubsystem.setRightWinchSpeed(-operator.getRawAxis(ControlConstants.rightClimbArm));
+    climbSubsystem.setRightWinchSpeed(DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm)));
 
     // left climb
-    climbSubsystem.setLeftWinchSpeed(-operator.getRawAxis(ControlConstants.leftClimbArm));
+    climbSubsystem.setLeftWinchSpeed(DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm)));
 
 
     /*

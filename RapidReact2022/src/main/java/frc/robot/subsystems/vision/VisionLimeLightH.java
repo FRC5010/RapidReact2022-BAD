@@ -40,7 +40,7 @@ public class VisionLimeLightH extends VisionSystem {
       double area = table.getTable(path).getEntry("ta").getDouble(0);
 
       // calculating distance
-      double distance = (targetHeight - camHeight) / Math.tan(Math.toRadians(angleY + camAngle));
+      double distance = (targetHeight - camHeight) / (Math.tan(Math.toRadians(angleY + camAngle) * Math.cos(Math.toRadians(angleX))));
       rawValues = new VisionValues(valid, 0, 0, angleX, angleY, distance);
       smoothedValues = rawValues;
     } else {
@@ -64,5 +64,14 @@ public class VisionLimeLightH extends VisionSystem {
   @Override
   public void setPipeline(double pipeline) {
     NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(pipeline);
+  }
+
+  public void setPiPMode(int streamVal){
+    table.getTable(name).getEntry("stream").setNumber(streamVal);
+  }
+
+  public void toggleLight() {
+    Number lightVal = table.getTable(name).getEntry("ledMode").getNumber(1);
+    table.getTable(name).getEntry("ledMode").setNumber(lightVal.intValue() == 3 ? 1 : 3);
   }
 }

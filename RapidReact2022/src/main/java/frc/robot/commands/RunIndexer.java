@@ -32,15 +32,23 @@ public class RunIndexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //indexerSubsystem.setDiagonalIndexer(power);
+    //upperIndexerSubsystem.setVerticalIndexer(power);
 
-    indexerSubsystem.setDiagonalIndexer(power);
-    upperIndexerSubsystem.setVerticalIndexer(power);
+    indexerSubsystem.setDiagonalIndexerPoint(power);
+    upperIndexerSubsystem.setVerticalIndexerPoint(power);
+
+    indexerSubsystem.spinUpDiagonalIndexerRPM();
+    upperIndexerSubsystem.spinUpVerticalIndexerRPM();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    indexerSubsystem.setDiagonalIndexerPoint(0);
     indexerSubsystem.setDiagonalIndexer(0);
+
+    upperIndexerSubsystem.setVerticalIndexerPoint(0);
     upperIndexerSubsystem.setVerticalIndexer(0);
   }
 

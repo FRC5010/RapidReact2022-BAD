@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants;
 import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultClimb;
@@ -76,9 +77,8 @@ public class Climb {
         climbSubsystem = new ClimbSubsystem(leftWinch, rightWinch, climbSolenoid);
 
         // smartdashboard tab
-        int colIndex = 0;
-        ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabClimbDisplay);
-        climbEncoderLayout = driverTab.getLayout("Climb Encoders", BuiltInLayouts.kGrid).withPosition(colIndex, 0).withSize(3, 5);
+        ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDiagnostics);
+        climbEncoderLayout = driverTab.getLayout("Climb Encoders", BuiltInLayouts.kGrid).withPosition(Constants.climbIndex, 0).withSize(3, 5);
 
         climbEncoderLayout.addBoolean("Is Climb Arms Horizontal", climbSubsystem::isClimbArmHorizontal);
         climbEncoderLayout.addNumber("Left Encoder Value", climbSubsystem::getLeftEncoderValue);

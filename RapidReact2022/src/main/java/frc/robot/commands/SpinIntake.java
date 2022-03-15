@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -62,20 +63,29 @@ public class SpinIntake extends CommandBase {
     
     boolean opposingColor = intakeSubsystem.getColor().equals(ControlConstants.opposingColor);
     if(Math.abs(modPow) > 0){
-      if(!opposingColor){
-        indexerSubsystem.setDiagonalIndexer(ShooterConstants.indexerPow);
+      double confidence = intakeSubsystem.getConfidence();
+      if(confidence > 0.85){
+        if(!opposingColor){
+          indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+        }else{
+          indexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM);
+        }
       }else{
-        indexerSubsystem.setDiagonalIndexer(-ShooterConstants.indexerPow);
+        indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
       } 
-      
+      indexerSubsystem.spinUpDiagonalIndexerRPM();
     }else{
+      indexerSubsystem.setDiagonalIndexerPoint(0);
       indexerSubsystem.setDiagonalIndexer(0);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    indexerSubsystem.setDiagonalIndexerPoint(0);
+    indexerSubsystem.setDiagonalIndexer(0);
+  }
 
   // Returns true when the command should end.
   @Override

@@ -147,7 +147,7 @@ public class ControlConstants {
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
     public static int fenderButton2 = ButtonNums.LEFT_STICK_BUTT.ordinal();
-    //public static int startFlywheel = ButtonNums.LEFT_STICK_BUTT.ordinal();
+    public static int lockAndLoadButton = ButtonNums.LEFT_STICK_BUTT.ordinal();
     public static int toggleLL = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 

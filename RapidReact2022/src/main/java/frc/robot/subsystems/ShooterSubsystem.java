@@ -72,6 +72,9 @@ public class ShooterSubsystem extends SubsystemBase {
     hoodPidController.setD(ShooterConstants.HoodConstants.kD);
 
     feederPidController = feederMotor.getPIDController();
+    feederPidController.setP(ShooterConstants.FeederConstants.kP);
+    feederPidController.setI(ShooterConstants.FeederConstants.kI);
+    feederPidController.setD(ShooterConstants.FeederConstants.kD);
 
     
 

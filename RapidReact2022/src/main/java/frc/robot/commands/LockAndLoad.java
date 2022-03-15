@@ -5,40 +5,43 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
-import frc.robot.constants.ShooterConstants.HoodConstants;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
-public class AimAndShoot extends CommandBase {
-  /** Creates a new AimAndShoot. */
-  private ShooterSubsystem shooterSubsystem;
-  private VerticalIndexerSubsystem indexerSubsystem;
-  private VisionSystem visionSystem;
-
-  public AimAndShoot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem,
-      VisionSystem visionSystem) {
-    this.shooterSubsystem = shooterSubsystem;
-    this.indexerSubsystem = indexerSubsystem;
-    this.visionSystem = visionSystem;
-
-    addRequirements(shooterSubsystem);
+public class LockAndLoad extends CommandBase {
+  /** Creates a new LockAndLoad. */
+  VerticalIndexerSubsystem verticalSubsystem; 
+  DiagonalIndexerSubsystem diagonalSubsystem; 
+  ShooterSubsystem shooterSubsystem; 
+  VisionSystem shooterVision;
+  boolean diagonalBB; 
+  boolean verticalBB; 
+  public LockAndLoad(VerticalIndexerSubsystem verticalSubsystem, DiagonalIndexerSubsystem diagonalSubsystem, ShooterSubsystem shooterSubsystem, VisionSystem shooterVision) {
     // Use addRequirements() here to declare subsystem dependencies.
+      this.verticalSubsystem = verticalSubsystem;
+      this.diagonalSubsystem = diagonalSubsystem;
+      this.shooterSubsystem = shooterSubsystem;
+      this.shooterVision = shooterVision;
+
+      addRequirements(verticalSubsystem, diagonalSubsystem, shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    diagonalBB = diagonalSubsystem.getLowerBB();
+    verticalBB = verticalSubsystem.getUpperBB(); 
     shooterSubsystem.setFlyFeederPoint(ShooterConstants.defaultFlyWheelRPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double distance = visionSystem.getDistance() / 12.0;
-    if (visionSystem.isValidTarget()) {
+    double distance = shooterVision.getDistance() / 12.0;
+    if (shooterVision.isValidTarget()) {
       double flyWheelPoint = shooterSubsystem.flyWheelCalculations(distance);
       shooterSubsystem.setFlyWheelPoint(flyWheelPoint);
       double hoodPoint = shooterSubsystem.hoodCalculations(distance);
@@ -48,31 +51,24 @@ public class AimAndShoot extends CommandBase {
 
       shooterSubsystem.spinUpFeederRPM();
     } 
-
-    shooterSubsystem.determineIfReadyToShoot();
-
-    if (shooterSubsystem.getReadyToShoot()) {
-      indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
-    }else{
-      indexerSubsystem.setVerticalIndexerPoint(0);
+    if (!verticalBB || !diagonalBB){
+      verticalSubsystem.setVerticalIndexer(-0.5);
+    }  else {
+      verticalSubsystem.setVerticalIndexer(0);
     }
-    indexerSubsystem.spinUpVerticalIndexerRPM();
 
+    if (!diagonalBB) {
+      diagonalSubsystem.setDiagonalIndexer(-0.5);
+    } else {
+      diagonalSubsystem.setDiagonalIndexer(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooterSubsystem.spinFeeder(0);
-    shooterSubsystem.setFlyWheelPoint(0);
-    shooterSubsystem.spinFlyWheel(0);
-    indexerSubsystem.setVerticalIndexer(0);
-    shooterSubsystem.stopHood();
-    shooterSubsystem.setFlyFeederPoint(0);
-    shooterSubsystem.spinFeeder(0);
-
-    indexerSubsystem.setVerticalIndexerPoint(0);
-    indexerSubsystem.setVerticalIndexer(0);
+    verticalSubsystem.setVerticalIndexer(0);
+    diagonalSubsystem.setDiagonalIndexer(0);
   }
 
   // Returns true when the command should end.

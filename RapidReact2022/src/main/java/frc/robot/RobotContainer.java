@@ -39,6 +39,7 @@ import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.vision.VisionLimeLight;
+import frc.robot.subsystems.vision.VisionLimeLightH;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -56,7 +57,7 @@ public class RobotContainer {
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
-  private VisionLimeLight shooterVision;
+  private VisionLimeLightH shooterVision;
   private Transport transport;
   private Climb climb;
 
@@ -74,7 +75,8 @@ public class RobotContainer {
     driver = new Joystick(ControlConstants.driverJoystick);
     operator = new Joystick(ControlConstants.operatorJoystick);
 
-    shooterVision = new VisionLimeLight("limelight-shooter", 36.5, 16.2, 102.559, ControlConstants.shooterVisionColumn);
+    // the 20 degrees as of march 15 2022,
+    shooterVision = new VisionLimeLightH("limelight-shooter", 36.5, 20 + 16.2, 102.559, ControlConstants.shooterVisionColumn);
     shooterVision.setPiPMode(2);
     cameraSubsystem = new CameraSubsystem();
 
@@ -136,6 +138,8 @@ public class RobotContainer {
 
     toggleLL = new JoystickButton(operator, ControlConstants.toggleLL);
     toggleLL.whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
+
+
 
   }
 

@@ -7,7 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.ShooterConstants.FeederConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
@@ -51,7 +53,8 @@ public class FenderShot extends CommandBase {
       shooterSubsystem.setHoodSetPoint(HoodConstants.lowHood);
     }
     
-    shooterSubsystem.spinFeeder(ShooterConstants.feederWheelPower);
+    shooterSubsystem.setFlyFeederPoint(FeederConstants.feederWheelRPM);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -60,9 +63,14 @@ public class FenderShot extends CommandBase {
     shooterSubsystem.spinUpWheelRPM();
     shooterSubsystem.pidHood();
     shooterSubsystem.determineIfReadyToShoot();
+    shooterSubsystem.spinUpFeederRPM();
+
     if(shooterSubsystem.getReadyToShoot()){
-      indexerSubsystem.setVerticalIndexer(ShooterConstants.indexerPow);
+      indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
+    }else {
+      indexerSubsystem.setVerticalIndexerPoint(0);
     }
+    indexerSubsystem.spinUpVerticalIndexerRPM();
   }
 
   // Called once the command ends or is interrupted.
@@ -73,6 +81,8 @@ public class FenderShot extends CommandBase {
     shooterSubsystem.spinFlyWheel(0);
     shooterSubsystem.stopHood();
     indexerSubsystem.setVerticalIndexer(0);
+    
+    shooterSubsystem.setFlyFeederPoint(0);
   }
 
   // Returns true when the command should end.

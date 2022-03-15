@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -20,23 +21,44 @@ import frc.robot.constants.IndexerConstants;
 
 public class DiagonalIndexerSubsystem extends SubsystemBase {
   /** Creates a new Indexer. */
-  private CANSparkMax lowerMotor;
+  private CANSparkMax diagonalLowerMotor;
+  private CANSparkMax diagonalUpperMotor;
   private DigitalInput lowerBB;
 
-  private SparkMaxPIDController indexerPIDController;
+  private SparkMaxPIDController lowerPIDController;
+  private SparkMaxPIDController upperPIDController;
+
+  private RelativeEncoder upperEncoder;
+  private RelativeEncoder lowerEncoder;
 
   private ShuffleboardLayout indexerLayout;
   private double indexerSetPoint;
   
-  public DiagonalIndexerSubsystem(CANSparkMax lowerMotor, DigitalInput upperBB) {
+  public DiagonalIndexerSubsystem(CANSparkMax diagonalLowerMotor, CANSparkMax diagonalUpperMotor, DigitalInput upperBB) {
     this.lowerBB = upperBB;
-    this.lowerMotor = lowerMotor;
-    this.indexerPIDController = lowerMotor.getPIDController();
+    this.diagonalLowerMotor = diagonalLowerMotor;
+    this.diagonalUpperMotor = diagonalUpperMotor;
+    this.lowerPIDController = diagonalLowerMotor.getPIDController();
+    lowerPIDController.setP(IndexerConstants.DiagonalLower.kP);
+    lowerPIDController.setI(IndexerConstants.DiagonalLower.kI);
+    lowerPIDController.setD(IndexerConstants.DiagonalLower.kD);
 
 
-    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
-    indexerLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
+    this.upperPIDController = diagonalUpperMotor.getPIDController();
+    upperPIDController.setP(IndexerConstants.DiagonalUpper.kP);
+    upperPIDController.setI(IndexerConstants.DiagonalUpper.kI);
+    upperPIDController.setD(IndexerConstants.DiagonalUpper.kD);
+
+    upperEncoder = diagonalUpperMotor.getEncoder();
+    lowerEncoder = diagonalLowerMotor.getEncoder();
+
+
+
+    ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDiagnostics);
+    indexerLayout = driverTab.getLayout("Indexers", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
     indexerLayout.addBoolean("Lower Cargo Present", this::getLowerBB);
+    indexerLayout.addNumber("Diagonal Lower RPM", this::getLowerRPM);
+    indexerLayout.addNumber("Diagonal Upper RPM", this::getUpperRPM);
   }
 
   @Override
@@ -45,8 +67,12 @@ public class DiagonalIndexerSubsystem extends SubsystemBase {
   }
 
   public void spinUpDiagonalIndexerRPM() {
-    indexerPIDController.setFF(IndexerConstants.DiagonalUpper.kS / indexerSetPoint + IndexerConstants.DiagonalUpper.kV);
-    indexerPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
+    lowerPIDController.setFF(IndexerConstants.DiagonalLower.kS / indexerSetPoint + IndexerConstants.DiagonalLower.kV);
+    lowerPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
+
+    upperPIDController.setFF(IndexerConstants.DiagonalUpper.kS / indexerSetPoint + IndexerConstants.DiagonalUpper.kV);
+    upperPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
+    
   
   }
 
@@ -55,14 +81,25 @@ public class DiagonalIndexerSubsystem extends SubsystemBase {
   }
 
   public void setDiagonalIndexer(double speed){
-    lowerMotor.set(speed);
+    diagonalLowerMotor.set(speed);
+    diagonalUpperMotor.set(speed);
+
+    lowerPIDController.setReference(speed * 12, CANSparkMax.ControlType.kVoltage);
+    upperPIDController.setReference(speed * 12, CANSparkMax.ControlType.kVoltage);
   }
 
   public boolean isDiagonalIndexerRunning(){
-    return Math.abs(lowerMotor.get()) > 0;
+    return Math.abs(diagonalLowerMotor.get()) > 0;
   }
 
   public boolean getLowerBB(){
     return !lowerBB.get();
+  }
+
+  public double getUpperRPM(){
+    return upperEncoder.getVelocity();
+  }
+  public double getLowerRPM(){
+    return lowerEncoder.getVelocity();
   }
 }

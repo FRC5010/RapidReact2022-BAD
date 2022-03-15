@@ -37,13 +37,19 @@ public class IntakeSubsystem extends SubsystemBase {
     m_colorMatcher.addColorMatch(Color.kWhite);
     m_colorMatcher.addColorMatch(Color.kGreen);
     m_colorMatcher.addColorMatch(Color.kOrange);
+    m_colorMatcher.addColorMatch(Color.kYellow);
 
     ShuffleboardTab driverTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     intakeLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
     intakeLayout.addString("Color", this::getColorString);
+    intakeLayout.addNumber("Confidence", this::getConfidence);
   }
   public Color getColor(){
     return m_colorMatcher.matchClosestColor(colorSensor.getColor()).color;
+  }
+
+  public double getConfidence(){
+    return m_colorMatcher.matchClosestColor(colorSensor.getColor()).confidence;
   }
 
   public String getColorString(){

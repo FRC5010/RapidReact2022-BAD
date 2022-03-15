@@ -20,12 +20,13 @@ import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
 import frc.robot.commands.FenderShot;
-import frc.robot.commands.Launcher;
+import frc.robot.commands.LockAndLoad;
 import frc.robot.commands.MoveHood;
 import frc.robot.commands.RunIndexer;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
+import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -80,7 +81,8 @@ public class Transport {
     private JoystickButton driveYEET;
     private JoystickButton fenderShot2;
     private JoystickButton climbTime;
-    
+    private JoystickButton lockAndLoad; 
+
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
         this.driver = driver;
@@ -90,7 +92,7 @@ public class Transport {
         // initializes intake
         intakeMotor = new CANSparkMax(ControlConstants.intakeM, MotorType.kBrushless);
         intakeMotor.restoreFactoryDefaults();
-        intakeMotor.setOpenLoopRampRate(0.5);
+        intakeMotor.setOpenLoopRampRate(1);
         intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot0P, ControlConstants.slot1P);
         intakePiston.set(Value.kReverse);
         colorSensor = new ColorSensorV3(ControlConstants.i2cPort);
@@ -108,19 +110,16 @@ public class Transport {
         verticalShortMotor.restoreFactoryDefaults();
         // Postive voltage is in and up
         diagonalLowerMotor.setInverted(false);
-        verticalLongMotor.setInverted(false);
-        diagonalUpperMotor.setInverted(false);
+        verticalLongMotor.setInverted(true);
+        diagonalUpperMotor.setInverted(true);
         verticalShortMotor.setInverted(false);
-
-        diagonalUpperMotor.follow(diagonalLowerMotor, true);
-        verticalLongMotor.follow(verticalShortMotor, true);
 
         lowerBB = new DigitalInput(ControlConstants.BB1);
         upperBB = new DigitalInput(ControlConstants.BB2);
 
 
-        indexerSubsystem = new DiagonalIndexerSubsystem(diagonalLowerMotor,lowerBB);
-        upperIndexerSubsystem = new VerticalIndexerSubsystem(verticalShortMotor, upperBB);
+        indexerSubsystem = new DiagonalIndexerSubsystem(diagonalLowerMotor, diagonalUpperMotor, lowerBB);
+        upperIndexerSubsystem = new VerticalIndexerSubsystem(verticalShortMotor,verticalLongMotor , upperBB);
         
         // initializes turret
         turretMotor = new CANSparkMax(ControlConstants.turretM, MotorType.kBrushless);
@@ -156,6 +155,7 @@ public class Transport {
         flyWheelLeft.follow(flyWheelRight, true);
         flyWheelRight.setOpenLoopRampRate(0.5);
         shooterSubsystem = new ShooterSubsystem(flyWheelRight, hoodMotor, feederMotor, shooterVision);
+
         
         //climbTime.whileHeld(new InstantCommand(() -> intakeSubsystem.deployIntake(), intakeSubsystem));
         setBabyCurrentLimits(ControlConstants.neoCurrentLimit, ControlConstants.babyNeoCurrentLimit);
@@ -198,11 +198,11 @@ public class Transport {
         calibrateHood.whenPressed(new CalibrateHood(shooterSubsystem));
 
         indexerUp = new JoystickButton(operator, ControlConstants.indexerUp);   
-        indexerUp.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, 0.8), false);
+        indexerUp.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, IndexerConstants.indexerRPM), false);
 
 
         indexerDown = new JoystickButton(operator, ControlConstants.indexerDown);
-        indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -0.8), false);
+        indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -IndexerConstants.indexerRPM), false);
 
         fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
         fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, true), false);
@@ -211,8 +211,8 @@ public class Transport {
         fenderShot2 = new JoystickButton(operator, ControlConstants.fenderButton2);
         fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, false), false);
 
-
-
+        lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
+        lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
 
     }
     public void setUpDeftCom(){

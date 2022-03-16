@@ -26,6 +26,7 @@ public class VisionLimeLight extends VisionSystem {
   @Override
   public void periodic() {
     updateViaNetworkTable(name);
+    System.out.println("table updating");
   }
 
   public void updateViaNetworkTable(String path) {
@@ -43,7 +44,7 @@ public class VisionLimeLight extends VisionSystem {
 
       // calculating distance
       // removed radians function
-      double distance = (targetHeight - camHeight) / (targetHeight - camHeight) / (Math.tan(Math.toRadians(angleY + camAngle) * Math.cos(Math.toRadians(angleX))));;
+      double distance = (targetHeight - camHeight) / (Math.tan(Math.toRadians(angleY + camAngle)) * Math.cos(Math.toRadians(angleX)));
       rawValues = new VisionValues(valid, 0, 0, angleX, angleY, distance, horizontal, vertical);
     
       smoothedValues.averageValues(rawValues, 5);

@@ -66,7 +66,7 @@ public class DiagonalIndexerSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void spinUpDiagonalIndexerRPM() {
+  public void runWithVelocityControl() {
     lowerPIDController.setFF(IndexerConstants.DiagonalLower.kS / indexerSetPoint + IndexerConstants.DiagonalLower.kV);
     lowerPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
 
@@ -83,9 +83,6 @@ public class DiagonalIndexerSubsystem extends SubsystemBase {
   public void setDiagonalIndexer(double speed){
     diagonalLowerMotor.set(speed);
     diagonalUpperMotor.set(speed);
-
-    lowerPIDController.setReference(speed * 12, CANSparkMax.ControlType.kVoltage);
-    upperPIDController.setReference(speed * 12, CANSparkMax.ControlType.kVoltage);
   }
 
   public boolean isDiagonalIndexerRunning(){

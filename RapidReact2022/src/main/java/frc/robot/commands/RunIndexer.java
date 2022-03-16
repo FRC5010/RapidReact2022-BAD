@@ -38,8 +38,8 @@ public class RunIndexer extends CommandBase {
     indexerSubsystem.setDiagonalIndexerPoint(power);
     upperIndexerSubsystem.setVerticalIndexerPoint(power);
 
-    indexerSubsystem.spinUpDiagonalIndexerRPM();
-    upperIndexerSubsystem.spinUpVerticalIndexerRPM();
+    indexerSubsystem.runWithVelocityControl();
+    upperIndexerSubsystem.runWithVelocityControl();
   }
 
   // Called once the command ends or is interrupted.

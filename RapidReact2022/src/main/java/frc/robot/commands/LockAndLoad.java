@@ -18,7 +18,6 @@ public class LockAndLoad extends CommandBase {
   ShooterSubsystem shooterSubsystem; 
   VisionSystem shooterVision;
   boolean diagonalBB; 
-  boolean verticalBB; 
   public LockAndLoad(VerticalIndexerSubsystem verticalSubsystem, DiagonalIndexerSubsystem diagonalSubsystem, ShooterSubsystem shooterSubsystem, VisionSystem shooterVision) {
     // Use addRequirements() here to declare subsystem dependencies.
       this.verticalSubsystem = verticalSubsystem;
@@ -26,14 +25,13 @@ public class LockAndLoad extends CommandBase {
       this.shooterSubsystem = shooterSubsystem;
       this.shooterVision = shooterVision;
 
-      addRequirements(verticalSubsystem, diagonalSubsystem, shooterSubsystem);
+      addRequirements(verticalSubsystem, shooterSubsystem, diagonalSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     diagonalBB = diagonalSubsystem.getLowerBB();
-    verticalBB = verticalSubsystem.getUpperBB(); 
     shooterSubsystem.setFlyFeederPoint(ShooterConstants.defaultFlyWheelRPM);
   }
 
@@ -51,16 +49,15 @@ public class LockAndLoad extends CommandBase {
 
       shooterSubsystem.spinUpFeederRPM();
     } 
-    if (!verticalBB || !diagonalBB){
-      verticalSubsystem.setVerticalIndexer(-0.5);
-    }  else {
-      verticalSubsystem.setVerticalIndexer(0);
-    }
-
+    diagonalBB = diagonalSubsystem.getLowerBB();
     if (!diagonalBB) {
+      System.out.println("down ooo");
       diagonalSubsystem.setDiagonalIndexer(-0.5);
+      verticalSubsystem.setVerticalIndexer(-0.5);  
     } else {
+      System.out.println("no down");
       diagonalSubsystem.setDiagonalIndexer(0);
+      verticalSubsystem.setVerticalIndexer(0);
     }
   }
 
@@ -69,6 +66,7 @@ public class LockAndLoad extends CommandBase {
   public void end(boolean interrupted) {
     verticalSubsystem.setVerticalIndexer(0);
     diagonalSubsystem.setDiagonalIndexer(0);
+    System.out.println("L&L Ended " + interrupted);
   }
 
   // Returns true when the command should end.

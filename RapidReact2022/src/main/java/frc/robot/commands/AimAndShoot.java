@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
@@ -16,15 +17,18 @@ public class AimAndShoot extends CommandBase {
   /** Creates a new AimAndShoot. */
   private ShooterSubsystem shooterSubsystem;
   private VerticalIndexerSubsystem indexerSubsystem;
+  private DiagonalIndexerSubsystem diagonalIndexerSubsystem;
   private VisionSystem visionSystem;
 
-  public AimAndShoot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem,
+  public AimAndShoot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, DiagonalIndexerSubsystem diagonalIndexerSubsystem,
       VisionSystem visionSystem) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
+    this.diagonalIndexerSubsystem = diagonalIndexerSubsystem;
     this.visionSystem = visionSystem;
 
-    addRequirements(shooterSubsystem);
+
+    addRequirements(shooterSubsystem, indexerSubsystem, diagonalIndexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -53,10 +57,18 @@ public class AimAndShoot extends CommandBase {
 
     if (shooterSubsystem.getReadyToShoot()) {
       indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
+      indexerSubsystem.runWithVelocityControl();
+
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+      diagonalIndexerSubsystem.runWithVelocityControl();
     }else{
       indexerSubsystem.setVerticalIndexerPoint(0);
+      indexerSubsystem.setVerticalIndexer(0);
+
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(0);
+      diagonalIndexerSubsystem.setDiagonalIndexer(0);
     }
-    indexerSubsystem.spinUpVerticalIndexerRPM();
+
 
   }
 
@@ -66,13 +78,13 @@ public class AimAndShoot extends CommandBase {
     shooterSubsystem.spinFeeder(0);
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
-    indexerSubsystem.setVerticalIndexer(0);
     shooterSubsystem.stopHood();
     shooterSubsystem.setFlyFeederPoint(0);
     shooterSubsystem.spinFeeder(0);
 
-    indexerSubsystem.setVerticalIndexerPoint(0);
     indexerSubsystem.setVerticalIndexer(0);
+    diagonalIndexerSubsystem.setDiagonalIndexer(0);
+    System.out.println("Code ended");
   }
 
   // Returns true when the command should end.

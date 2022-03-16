@@ -67,10 +67,11 @@ public class FenderShot extends CommandBase {
 
     if(shooterSubsystem.getReadyToShoot()){
       indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
+      indexerSubsystem.runWithVelocityControl();
+
     }else {
       indexerSubsystem.setVerticalIndexerPoint(0);
     }
-    indexerSubsystem.spinUpVerticalIndexerRPM();
   }
 
   // Called once the command ends or is interrupted.

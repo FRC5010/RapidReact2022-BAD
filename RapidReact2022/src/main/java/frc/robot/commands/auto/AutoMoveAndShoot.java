@@ -60,8 +60,7 @@ public class AutoMoveAndShoot extends SequentialCommandGroup {
       ),
       new ParallelCommandGroup(
         new SpinTurret(turretSubsystem, shooterVision, false),
-        new SequentialCommandGroup(new Timer(2000),new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0)),
-        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision)
+        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem, shooterVision)
       )
     
     );

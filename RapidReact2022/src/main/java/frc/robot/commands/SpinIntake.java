@@ -64,7 +64,7 @@ public class SpinIntake extends CommandBase {
     boolean opposingColor = intakeSubsystem.getColor().equals(ControlConstants.opposingColor);
     if(Math.abs(modPow) > 0){
       double confidence = intakeSubsystem.getConfidence();
-      if(confidence > 0.85){
+      if(confidence > 0.90){
         if(!opposingColor){
           indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
         }else{
@@ -73,7 +73,7 @@ public class SpinIntake extends CommandBase {
       }else{
         indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
       } 
-      indexerSubsystem.spinUpDiagonalIndexerRPM();
+      indexerSubsystem.runWithVelocityControl();
     }else{
       indexerSubsystem.setDiagonalIndexerPoint(0);
       indexerSubsystem.setDiagonalIndexer(0);
@@ -83,8 +83,8 @@ public class SpinIntake extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexerSubsystem.setDiagonalIndexerPoint(0);
-    indexerSubsystem.setDiagonalIndexer(0);
+    //indexerSubsystem.setDiagonalIndexerPoint(0);
+    //indexerSubsystem.setDiagonalIndexer(0);
   }
 
   // Returns true when the command should end.

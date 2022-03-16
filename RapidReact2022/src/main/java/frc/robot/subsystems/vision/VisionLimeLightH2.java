@@ -9,19 +9,17 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-public class VisionLimeLightH extends VisionSystem {
+public class VisionLimeLightH2 extends VisionSystem {
   /**
    * Creates a new LimeLightVision.
    */
 
-
-  //class for when the limelight is mounted "normally" or where the leds are mounted horizontally
-  //used when the limelight is mounted horiziontal, landscape
-  public VisionLimeLightH(String name, int colIndex) {
+   // makes a new limelight that is vertical, portrait
+  public VisionLimeLightH2(String name, int colIndex) {
     super(name, colIndex);
   }
 
-  public VisionLimeLightH(String name, double camHeight, double camAngle, double targetHeight, int colIndex) {
+  public VisionLimeLightH2(String name, double camHeight, double camAngle, double targetHeight, int colIndex) {
     super(name, camHeight, camAngle, targetHeight, colIndex);
   }
 
@@ -35,19 +33,32 @@ public class VisionLimeLightH extends VisionSystem {
     boolean valid = table.getTable(path).getEntry("tv").getDouble(0) == 1.0;
     
     if (valid) {
+      // LL is mounted sideways, thus we need to reverse values
       double angleX = table.getTable(path).getEntry("tx").getDouble(0);
       double angleY = table.getTable(path).getEntry("ty").getDouble(0);
       double area = table.getTable(path).getEntry("ta").getDouble(0);
+      double vertical = table.getTable(path).getEntry("thor").getDouble(0);
+      double horizontal = table.getTable(path).getEntry("tvert").getDouble(0);
+
 
       // calculating distance
+      // removed radians function
+      //  * Math.cos(Math.toRadians(angleX)) got rid of this since distances are messed up right now
       double distance = (targetHeight - camHeight) / (Math.tan(Math.toRadians(angleY + camAngle)) * Math.cos(Math.toRadians(angleX)));
-      rawValues = new VisionValues(valid, 0, 0, angleX, angleY, distance);
-      smoothedValues = rawValues;
+      rawValues = new VisionValues(valid, 0, 0, angleX, angleY, distance, horizontal, vertical);
+    
+      smoothedValues.averageValues(rawValues, 5);
     } else {
       rawValues = new VisionValues();
       smoothedValues = new VisionValues();
     }
   }
+
+  public void setPipeline(double pipeline){
+    NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(pipeline);
+  }
+  //name is assigned in the constructor, and will give you the correct limelight table
+  //aka use name whenever you use getTable()
 
   public void setLight(boolean on) {
     table.getTable(name).getEntry("ledMode").setNumber(on ? 3 : 1);
@@ -59,11 +70,6 @@ public class VisionLimeLightH extends VisionSystem {
 
   public boolean isLightOn() {
     return 1 != table.getTable(name).getEntry("ledMode").getNumber(0).intValue();
-  }
-
-  @Override
-  public void setPipeline(double pipeline) {
-    NetworkTableInstance.getDefault().getTable(name).getEntry("pipeline").setNumber(pipeline);
   }
 
   public void setPiPMode(int streamVal){

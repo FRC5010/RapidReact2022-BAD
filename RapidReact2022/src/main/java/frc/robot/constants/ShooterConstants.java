@@ -10,9 +10,9 @@ public class ShooterConstants {
     // flywheel values
 
     // pid values
-    public static double kPC = 0.26749;
+    public static double kPC = 0.11889;
     public static double kIC = 0;
-    public static double kDC = 0;
+    public static double kDC = 0.5;
 
     public static double kP = kPC / 60 / 10;
     public static double kI = kIC / 60;
@@ -20,9 +20,9 @@ public class ShooterConstants {
 
 
     // characterized values
-    public static double kSC = 0.11361;
-    public static double kVC = 0.13197;
-    public static double kAC = 0.0066214;
+    public static double kSC = 0.084437; // 0.11361;
+    public static double kVC = 0.12852; // 0.13197;
+    public static double kAC = 0.00671; // 0.0066214;
 
     public static double kS = kSC / 12;
     public static double kV = kVC / 60 / 1 / (12 - kS);

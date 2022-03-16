@@ -54,9 +54,11 @@ public class AutoFenderToMove extends SequentialCommandGroup {
       ),
       new ParallelCommandGroup(
         new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0),
-        new SpinTurret(turretSubsystem, shooterVision, true),
-        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision),
         drivingGroup
+      ),
+      new ParallelCommandGroup(
+        new SpinTurret(turretSubsystem, shooterVision, true),
+        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision)
       )
     );
   }

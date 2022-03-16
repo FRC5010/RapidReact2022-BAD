@@ -68,8 +68,8 @@ private ShuffleboardLayout turretLayout;
     if(currPos < TurretConstants.leftLimit || currPos > TurretConstants.rightLimit){
       limit = 0;
     }
-    SmartDashboard.putNumber("TurretPow", -limit);
-    turretMotor.set(-limit);
+    SmartDashboard.putNumber("TurretPow", limit);
+    turretMotor.set(limit);
   }
 
   public boolean isOnTarget(double angle){

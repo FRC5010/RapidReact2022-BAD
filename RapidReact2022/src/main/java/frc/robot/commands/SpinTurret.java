@@ -57,6 +57,7 @@ public class SpinTurret extends CommandBase {
     if(pow == 0){
       if(shooterSystem.isValidTarget()){
         double angle = shooterSystem.getAngleX();
+        //System.out.println("angle mannnnnnn: " + angle);
         turretSubsystem.angleTurret(angle, lastTime, lastAngle);
         turretSubsystem.isOnTarget(angle);
 

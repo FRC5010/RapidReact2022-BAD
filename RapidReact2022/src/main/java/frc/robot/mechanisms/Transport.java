@@ -183,7 +183,7 @@ public class Transport {
 
         aimAndShoot = new JoystickButton(operator, ControlConstants.launchButton);
         //switched out DefaultShoot for AimAndShoot
-        aimAndShoot.whileHeld(new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, shooterVision), true);
+        aimAndShoot.whileHeld(new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision), false);
 
         defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot);
         defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem));
@@ -212,7 +212,7 @@ public class Transport {
         fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, false), false);
 
         lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
-        lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
+        lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), false);
 
     }
     public void setUpDeftCom(){

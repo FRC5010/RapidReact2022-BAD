@@ -63,7 +63,7 @@ public class VerticalIndexerSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void spinUpVerticalIndexerRPM() {
+  public void runWithVelocityControl() {
     shortPIDController.setFF(IndexerConstants.VerticalShort.kS / indexerSetPoint + IndexerConstants.VerticalShort.kV);
     shortPIDController.setReference(indexerSetPoint, CANSparkMax.ControlType.kVelocity);
 

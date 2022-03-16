@@ -4,13 +4,11 @@
 
 package frc.robot;
 
-import java.util.ResourceBundle.Control;
-
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -25,21 +23,18 @@ import frc.robot.commands.LedColor;
 import frc.robot.commands.SetPipeline;
 import frc.robot.commands.auto.AutoFenderToMove;
 import frc.robot.commands.auto.AutoMoveAndShoot;
-import frc.robot.commands.auto.GalacticSearch;
-import frc.robot.commands.auto.HubToBall2;
 import frc.robot.commands.auto.HubToBall3;
 import frc.robot.commands.auto.LowerCargoToHub;
-import frc.robot.commands.auto.ManyBallAuto;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.mechanisms.Climb;
 import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.vision.VisionLimeLight;
 import frc.robot.subsystems.vision.VisionLimeLightH;
+import frc.robot.subsystems.vision.VisionLimeLightH2;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -57,7 +52,7 @@ public class RobotContainer {
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
-  private VisionLimeLightH shooterVision;
+  private VisionLimeLightH2 shooterVision;
   private Transport transport;
   private Climb climb;
 
@@ -76,7 +71,7 @@ public class RobotContainer {
     operator = new Joystick(ControlConstants.operatorJoystick);
 
     // the 20 degrees as of march 15 2022,
-    shooterVision = new VisionLimeLightH("limelight-shooter", 36.5, 20 + 16.2, 102.559, ControlConstants.shooterVisionColumn);
+    shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
     shooterVision.setPiPMode(2);
     cameraSubsystem = new CameraSubsystem();
 
@@ -136,7 +131,7 @@ public class RobotContainer {
     SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
 
-    toggleLL = new JoystickButton(operator, ControlConstants.toggleLL);
+    toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
     toggleLL.whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
 
 

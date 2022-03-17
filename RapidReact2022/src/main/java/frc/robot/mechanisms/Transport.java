@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
@@ -82,6 +83,7 @@ public class Transport {
     private JoystickButton fenderShot2;
     private JoystickButton climbTime;
     private JoystickButton lockAndLoad; 
+    private Trigger intakeTrigger;
 
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
@@ -92,7 +94,7 @@ public class Transport {
         // initializes intake
         intakeMotor = new CANSparkMax(ControlConstants.intakeM, MotorType.kBrushless);
         intakeMotor.restoreFactoryDefaults();
-        intakeMotor.setOpenLoopRampRate(1);
+        intakeMotor.setOpenLoopRampRate(0.5);
         intakePiston = new DoubleSolenoid(PneumaticsModuleType.REVPH, ControlConstants.slot0P, ControlConstants.slot1P);
         intakePiston.set(Value.kReverse);
         colorSensor = new ColorSensorV3(ControlConstants.i2cPort);
@@ -186,7 +188,7 @@ public class Transport {
         aimAndShoot.whileHeld(new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision), false);
 
         defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot);
-        defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem));
+        defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem));
 
         incFlyWheel = new POVButton(operator, ControlConstants.incShooter);
         incFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM += ShooterConstants.changeSetPoint));
@@ -205,19 +207,22 @@ public class Transport {
         indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -IndexerConstants.indexerRPM), false);
 
         fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
-        fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, true), false);
+        fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,true), false);
 
         
         fenderShot2 = new JoystickButton(operator, ControlConstants.fenderButton2);
-        fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, false), false);
+        fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
 
         lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
-        lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), false);
+        lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
+
+        intakeTrigger = new Trigger(() -> (Math.abs(driver.getRawAxis(ControlConstants.intakeAxis) - driver.getRawAxis(ControlConstants.outtakeAxis)) > 0));
+        intakeTrigger.whileActiveOnce(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));
 
     }
     public void setUpDeftCom(){
         //shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
-        intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));
+        //intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));
         
         turretSubsystem.setDefaultCommand(new SpinTurret(turretSubsystem, shooterVision,operator, false));
 

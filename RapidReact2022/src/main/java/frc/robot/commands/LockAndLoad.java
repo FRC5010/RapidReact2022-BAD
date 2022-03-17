@@ -47,7 +47,7 @@ public class LockAndLoad extends CommandBase {
       shooterSubsystem.spinUpWheelRPM();
       shooterSubsystem.pidHood();
 
-      shooterSubsystem.spinUpFeederRPM();
+      shooterSubsystem.runWithVelocityControl();
     } 
     diagonalBB = diagonalSubsystem.getLowerBB();
     if (!diagonalBB) {

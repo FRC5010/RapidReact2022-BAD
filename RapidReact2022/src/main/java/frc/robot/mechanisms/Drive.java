@@ -96,7 +96,7 @@ public class Drive {
         () -> DriveConstants.steerFactor = Math.max(0, DriveConstants.steerFactor - DriveConstants.drivingAdjustment)));
 
     driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
-    driveYEET.whileHeld(new DriveTrainYEET(driveTrain, driver));
+    //driveYEET.whileHeld(new DriveTrainYEET(driveTrain, driver));
   }
 
   public static void setCurrentLimits(int currentLimit) {
@@ -112,6 +112,9 @@ public class Drive {
 
   public void init(Joystick driver, VisionSystem shooterVision) {
     this.driver = driver;
+
+    // 10.71:1 gearbox on drivetrain as of 3/17/2022
+
     // Neos HAVE to be in brushless
     lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
     //lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);

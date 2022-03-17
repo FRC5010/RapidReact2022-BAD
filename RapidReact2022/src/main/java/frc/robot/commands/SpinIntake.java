@@ -40,6 +40,7 @@ public class SpinIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    intakeSubsystem.deployIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,11 +50,6 @@ public class SpinIntake extends CommandBase {
     double intakePow;
       if (null != driver) { 
         intakePow = driver.getRawAxis(ControlConstants.intakeAxis) - driver.getRawAxis(ControlConstants.outtakeAxis);
-        if(Math.abs(intakePow) != 0){
-          intakeSubsystem.deployIntake();
-        }else{
-          intakeSubsystem.retractIntake();
-        }
       } else {
         intakePow = power;
       }
@@ -62,29 +58,28 @@ public class SpinIntake extends CommandBase {
     intakeSubsystem.setIntakePow(modPow);
     
     boolean opposingColor = intakeSubsystem.getColor().equals(ControlConstants.opposingColor);
-    if(Math.abs(modPow) > 0){
       double confidence = intakeSubsystem.getConfidence();
-      if(confidence > 0.90){
-        if(!opposingColor){
-          indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
-        }else{
-          indexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM);
-        }
-      }else{
+    if(confidence > 0.90){
+      if(!opposingColor){
         indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
-      } 
-      indexerSubsystem.runWithVelocityControl();
+      }else{
+        indexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM);
+      }
     }else{
-      indexerSubsystem.setDiagonalIndexerPoint(0);
-      indexerSubsystem.setDiagonalIndexer(0);
-    }
+      indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+    } 
+    indexerSubsystem.runWithVelocityControl();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //indexerSubsystem.setDiagonalIndexerPoint(0);
-    //indexerSubsystem.setDiagonalIndexer(0);
+    indexerSubsystem.setDiagonalIndexerPoint(0);
+    indexerSubsystem.setDiagonalIndexer(0);
+
+    intakeSubsystem.setIntakePow(0);
+
+    intakeSubsystem.retractIntake();
   }
 
   // Returns true when the command should end.

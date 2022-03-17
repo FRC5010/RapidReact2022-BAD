@@ -10,8 +10,8 @@ public class ShooterConstants {
     // flywheel values
 
     // pid values
-    public static double kPC = 0.11889;
-    public static double kIC = 0;
+    public static double kPC = 0.2;//0.11889;
+    public static double kIC = 0.000005;
     public static double kDC = 0.5;
 
     public static double kP = kPC / 60 / 10;
@@ -30,9 +30,8 @@ public class ShooterConstants {
 
     //Defaults
     public static double defaultFlyWheelRPM = 1000;
-    public static double lowRPM = 750;
-    public static double highRPM = 2025;
-    public static double feederWheelPower = 0.8;
+    public static double lowRPM = 900;
+    public static double highRPM = 2075;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
     public static double shotAdjustment = 0;
@@ -83,7 +82,7 @@ public class ShooterConstants {
         public static double hoodMaxPos = 40;
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
-        public static double highHood = 12; //4 is what this was during 1st comp
+        public static double highHood = 10; //4 is what this was during 1st comp
         public static double manualPow = 0.25;
     }
 

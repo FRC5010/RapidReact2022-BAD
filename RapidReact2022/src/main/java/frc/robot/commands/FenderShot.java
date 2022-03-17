@@ -11,6 +11,7 @@ import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.FeederConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
@@ -20,17 +21,20 @@ public class FenderShot extends CommandBase {
   private VerticalIndexerSubsystem indexerSubsystem;
   private Joystick driver;
   private boolean isUpperShot = true;
-  public FenderShot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, Joystick driver) {
+  private DiagonalIndexerSubsystem diagonalIndexerSubsystem;
+  public FenderShot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, DiagonalIndexerSubsystem diagonalIndexerSubsystem, Joystick driver) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
+    this.diagonalIndexerSubsystem = diagonalIndexerSubsystem;
     this.driver = driver;
     addRequirements(shooterSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public FenderShot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, boolean isUpperShot) {
+  public FenderShot(ShooterSubsystem shooterSubsystem, VerticalIndexerSubsystem indexerSubsystem, DiagonalIndexerSubsystem diagonalIndexerSubsystem, boolean isUpperShot) {
     this.shooterSubsystem = shooterSubsystem;
     this.indexerSubsystem = indexerSubsystem;
+    this.diagonalIndexerSubsystem = diagonalIndexerSubsystem;
     this.isUpperShot = isUpperShot;
     this.driver = null;
     addRequirements(shooterSubsystem);
@@ -63,14 +67,27 @@ public class FenderShot extends CommandBase {
     shooterSubsystem.spinUpWheelRPM();
     shooterSubsystem.pidHood();
     shooterSubsystem.determineIfReadyToShoot();
-    shooterSubsystem.spinUpFeederRPM();
+    shooterSubsystem.runWithVelocityControl();
 
     if(shooterSubsystem.getReadyToShoot()){
       indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
       indexerSubsystem.runWithVelocityControl();
 
-    }else {
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+      diagonalIndexerSubsystem.runWithVelocityControl();
+    }else if(!diagonalIndexerSubsystem.getLowerBB()){
+      indexerSubsystem.setVerticalIndexerPoint(-IndexerConstants.indexerRPM/75);
+      //maybe change 75 to 50 or something if we decide the fender shot is too inaccurate/we need to run the indexer down more to spread the balls out (needs to be tested and messed with)
+      indexerSubsystem.runWithVelocityControl();
+
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM/75);
+      diagonalIndexerSubsystem.runWithVelocityControl();
+    }else{
       indexerSubsystem.setVerticalIndexerPoint(0);
+      indexerSubsystem.setVerticalIndexer(0);
+
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(0);
+      diagonalIndexerSubsystem.setDiagonalIndexer(0);
     }
   }
 
@@ -81,9 +98,11 @@ public class FenderShot extends CommandBase {
     shooterSubsystem.setFlyWheelPoint(0);
     shooterSubsystem.spinFlyWheel(0);
     shooterSubsystem.stopHood();
-    indexerSubsystem.setVerticalIndexer(0);
-    
     shooterSubsystem.setFlyFeederPoint(0);
+    shooterSubsystem.spinFeeder(0);
+
+    indexerSubsystem.setVerticalIndexer(0);
+    diagonalIndexerSubsystem.setDiagonalIndexer(0);
   }
 
   // Returns true when the command should end.

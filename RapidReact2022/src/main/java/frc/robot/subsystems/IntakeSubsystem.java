@@ -30,6 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
     this.intakeMotor = intakeMotor;
     this.colorSensor = colorSensor;
     this.intakePiston = intakePiston;
+    
     this.m_colorMatcher = new ColorMatch();
     m_colorMatcher.addColorMatch(IndexerConstants.kRedTarget);
     m_colorMatcher.addColorMatch(IndexerConstants.kBlueTarget);

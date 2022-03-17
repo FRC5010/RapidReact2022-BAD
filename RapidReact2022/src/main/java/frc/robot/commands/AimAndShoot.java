@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.ShooterConstants.FeederConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -35,7 +36,7 @@ public class AimAndShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterSubsystem.setFlyFeederPoint(ShooterConstants.defaultFlyWheelRPM);
+    shooterSubsystem.setFlyFeederPoint(FeederConstants.feederWheelRPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,7 +51,7 @@ public class AimAndShoot extends CommandBase {
       shooterSubsystem.spinUpWheelRPM();
       shooterSubsystem.pidHood();
 
-      shooterSubsystem.spinUpFeederRPM();
+      shooterSubsystem.runWithVelocityControl();
     } 
 
     shooterSubsystem.determineIfReadyToShoot();
@@ -61,7 +62,15 @@ public class AimAndShoot extends CommandBase {
 
       diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
       diagonalIndexerSubsystem.runWithVelocityControl();
-    }else{
+    }else if(!diagonalIndexerSubsystem.getLowerBB()){
+      indexerSubsystem.setVerticalIndexerPoint(-IndexerConstants.indexerRPM/75);
+      //might want to change the 75 to find a better number that doesn't take so long, the diagonal and vertical might be different, just something we need to mess with with driver practice 3/17
+      indexerSubsystem.runWithVelocityControl();
+
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM/75);
+      diagonalIndexerSubsystem.runWithVelocityControl();
+    }
+    else{
       indexerSubsystem.setVerticalIndexerPoint(0);
       indexerSubsystem.setVerticalIndexer(0);
 

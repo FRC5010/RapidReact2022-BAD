@@ -97,8 +97,8 @@ public class DriveTrainMain extends SubsystemBase {
   public void driverArcadeDrive(double throttle, double steer) {
     System.out.print(Math.round(throttle * 100.0) + "% e ");
 
-    steer = (steer * DriveConstants.steerFactor) + ((Math.ceil(steer) + Math.floor(steer)) * DriveConstants.ksVolts/12.0);
-    throttle = (throttle * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.ceil(throttle) + Math.floor(throttle)) * DriveConstants.ksVolts/12.0);
+    steer = driverModSteer(steer);
+    throttle = driverModThrottle(throttle);
 
     System.out.println(throttle);
     diffDrive.arcadeDrive(throttle, steer);
@@ -109,27 +109,28 @@ public class DriveTrainMain extends SubsystemBase {
     diffDrive.arcadeDrive(throttle, steer);
   }
   public void driverCurvatureDrive(double throttle, double steer){
-    steer = (steer * DriveConstants.steerFactor) + ((Math.ceil(steer) + Math.floor(steer)) * DriveConstants.ksVolts/12.0);
-    throttle = (throttle * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.ceil(throttle) + Math.floor(throttle)) * DriveConstants.ksVolts/12.0);
+    steer = driverModSteer(steer);
+    throttle = driverModThrottle(throttle);
+
     diffDrive.curvatureDrive(throttle, steer, true);
   }
   public void driverCurvatureDrive(double throttle, double steer, boolean turnStop){
-    steer = (steer * DriveConstants.steerFactor) + ((Math.ceil(steer) + Math.floor(steer)) * DriveConstants.ksVolts/12.0);
-    throttle = (throttle * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.ceil(throttle) + Math.floor(throttle)) * DriveConstants.ksVolts/12.0);
-
+    steer = driverModSteer(steer);
+    throttle = driverModThrottle(throttle);
+    
     diffDrive.curvatureDrive(throttle, steer, turnStop);
   }
+
+  public double driverModSteer(double steer){
+    return minMaxOne((scaleInputs(steer) * DriveConstants.steerFactor) + ((Math.ceil(steer) + Math.floor(steer)) * DriveConstants.ksVolts));
+  }
+
+  public double driverModThrottle(double throttle){
+    return minMaxOne((scaleInputs(throttle) * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.ceil(throttle) + Math.floor(throttle)) * DriveConstants.ksVolts));
+  }
+
   public static double scaleInputs(double input) {
-    if (input > -.05 && input < .05) {
-      return 0.0;
-    }
-    if (input > 1) {
-      return 1;
-    }
-    if (input < -1) {
-      return -1;
-    }
-    
+    input = deadzone(input);
     return Math.pow(input, 3);
 
   }
@@ -138,6 +139,13 @@ public class DriveTrainMain extends SubsystemBase {
     if (input > -.05 && input < .05) {
       return 0.0;
     }
+    input = minMaxOne(input);
+    
+    return input;
+
+  }
+
+  public static double minMaxOne(double input){
     if (input > 1) {
       return 1;
     }
@@ -146,8 +154,9 @@ public class DriveTrainMain extends SubsystemBase {
     }
     
     return input;
-
   }
+
+  
 
   public void setMaxOutput(double maxOutput) {
     leftMaster.set(maxOutput);

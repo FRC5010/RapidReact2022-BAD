@@ -94,8 +94,8 @@ public class ShooterConstants {
 
         public static double kPEncoder = 0.02;
 
-        public static double leftLimit = -3;
-        public static double rightLimit = 2;
+        public static double leftLimit = -15;
+        public static double rightLimit = 10;
     }
 }
 

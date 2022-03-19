@@ -58,11 +58,20 @@ public class DefaultClimb extends CommandBase {
     intakeSubsystem.deployIntake();
 
     // right climb
-    climbSubsystem.setRightWinchSpeed(DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm)));
+    double rightClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm));
+    if (climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax || rightClimbSpeed < 0){
+      climbSubsystem.setRightWinchSpeed(rightClimbSpeed);
+    } else {
+      climbSubsystem.setRightWinchSpeed(0);
+    }
 
     // left climb
-    climbSubsystem.setLeftWinchSpeed(DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm)));
-
+    double leftClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm));
+    if (climbSubsystem.getLeftEncoderValue() < ClimbConstants.climbBothMax || leftClimbSpeed < 0){
+      climbSubsystem.setLeftWinchSpeed(leftClimbSpeed);
+    } else {
+      climbSubsystem.setLeftWinchSpeed(0);
+    }
 
     /*
     if(operator.getRawButton(ControlConstants.rightClimbArmUp) && 

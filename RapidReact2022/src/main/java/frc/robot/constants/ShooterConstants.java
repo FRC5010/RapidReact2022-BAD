@@ -89,13 +89,17 @@ public class ShooterConstants {
     public static class TurretConstants{
         public static double limitPow = 0.75;
 
+        public static double seekSpeed = 0.5;
+
         public static double kPVision = 0.007;
         public static double kDVision = 1.05;
 
         public static double kPEncoder = 0.02;
 
-        public static double leftLimit = -15;
-        public static double rightLimit = 10;
+
+        // as of 3/19/22 the turret can't move all the way, so we are decreasing the limits to use the search feature of the turret
+        public static double leftLimit = -5; //-15;
+        public static double rightLimit = 5; //10;
     }
 }
 

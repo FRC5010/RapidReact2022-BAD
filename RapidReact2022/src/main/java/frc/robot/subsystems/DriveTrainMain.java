@@ -97,7 +97,7 @@ public class DriveTrainMain extends SubsystemBase {
   public void driverArcadeDrive(double throttle, double steer) {
     System.out.print(Math.round(throttle * 100.0) + "% e ");
 
-    steer = driverModSteer(steer);
+    steer = driverModSteer(steer, throttle);
     throttle = driverModThrottle(throttle);
 
     System.out.println(throttle);
@@ -109,24 +109,24 @@ public class DriveTrainMain extends SubsystemBase {
     diffDrive.arcadeDrive(throttle, steer);
   }
   public void driverCurvatureDrive(double throttle, double steer){
-    steer = driverModSteer(steer);
+    steer = driverModSteer(steer, throttle);
     throttle = driverModThrottle(throttle);
 
     diffDrive.curvatureDrive(throttle, steer, true);
   }
   public void driverCurvatureDrive(double throttle, double steer, boolean turnStop){
-    steer = driverModSteer(steer);
+    steer = driverModSteer(steer, throttle);
     throttle = driverModThrottle(throttle);
-    
+
     diffDrive.curvatureDrive(throttle, steer, turnStop);
   }
 
-  public double driverModSteer(double steer){
-    return minMaxOne((scaleInputs(steer) * DriveConstants.steerFactor) + ((Math.ceil(steer) + Math.floor(steer)) * DriveConstants.ksVolts));
+  public double driverModSteer(double steer, double throttle){
+    return minMaxOne((deadzone(steer) * DriveConstants.steerFactor) + (Math.abs(steer) > 0 && Math.abs(throttle) == 0 ? (Math.signum(steer)) * DriveConstants.ksVolts : 0));
   }
 
   public double driverModThrottle(double throttle){
-    return minMaxOne((scaleInputs(throttle) * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.ceil(throttle) + Math.floor(throttle)) * DriveConstants.ksVolts));
+    return minMaxOne((scaleInputs(throttle) * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.signum(throttle)) * DriveConstants.ksVolts));
   }
 
   public static double scaleInputs(double input) {

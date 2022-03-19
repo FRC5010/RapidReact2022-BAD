@@ -236,11 +236,11 @@ public class Transport {
         return turretSubsystem;
     }
 
-    public DiagonalIndexerSubsystem getIndexerSubsystem(){
+    public DiagonalIndexerSubsystem getDiagonalIndexerSubsystem(){
         return indexerSubsystem;
     }
 
-    public VerticalIndexerSubsystem getUpperIndexerSubsystem(){
+    public VerticalIndexerSubsystem getVerticalIndexerSubsystem(){
         return upperIndexerSubsystem;
     }
 

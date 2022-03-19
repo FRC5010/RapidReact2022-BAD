@@ -14,6 +14,10 @@ import frc.robot.commands.FenderShot;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.commands.Timer;
+import frc.robot.commands.auto.blocks.CalibrateSystemBlock;
+import frc.robot.commands.auto.blocks.FenderWithTimerBlock;
+import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
+import frc.robot.commands.auto.blocks.ShootWithTimerBlock;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -25,7 +29,7 @@ import frc.robot.subsystems.vision.VisionSystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoFenderToMove extends SequentialCommandGroup {
+public class FenderTwoBall extends SequentialCommandGroup {
   /** Creates a new AutoFenderToMove. */
   IntakeSubsystem intakeSubsystem; 
   DiagonalIndexerSubsystem indexerSubsystem; 
@@ -33,33 +37,23 @@ public class AutoFenderToMove extends SequentialCommandGroup {
   VisionSystem shooterVision; 
   ShooterSubsystem shooterSubsystem; 
   VerticalIndexerSubsystem upperIndexerSubsystem;
-  public AutoFenderToMove(Transport transport, VisionSystem shooterVision, SequentialCommandGroup drivingGroup) {
+  public FenderTwoBall(Transport transport, SequentialCommandGroup drivingGroup) {
     intakeSubsystem = transport.getIntakeSubsystem();
-    indexerSubsystem = transport.getIndexerSubsystem();
+    indexerSubsystem = transport.getDiagonalIndexerSubsystem();
     turretSubsystem = transport.getTurretSubsystem();
     this.shooterVision = shooterVision;
     shooterSubsystem = transport.getShooterSubsystem();
-    upperIndexerSubsystem = transport.getUpperIndexerSubsystem(); 
+    upperIndexerSubsystem = transport.getVerticalIndexerSubsystem(); 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelCommandGroup(
-        new CalibrateHood(shooterSubsystem),
-        new InstantCommand(() -> intakeSubsystem.deployIntake()),
-        new InstantCommand(() -> turretSubsystem.zeroTurret())
-      ), 
-      new ParallelDeadlineGroup(
-        new Timer(5000),
-        new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false)
-      ),
-      new ParallelCommandGroup(
-        new SpinIntake(intakeSubsystem, indexerSubsystem, 1.0),
-        drivingGroup
-      ),
-      new ParallelCommandGroup(
-        new SpinTurret(turretSubsystem, shooterVision, true),
-        new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision)
-      )
+      new CalibrateSystemBlock(transport), 
+
+      new FenderWithTimerBlock(transport,2000),
+
+      new MoveAndIntakeBlock(transport, drivingGroup),
+
+      new ShootWithTimerBlock(transport, 2000)
     );
   }
 }

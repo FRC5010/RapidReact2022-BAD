@@ -42,13 +42,13 @@ public final class DriveConstants {
 
     public static final double kTrackwidthMeters = 0.616;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-    public static final double kMaxSpeedMetersPerSecond = 1.2;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.6;
+    public static final double kMaxSpeedMetersPerSecond = 72 * (.0254); // converting from in/s to m/s
+    public static final double kMaxAccelerationMetersPerSecondSquared = 60 * (.0254); // converting from in/s/s to m/s/s
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
 
-    public static final double wheelDiameter = 0.5 * 0.3048; // 12 * 0.0254 - feet to meters
-    public static final double motorRotationsPerWheelRotation = 8.45; // i.e. gear ratio
+    public static final double wheelDiameter = 0.5 * (0.3048); // 12 * 0.0254 - feet to meters
+    public static final double motorRotationsPerWheelRotation = 10.71; // i.e. gear ratio
     public static final double pulsesPerMotorRotation = 1.0; // Encoder PPR
     public static final double pulsesPerWheelRotation = pulsesPerMotorRotation * motorRotationsPerWheelRotation;
 

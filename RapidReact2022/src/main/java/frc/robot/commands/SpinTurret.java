@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
+import frc.robot.constants.ShooterConstants.TurretConstants;
 import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -21,7 +22,7 @@ public class SpinTurret extends CommandBase {
   boolean isSeek = false;
   double lastAngle;
   double lastTime;
-  int seekDirection = 1; 
+  int seekDirection = -1; 
   public SpinTurret(TurretSubsystem turretSubsystem, VisionSystem shooterSystem,Joystick operator, boolean isSeek) {
     this.turretSubsystem = turretSubsystem;
     this.shooterSystem = shooterSystem;
@@ -65,7 +66,7 @@ public class SpinTurret extends CommandBase {
         lastTime = System.currentTimeMillis();
       }else{
         if (isSeek){
-          pow = 0.13; 
+          pow = TurretConstants.seekSpeed; 
           turretSubsystem.turnTurret(pow * seekDirection);
           if (turretSubsystem.isAtRightLimit()){
             seekDirection = -1;

@@ -17,14 +17,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
 import frc.robot.commands.SetPipeline;
-import frc.robot.commands.auto.AutoFenderToMove;
-import frc.robot.commands.auto.AutoMoveAndShoot;
-import frc.robot.commands.auto.HubToBall3;
-import frc.robot.commands.auto.LowerCargoToHub;
+import frc.robot.commands.auto.ExtendingTerminalBall;
+import frc.robot.commands.auto.ExtendingThreeBall;
+import frc.robot.commands.auto.FenderTwoBall;
+import frc.robot.commands.auto.TarmacTwoBall;
+import frc.robot.commands.auto.pathing.UpperTarmacToBall;
+import frc.robot.commands.auto.pathing.LowerBall1ToBall2;
+import frc.robot.commands.auto.pathing.LowerBall2ToTerminal;
+import frc.robot.commands.auto.pathing.LowerTarmacToBall1;
+import frc.robot.commands.auto.pathing.SingleCargoPath;
+import frc.robot.commands.auto.pathing.TarmacToCargoPath;
+import frc.robot.commands.auto.pathing.TerminalDriveBack;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.mechanisms.Climb;
@@ -88,10 +96,27 @@ public class RobotContainer {
      * command.addOption("HubBall3", new HubToBall3());
      * command.addOption("ManyBall", new ManyBallAuto());
      */
-    command.addOption("MoveAndShoot", new AutoMoveAndShoot(transport, shooterVision, new LowerCargoToHub()));
+
+    command.addOption("MoveAndShoot", new TarmacTwoBall(transport, new SingleCargoPath()));
+
+    command.addOption("LowerThreeBall",
+      new SequentialCommandGroup(
+        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+        new ExtendingThreeBall(transport, new LowerBall1ToBall2())
+      )
+    );
+
+    command.addOption("Lower4-5Ball",
+      new SequentialCommandGroup(
+        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+        new ExtendingThreeBall(transport, new LowerBall1ToBall2()),
+        new ExtendingTerminalBall(transport, new LowerBall2ToTerminal(), new TerminalDriveBack())
+      )
+    );
+
     // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision,
     // new HubToBall2()));
-    command.addOption("FenderMoveAndShoot", new AutoFenderToMove(transport, shooterVision, new HubToBall3()));
+    command.addOption("FenderMoveAndShoot", new FenderTwoBall(transport, new UpperTarmacToBall()));
     // command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision,
     // new ManyBallAuto()));
     // command.addOption("Galactic Search", new

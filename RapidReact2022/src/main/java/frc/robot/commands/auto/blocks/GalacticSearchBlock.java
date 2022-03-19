@@ -3,7 +3,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.auto;
+package frc.robot.commands.auto.blocks;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,12 +19,12 @@ import frc.robot.subsystems.vision.VisionSystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class GalacticSearch extends SequentialCommandGroup {
+public class GalacticSearchBlock extends SequentialCommandGroup {
   private DriveTrainMain driveTrainMain;
   private VisionSystem visionSystem;
   private Pose pose;
 
-  public GalacticSearch(DriveTrainMain driveTrainMain, VisionSystem visionSystem, Pose pose) {
+  public GalacticSearchBlock(DriveTrainMain driveTrainMain, VisionSystem visionSystem, Pose pose) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainMain = driveTrainMain;
     this.visionSystem = visionSystem;

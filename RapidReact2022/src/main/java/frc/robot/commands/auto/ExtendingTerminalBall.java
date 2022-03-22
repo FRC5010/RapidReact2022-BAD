@@ -23,7 +23,7 @@ public class ExtendingTerminalBall extends SequentialCommandGroup {
 
       new MoveAndIntakeBlock(transport, drivingBackGroup),
 
-      new ShootWithTimerBlock(transport, 2000)
+      new ShootWithTimerBlock(transport, 1500)
       
 
     );

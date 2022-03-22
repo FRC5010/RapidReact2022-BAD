@@ -34,7 +34,7 @@ public class ShooterConstants {
     public static double highRPM = 2075;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
-    public static double shotAdjustment = 0;
+    public static double shotAdjustment = 100;
 
     public static class FeederConstants{
         public static double feederWheelPower = 1;
@@ -91,15 +91,14 @@ public class ShooterConstants {
 
         public static double seekSpeed = 0.5;
 
-        public static double kPVision = 0.007;
-        public static double kDVision = 1.05;
+        public static double kPVision = 0.008;
+        public static double kDVision = 850;
 
-        public static double kPEncoder = 0.02;
+        public static double kPEncoder = 0.15;
 
 
-        // as of 3/19/22 the turret can't move all the way, so we are decreasing the limits to use the search feature of the turret
-        public static double leftLimit = -5; //-15;
-        public static double rightLimit = 5; //10;
+        public static double leftLimit = -1.8; //-15;
+        public static double rightLimit = 1.3; //10;
     }
 }
 

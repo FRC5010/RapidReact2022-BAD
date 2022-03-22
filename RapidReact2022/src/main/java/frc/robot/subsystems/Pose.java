@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -46,7 +47,7 @@ public class Pose extends SubsystemBase {
     public final RelativeEncoder rightEncoder;
 
     // The gyro sensor
-    public final AHRS gyro = new AHRS(Port.kUSB1);
+    public final AHRS gyro = new AHRS(I2C.Port.kMXP);
 
     // Odometry class for tracking robot pose
 

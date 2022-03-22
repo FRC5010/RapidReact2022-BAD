@@ -168,7 +168,7 @@ public class Transport {
         intakeMotor.setSmartCurrentLimit(60);
         diagonalLowerMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
         verticalLongMotor.setSmartCurrentLimit(babyNeoCurrentLimit);
-        turretMotor.setSmartCurrentLimit(25);
+        turretMotor.setSmartCurrentLimit(50);
         flyWheelLeft.setSmartCurrentLimit(neoCurrentLimit);
         flyWheelRight.setSmartCurrentLimit(neoCurrentLimit);
         hoodMotor.setSmartCurrentLimit(babyNeoCurrentLimit);

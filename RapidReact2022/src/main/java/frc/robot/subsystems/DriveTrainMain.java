@@ -136,7 +136,7 @@ public class DriveTrainMain extends SubsystemBase {
   }
 
   public static double deadzone(double input) {
-    if (input > -.05 && input < .05) {
+    if (input > -.075 && input < .075) {
       return 0.0;
     }
     input = minMaxOne(input);

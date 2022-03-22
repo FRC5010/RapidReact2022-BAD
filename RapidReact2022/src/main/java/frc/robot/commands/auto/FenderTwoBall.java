@@ -49,11 +49,11 @@ public class FenderTwoBall extends SequentialCommandGroup {
     addCommands(
       new CalibrateSystemBlock(transport), 
 
-      new FenderWithTimerBlock(transport,2000),
+      new FenderWithTimerBlock(transport,1500),
 
       new MoveAndIntakeBlock(transport, drivingGroup),
 
-      new ShootWithTimerBlock(transport, 2000)
+      new ShootWithTimerBlock(transport, 1500)
     );
   }
 }

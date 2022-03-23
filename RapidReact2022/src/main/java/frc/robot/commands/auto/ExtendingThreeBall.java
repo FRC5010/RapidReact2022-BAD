@@ -7,6 +7,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.SpinIntake;
+import frc.robot.commands.auto.blocks.IntakeWithTimerBlock;
 import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
 import frc.robot.commands.auto.blocks.ShootWithTimerBlock;
 import frc.robot.mechanisms.Transport;
@@ -22,7 +23,8 @@ public class ExtendingThreeBall extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new MoveAndIntakeBlock(transport, drivingGroup),
-      new ShootWithTimerBlock(transport,1500)
+      new IntakeWithTimerBlock(transport, 250),
+      new ShootWithTimerBlock(transport,1250)
     );
   }
 }

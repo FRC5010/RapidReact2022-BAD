@@ -108,6 +108,7 @@ public class ControlConstants {
     public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
 
     //public static int rightClimbArmDown = ButtonNums.A_BUTTON.ordinal();
+    public static int toggleLL = ButtonNums.A_BUTTON.ordinal();
     //public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
     //public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
     //public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();
@@ -123,7 +124,7 @@ public class ControlConstants {
     
     //public static int toggleDrive = ButtonNums.LEFT_STICK_BUTT.ordinal();
     //public static int toggleLed = ButtonNums.RIGHT_STICK_BUTT.ordinal();
-    public static int toggleLL = ButtonNums.RIGHT_STICK_BUTT.ordinal();
+    //public static int toggleLL = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     
     
 
@@ -134,21 +135,24 @@ public class ControlConstants {
 
     //Operator
     public static int operatorJoystick = 1;
-    public static int leftClimbArm = AxisNums.LEFT_Y.ordinal(); 
+    public static int leftClimbArm = AxisNums.LEFT_Y.ordinal();
+    public static int joystickIndexer = AxisNums.LEFT_Y.ordinal(); 
     public static int rightClimbArm = AxisNums.RIGHT_Y.ordinal();
     public static int spinHood = AxisNums.RIGHT_Y.ordinal();
     public static int turnTurret = AxisNums.RIGHT_X.ordinal();
-    //public static int outtakeAxis = AxisNums.L_TRIGGER.ordinal() ;
-    //public static int intakeAxis = AxisNums.R_TRIGGER.ordinal();
+    public static int fender2Button = AxisNums.L_TRIGGER.ordinal() ;
+    public static int lockAndLoadButton = AxisNums.R_TRIGGER.ordinal();
 
-    public static int indexerDown = ButtonNums.A_BUTTON.ordinal();
+    //public static int indexerDown = ButtonNums.A_BUTTON.ordinal(); // 3/22/2022 not used, switched to joystick
     public static int hoodDown = ButtonNums.B_BUTTON.ordinal(); 
-    public static int indexerUp = ButtonNums.X_BUTTON.ordinal();
+    //public static int indexerUp = ButtonNums.X_BUTTON.ordinal();
     public static int hoodUp = ButtonNums.Y_BUTTON.ordinal(); 
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
-    public static int fenderButton2 = ButtonNums.RIGHT_STICK_BUTT.ordinal();
-    public static int lockAndLoadButton = ButtonNums.LEFT_STICK_BUTT.ordinal();
+
+    //public static int fenderButton2 = ButtonNums.RIGHT_STICK_BUTT.ordinal();
+    //public static int lockAndLoadButton = ButtonNums.LEFT_STICK_BUTT.ordinal();
+
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 
     public static int defaultShoot = ButtonNums.START_BUTTON.ordinal();
@@ -157,8 +161,11 @@ public class ControlConstants {
 
     public static int incShooter = POVDirs.UP.ordinal() * 90;
     public static int decShooter = POVDirs.DOWN.ordinal() * 90;
-    //public static int spinnerOverrideButtonLow = POVDirs.RIGHT.ordinal() * 90;
-    //public static int spinnerOverrideButtonHigh = POVDirs.LEFT.ordinal() * 90;
+    public static int shotAdjustmentUp = POVDirs.RIGHT.ordinal() * 90;
+    public static int shotAdjustmentDown = POVDirs.LEFT.ordinal() * 90;
+
+    //test button for disable ball reject
+    public static int toggleReject = ButtonNums.X_BUTTON.ordinal();
 
     // Shuffleboard constants
     public static String SBTabDriverDisplay = "Driver Display";

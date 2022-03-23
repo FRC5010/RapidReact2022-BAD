@@ -81,7 +81,6 @@ public class RobotContainer {
     // the 20 degrees as of march 15 2022,
     shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
     shooterVision.setPiPMode(2);
-    cameraSubsystem = new CameraSubsystem();
 
     drive = new Drive(driver, shooterVision);
     transport = new Transport(operator, driver, shooterVision);
@@ -99,14 +98,14 @@ public class RobotContainer {
 
     command.addOption("MoveAndShoot", new TarmacTwoBall(transport, new SingleCargoPath()));
 
-    command.addOption("LowerThreeBall",
+    command.addOption("Lower 3+1 Ball",
       new SequentialCommandGroup(
         new TarmacTwoBall(transport, new LowerTarmacToBall1()),
         new ExtendingThreeBall(transport, new LowerBall1ToBall2())
       )
     );
 
-    command.addOption("Lower4-5Ball",
+    command.addOption("Lower 5+1 Ball",
       new SequentialCommandGroup(
         new TarmacTwoBall(transport, new LowerTarmacToBall1()),
         new ExtendingThreeBall(transport, new LowerBall1ToBall2()),
@@ -165,6 +164,16 @@ public class RobotContainer {
 
   // Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
+    if (!DriverStation.isTest()) {
+      drive.setUpDeftCom();
+      transport.setUpDeftCom();
+    } else {
+      transport.setUpDeftCom();
+    }
+    cameraSubsystem = new CameraSubsystem();
+  }
+
+  public void determineAllianceColor(){
     Alliance color = DriverStation.getAlliance();
     if (Alliance.Red.equals(color)){
       ControlConstants.allianceColor = IndexerConstants.kRedTarget;
@@ -174,12 +183,6 @@ public class RobotContainer {
       ControlConstants.opposingColor = IndexerConstants.kRedTarget;
     } else {
       ControlConstants.allianceColor = Color.kBlack;
-    }
-    if (!DriverStation.isTest()) {
-      drive.setUpDeftCom();
-      transport.setUpDeftCom();
-    } else {
-      transport.setUpDeftCom();
     }
   }
 

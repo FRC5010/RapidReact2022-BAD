@@ -34,7 +34,7 @@ public class ShooterConstants {
     public static double highRPM = 2075;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
-    public static double shotAdjustment = 100;
+    public static double shotAdjustment = 75;
 
     public static class FeederConstants{
         public static double feederWheelPower = 1;
@@ -90,6 +90,8 @@ public class ShooterConstants {
         public static double limitPow = 0.75;
 
         public static double seekSpeed = 0.5;
+
+        public static double kS = 0.01;
 
         public static double kPVision = 0.008;
         public static double kDVision = 850;

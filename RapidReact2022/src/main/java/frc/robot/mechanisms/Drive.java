@@ -141,8 +141,8 @@ public class Drive {
     rDrive3.follow(rDrive1, false);
     rDrive3.setInverted(false);
 
-    rDrive1.setOpenLoopRampRate(0.25);
-    lDrive1.setOpenLoopRampRate(0.25);
+    rDrive1.setOpenLoopRampRate(0.5);
+    lDrive1.setOpenLoopRampRate(0.5);
 
     lEncoder = lDrive1.getEncoder();
     rEncoder = rDrive1.getEncoder();

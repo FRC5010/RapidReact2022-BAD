@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    m_robotContainer.setUpDeftCom();
+    m_robotContainer.determineAllianceColor();
   }
 
   /** This function is called periodically during autonomous. */
@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.setUpDeftCom();
+    m_robotContainer.determineAllianceColor();
   }
 
   /** This function is called periodically during operator control. */

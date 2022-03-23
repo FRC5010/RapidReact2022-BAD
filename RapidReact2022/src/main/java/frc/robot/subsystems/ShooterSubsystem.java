@@ -114,7 +114,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterLayout.addNumber("Fly Wheel SetPoint", this::getFlywheelSetPoint).withSize(1, 1);
     shooterLayout.addNumber("Default RPM Flywheel", () -> ShooterConstants.defaultFlyWheelRPM).withSize(1, 1);
     shooterLayout.addNumber("Feeder RPM", this::getFeederRPM);
-
+    shooterLayout.addNumber("Shot adjustment RPM", this::getShotAdjustment);
   }
   
   public void spinUpWheelRPM() {
@@ -133,6 +133,10 @@ public class ShooterSubsystem extends SubsystemBase {
       return true;
     }
     return false;
+  }
+
+  public double getShotAdjustment(){
+    return ShooterConstants.shotAdjustment;
   }
 
   public void setHoodEncoder(double pos){

@@ -8,11 +8,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ClimbConstants;
 import frc.robot.constants.ControlConstants;
+import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 public class DefaultClimb extends CommandBase {
@@ -22,16 +25,18 @@ public class DefaultClimb extends CommandBase {
   private IntakeSubsystem intakeSubsystem;
   private VisionSystem shooterVision;
   private ShooterSubsystem shooterSubsystem;
-  private TurretSubsystem turretSubsystem;
+  private DiagonalIndexerSubsystem diagonalIndexerSubsystem;
+  private VerticalIndexerSubsystem verticalIndexerSubsystem;
 
-  public DefaultClimb(ClimbSubsystem climbSubsystem, Joystick driver, IntakeSubsystem intakeSubsystem, VisionSystem shooterVision, ShooterSubsystem shooterSubsystem, TurretSubsystem turretSubsystem) {
+  public DefaultClimb(ClimbSubsystem climbSubsystem, Joystick driver, Transport transport) {
     this.climbSubsystem = climbSubsystem;
     this.operator = driver;
-    this.intakeSubsystem = intakeSubsystem;
-    this.shooterVision = shooterVision;
-    this.shooterSubsystem = shooterSubsystem;
-    this.turretSubsystem = turretSubsystem;
-    addRequirements(climbSubsystem, intakeSubsystem, shooterSubsystem, turretSubsystem);
+    this.intakeSubsystem = transport.getIntakeSubsystem();
+    this.shooterVision = transport.getShooterVision();
+    this.shooterSubsystem = transport.getShooterSubsystem();
+    this.diagonalIndexerSubsystem = transport.getDiagonalIndexerSubsystem();
+    this.verticalIndexerSubsystem = transport.getVerticalIndexerSubsystem();
+    addRequirements(climbSubsystem, intakeSubsystem, shooterSubsystem, diagonalIndexerSubsystem, verticalIndexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -6,20 +6,32 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.ControlConstants;
+import frc.robot.constants.IndexerConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
+import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class RunIndexer extends CommandBase {
   /** Creates a new RunIndexer. */
   DiagonalIndexerSubsystem indexerSubsystem;
   VerticalIndexerSubsystem upperIndexerSubsystem; 
-  Joystick operator;
+  Joystick operator = null;
   double power;
 
   public RunIndexer(VerticalIndexerSubsystem upperIndexerSubsystem,DiagonalIndexerSubsystem indexerSubsystem, double power) {
     this.indexerSubsystem = indexerSubsystem;
     this.upperIndexerSubsystem = upperIndexerSubsystem;
     this.power = power;    
+    addRequirements(indexerSubsystem);
+    addRequirements(upperIndexerSubsystem);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public RunIndexer(VerticalIndexerSubsystem upperIndexerSubsystem,DiagonalIndexerSubsystem indexerSubsystem, Joystick operator) {
+    this.indexerSubsystem = indexerSubsystem;
+    this.upperIndexerSubsystem = upperIndexerSubsystem;
+    this.operator = operator;    
     addRequirements(indexerSubsystem);
     addRequirements(upperIndexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,8 +47,14 @@ public class RunIndexer extends CommandBase {
     //indexerSubsystem.setDiagonalIndexer(power);
     //upperIndexerSubsystem.setVerticalIndexer(power);
 
-    indexerSubsystem.setDiagonalIndexerPoint(power);
-    upperIndexerSubsystem.setVerticalIndexerPoint(power);
+    if(operator == null){
+      indexerSubsystem.setDiagonalIndexerPoint(power);
+      upperIndexerSubsystem.setVerticalIndexerPoint(power);
+    }else{
+      double powMod = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.joystickIndexer));
+      indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM * powMod);
+      upperIndexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM * powMod);
+    }
 
     indexerSubsystem.runWithVelocityControl();
     upperIndexerSubsystem.runWithVelocityControl();

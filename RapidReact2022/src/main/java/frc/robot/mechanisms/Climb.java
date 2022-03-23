@@ -23,6 +23,7 @@ import frc.robot.Constants;
 import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultClimb;
+import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -103,7 +104,10 @@ public class Climb {
     
         climbTime.whileHeld(new SequentialCommandGroup(
                 new CalibrateHood(transport.getShooterSubsystem()),
-                new DefaultClimb(climbSubsystem, operator, transport.getIntakeSubsystem(), transport.getShooterVision(), transport.getShooterSubsystem(), transport.getTurretSubsystem())), 
+                new ParallelCommandGroup(
+                    new DefaultClimb(climbSubsystem, operator, transport)),
+                    new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), false)
+                ),
             true);
         
         climbTogglePistons = new JoystickButton(operator, ControlConstants.toggleClimb);

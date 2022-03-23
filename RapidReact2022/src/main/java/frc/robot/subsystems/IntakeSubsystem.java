@@ -25,7 +25,9 @@ public class IntakeSubsystem extends SubsystemBase {
   ColorMatch m_colorMatcher;
   CANSparkMax intakeMotor;
   ShuffleboardLayout intakeLayout;
-  
+
+  private boolean isRejectOn = true;
+
   public IntakeSubsystem(CANSparkMax intakeMotor, DoubleSolenoid intakePiston, ColorSensorV3 colorSensor) {
     this.intakeMotor = intakeMotor;
     this.colorSensor = colorSensor;
@@ -44,6 +46,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeLayout = driverTab.getLayout("Shooter", BuiltInLayouts.kGrid).withPosition(Constants.indexerIndex, 0).withSize(1, 5);
     intakeLayout.addString("Color", this::getColorString);
     intakeLayout.addNumber("Confidence", this::getConfidence);
+    intakeLayout.addBoolean("Reject Ball", this::getRejectState);
   }
   public Color getColor(){
     return m_colorMatcher.matchClosestColor(colorSensor.getColor()).color;
@@ -62,6 +65,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }else{
       return "unknown";
     }
+  }
+
+  public void toggleReject(){
+    isRejectOn = !isRejectOn;
+  }
+  public boolean getRejectState(){
+    return isRejectOn;
   }
 
   public void togglePiston(){

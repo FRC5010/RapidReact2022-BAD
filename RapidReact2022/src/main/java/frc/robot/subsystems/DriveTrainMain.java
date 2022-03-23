@@ -95,7 +95,6 @@ public class DriveTrainMain extends SubsystemBase {
   //Driver means it's being affected by sensitivity
   // Non driver is full power
   public void driverArcadeDrive(double throttle, double steer) {
-    System.out.print(Math.round(throttle * 100.0) + "% e ");
 
     steer = driverModSteer(steer, throttle);
     throttle = driverModThrottle(throttle);
@@ -126,7 +125,7 @@ public class DriveTrainMain extends SubsystemBase {
   }
 
   public double driverModThrottle(double throttle){
-    return minMaxOne((scaleInputs(throttle) * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.signum(throttle)) * DriveConstants.ksVolts));
+    return minMaxOne((deadzone(throttle) * DriveConstants.throttleFactor * DriveConstants.driveInversion) + ((Math.signum(throttle)) * DriveConstants.ksVolts));
   }
 
   public static double scaleInputs(double input) {

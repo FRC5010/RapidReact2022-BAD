@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,10 +28,12 @@ import frc.robot.commands.MoveHood;
 import frc.robot.commands.RunIndexer;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
+import frc.robot.commands.Timer;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
+import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -80,10 +84,16 @@ public class Transport {
     private JoystickButton fenderShot;
     private JoystickButton defaultShoot;
     private JoystickButton driveYEET;
-    private JoystickButton fenderShot2;
+    private Trigger fenderShot2;
     private JoystickButton climbTime;
-    private JoystickButton lockAndLoad; 
+    private Trigger lockAndLoad; 
     private Trigger intakeTrigger;
+    private JoystickButton toggleReject;
+    private Trigger indexerTrigger;
+    private Trigger indexerTriggerDown;
+    private Trigger indexerTriggerUp;
+    private POVButton shotAdjustmentDec;
+    private POVButton shotAdjustmentInc;
 
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
         this.shooterVision = shooterVision;
@@ -199,26 +209,43 @@ public class Transport {
         calibrateHood = new JoystickButton(driver, ControlConstants.calibrate);
         calibrateHood.whenPressed(new CalibrateHood(shooterSubsystem));
 
-        indexerUp = new JoystickButton(operator, ControlConstants.indexerUp);   
-        indexerUp.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, IndexerConstants.indexerRPM), false);
+        //indexerUp = new JoystickButton(operator, ControlConstants.indexerUp);   
+        //indexerUp.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, IndexerConstants.indexerRPM), false);
 
 
-        indexerDown = new JoystickButton(operator, ControlConstants.indexerDown);
-        indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -IndexerConstants.indexerRPM), false);
+        //indexerDown = new JoystickButton(operator, ControlConstants.indexerDown);
+        //indexerDown.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, -IndexerConstants.indexerRPM), false);
+
+
+        indexerTrigger = new Trigger(() -> Math.abs(operator.getRawAxis(ControlConstants.joystickIndexer)) > .08);
+        indexerTrigger.whileActiveOnce(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, operator));
 
         fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
         fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,true), false);
 
         
-        fenderShot2 = new JoystickButton(operator, ControlConstants.fenderButton2);
-        fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
+        fenderShot2 = new Trigger(() -> Math.abs(operator.getRawAxis(ControlConstants.fender2Button)) > 0);
+        fenderShot2.whileActiveOnce(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
 
-        lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
-        lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
+        //lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
+        //lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
+        lockAndLoad = new Trigger(() -> (Math.abs(operator.getRawAxis(ControlConstants.lockAndLoadButton)) > 0));
+        lockAndLoad.whenActive(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
+        
 
         intakeTrigger = new Trigger(() -> (Math.abs(driver.getRawAxis(ControlConstants.intakeAxis) - driver.getRawAxis(ControlConstants.outtakeAxis)) > 0));
-        intakeTrigger.whileActiveOnce(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));
+        //intakeTrigger.whileActiveOnce(new SequentialCommandGroup(new SpinIntake(intakeSubsystem, indexerSubsystem, driver, 200), ));
+        intakeTrigger.whileActiveOnce(new SpinIntake(intakeSubsystem, indexerSubsystem, upperIndexerSubsystem, driver, 150));
 
+        toggleReject = new JoystickButton(operator, ControlConstants.toggleReject);
+        toggleReject.whenPressed(new InstantCommand(()-> intakeSubsystem.toggleReject(), intakeSubsystem));
+        //finish way to toggle the boolean in intakesubsystem
+
+        shotAdjustmentInc = new POVButton(operator, ControlConstants.shotAdjustmentUp);
+        shotAdjustmentInc.whenPressed(new InstantCommand(()-> ShooterConstants.shotAdjustment += 25));
+        
+        shotAdjustmentDec = new POVButton(operator, ControlConstants.shotAdjustmentDown);
+        shotAdjustmentDec.whenPressed(new InstantCommand(()-> ShooterConstants.shotAdjustment -= 25));
     }
     public void setUpDeftCom(){
         //shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));

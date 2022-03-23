@@ -9,11 +9,14 @@ import java.util.ResourceBundle.Control;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class SpinIntake extends CommandBase {
   /** Creates a new SpinIntake. */
@@ -21,11 +24,20 @@ public class SpinIntake extends CommandBase {
   private double power = 0.0;
   private IntakeSubsystem intakeSubsystem;
   private DiagonalIndexerSubsystem indexerSubsystem;
+  private VerticalIndexerSubsystem upperIndexerSubsystem;
 
-  public SpinIntake(IntakeSubsystem intakeSubsystem, DiagonalIndexerSubsystem indexerSubsystem, Joystick driver) {
+  //creating delay for outtaking wrong balls
+  private boolean rejectBall = false;
+  private long delayMS;
+  private long startTime;
+  private long currTime;
+
+  public SpinIntake(IntakeSubsystem intakeSubsystem, DiagonalIndexerSubsystem indexerSubsystem, VerticalIndexerSubsystem upperIndexerSubsystem, Joystick driver, long delayMS) {
     this.driver = driver;
     this.intakeSubsystem = intakeSubsystem;
     this.indexerSubsystem = indexerSubsystem;
+    this.upperIndexerSubsystem = upperIndexerSubsystem;
+    this.delayMS = delayMS;
     addRequirements(intakeSubsystem, indexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -41,6 +53,8 @@ public class SpinIntake extends CommandBase {
   @Override
   public void initialize() {
     intakeSubsystem.deployIntake();
+    startTime = System.currentTimeMillis();
+    rejectBall = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,17 +71,30 @@ public class SpinIntake extends CommandBase {
     double modPow = intakePow * 1.0;
     intakeSubsystem.setIntakePow(modPow);
     
+    currTime = System.currentTimeMillis();
     boolean opposingColor = intakeSubsystem.getColor().equals(ControlConstants.opposingColor);
       double confidence = intakeSubsystem.getConfidence();
-    if(confidence > 0.90){
-      if(!opposingColor){
-        indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+    //should reject ball for a minimum of delayMS(for now that is 200 ms) before allowing the intake to spin properly
+    if(rejectBall == true && intakeSubsystem.getRejectState() == true){
+      if(currTime - startTime >= delayMS){
+        rejectBall = false;
+        startTime = currTime;
       }else{
         indexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM);
       }
     }else{
-      indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
-    } 
+      if(confidence > 0.90){
+        if(!opposingColor){
+          indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+        }else{
+          //indexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM);
+          rejectBall = true;
+          startTime = currTime;
+        }
+      }else{
+        indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+      }
+    }
     indexerSubsystem.runWithVelocityControl();
   }
 
@@ -80,6 +107,8 @@ public class SpinIntake extends CommandBase {
     intakeSubsystem.setIntakePow(0);
 
     intakeSubsystem.retractIntake();
+
+    //CommandScheduler.getInstance().schedule(new ParallelDeadlineGroup(new Timer(200), new RunIndexer(upperIndexerSubsystem, indexerSubsystem, IndexerConstants.indexerRPM)));
   }
 
   // Returns true when the command should end.

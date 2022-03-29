@@ -3,13 +3,11 @@
   "encoder type": "Encoder Port",
   "encoding": false,
   "gearing denominator": 1.0,
-  "gearing numerator": 10.71,
-  "gyro": "NavX",
-  "gyro ctor": "SerialPort (USB)",
-  "is drivetrain": true,
+  "gearing numerator": 1.0,
+  "gyro": "Analog Gyro",
+  "gyro ctor": "0",
+  "is drivetrain": false,
   "motor controllers": [
-    "SPARK MAX (Brushless)",
-    "SPARK MAX (Brushless)",
     "SPARK MAX (Brushless)"
   ],
   "number of samples per average": 1,
@@ -19,14 +17,10 @@
     1
   ],
   "primary motor ports": [
-    1,
-    2,
-    3
+    13
   ],
   "primary motors inverted": [
-    true,
-    true,
-    true
+    false
   ],
   "secondary encoder inverted": false,
   "secondary encoder ports": [
@@ -34,13 +28,9 @@
     3
   ],
   "secondary motor ports": [
-    4,
-    5,
-    6
+    2
   ],
   "secondary motors inverted": [
-    false,
-    false,
     false
   ],
   "velocity measurement period": 100

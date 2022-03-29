@@ -124,8 +124,7 @@ public class DriveTrainMain extends SubsystemBase {
       return -1;
     }
     
-    return Math.pow(input, 3);
-
+    return input; //Math.pow(input, 1.4);
   }
 
   public void setMaxOutput(double maxOutput) {

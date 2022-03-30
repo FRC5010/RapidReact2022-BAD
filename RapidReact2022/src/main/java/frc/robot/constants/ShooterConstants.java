@@ -31,7 +31,7 @@ public class ShooterConstants {
     //Defaults
     public static double defaultFlyWheelRPM = 1000;
     public static double lowRPM = 900;
-    public static double highRPM = 2075;
+    public static double highRPM = 2225;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
     public static double shotAdjustment = 75;
@@ -82,25 +82,26 @@ public class ShooterConstants {
         public static double hoodMaxPos = 40;
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
-        public static double highHood = 10; //4 is what this was during 1st comp
+        public static double highHood = 5.7; //4 is what this was during 1st comp
         public static double manualPow = 0.25;
     }
 
     public static class TurretConstants{
         public static double limitPow = 0.75;
 
-        public static double seekSpeed = 0.5;
+        public static double seekSpeed = 0.15;
 
-        public static double kS = 0.01;
+        public static double kS = 0.02;
 
-        public static double kPVision = 0.008;
+        public static double kPVision = 0.004;
         public static double kDVision = 850;
 
         public static double kPEncoder = 0.15;
 
-
-        public static double leftLimit = -1.8; //-15;
-        public static double rightLimit = 1.3; //10;
+        // 3/26/2022, changed limits of turret to keep static hooks up
+        // old values for full range are commented out
+        public static double leftLimit = -0.39; //-1.8;
+        public static double rightLimit = 0.39; //1.3;
     }
 }
 

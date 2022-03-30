@@ -15,7 +15,7 @@ public class LowerBall1ToBall2 extends SequentialCommandGroup {
   public LowerBall1ToBall2() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    String path1 = "paths/LowerBall1ToBall2.wpilib.json";
+    String path1 = "paths/LowerBall1ToBall2State.wpilib.json";
     addCommands(
       Drive.getAutonomousCommand(path1, true)
     );

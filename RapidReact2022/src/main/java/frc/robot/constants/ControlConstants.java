@@ -140,12 +140,12 @@ public class ControlConstants {
     public static int rightClimbArm = AxisNums.RIGHT_Y.ordinal();
     public static int spinHood = AxisNums.RIGHT_Y.ordinal();
     public static int turnTurret = AxisNums.RIGHT_X.ordinal();
-    public static int fender2Button = AxisNums.L_TRIGGER.ordinal() ;
+    public static int bothArmsDown = AxisNums.L_TRIGGER.ordinal() ;
     public static int lockAndLoadButton = AxisNums.R_TRIGGER.ordinal();
 
-    //public static int indexerDown = ButtonNums.A_BUTTON.ordinal(); // 3/22/2022 not used, switched to joystick
+    public static int fender2Button = ButtonNums.A_BUTTON.ordinal(); // 3/25/2022 added arms down for comp at tippie
     public static int hoodDown = ButtonNums.B_BUTTON.ordinal(); 
-    //public static int indexerUp = ButtonNums.X_BUTTON.ordinal();
+    public static int toggleReject = ButtonNums.X_BUTTON.ordinal();
     public static int hoodUp = ButtonNums.Y_BUTTON.ordinal(); 
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
@@ -165,7 +165,7 @@ public class ControlConstants {
     public static int shotAdjustmentDown = POVDirs.LEFT.ordinal() * 90;
 
     //test button for disable ball reject
-    public static int toggleReject = ButtonNums.X_BUTTON.ordinal();
+    
 
     // Shuffleboard constants
     public static String SBTabDriverDisplay = "Driver Display";

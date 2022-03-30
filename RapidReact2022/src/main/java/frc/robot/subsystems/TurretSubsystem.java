@@ -61,9 +61,12 @@ private ShuffleboardLayout turretLayout;
     double d = SmartDashboard.getNumber("TurretD", TurretConstants.kDVision);
     double pVal = angle * p;
     double dVal = d * ((angle - lastAngle) / ((System.currentTimeMillis() - lastTime) * 1000));
-    double anglePow = pVal + dVal;
-    double limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));
-
+    double anglePow = pVal + dVal; // + ((1) * Math.signum(angle) * TurretConstants.kS);
+    double limit = 0;
+    if(Math.abs(angle) > 1){
+      limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));  
+    }
+    
     double currPos = turretEncoder.getPosition();
     if(currPos < TurretConstants.leftLimit || currPos > TurretConstants.rightLimit){
       limit = 0;

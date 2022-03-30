@@ -19,13 +19,11 @@ public class ExtendingTerminalBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new MoveAndIntakeBlock(transport, drivingToGroup),
+      new MoveAndIntakeBlock(transport, drivingToGroup, true),
 
-      new MoveAndIntakeBlock(transport, drivingBackGroup),
+      new MoveAndIntakeBlock(transport, drivingBackGroup, true),
 
-      new ShootWithTimerBlock(transport, 1500)
-      
-
+      new ShootWithTimerBlock(transport, 1500, true)
     );
   }
 }

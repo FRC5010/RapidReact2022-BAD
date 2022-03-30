@@ -62,20 +62,36 @@ public class DefaultClimb extends CommandBase {
     
     intakeSubsystem.deployIntake();
 
-    // right climb
-    double rightClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm));
-    if (climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax || rightClimbSpeed < 0){
-      climbSubsystem.setRightWinchSpeed(rightClimbSpeed);
-    } else {
-      climbSubsystem.setRightWinchSpeed(0);
-    }
+    // trigger is negated to power the arms down
+    double downSpeed = (-1) * DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.bothArmsDown));
+    if(downSpeed < 0){
 
-    // left climb
-    double leftClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm));
-    if (climbSubsystem.getLeftEncoderValue() < ClimbConstants.climbBothMax || leftClimbSpeed < 0){
-      climbSubsystem.setLeftWinchSpeed(leftClimbSpeed);
-    } else {
-      climbSubsystem.setLeftWinchSpeed(0);
+      if(climbSubsystem.getRightEncoderValue() > 0)
+        climbSubsystem.setRightWinchSpeed(downSpeed);
+      else
+        climbSubsystem.setRightWinchSpeed(0);
+        
+      if(climbSubsystem.getLeftEncoderValue() > 0)
+        climbSubsystem.setLeftWinchSpeed(downSpeed);
+      else
+        climbSubsystem.setLeftWinchSpeed(0);
+
+    }else{
+      // right climb
+      double rightClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm));
+      if (climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax || rightClimbSpeed < 0){
+        climbSubsystem.setRightWinchSpeed(rightClimbSpeed);
+      } else {
+        climbSubsystem.setRightWinchSpeed(0);
+      }
+
+      // left climb
+      double leftClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm));
+      if (climbSubsystem.getLeftEncoderValue() < ClimbConstants.climbBothMax || leftClimbSpeed < 0){
+        climbSubsystem.setLeftWinchSpeed(leftClimbSpeed);
+      } else {
+        climbSubsystem.setLeftWinchSpeed(0);
+      }
     }
 
     /*

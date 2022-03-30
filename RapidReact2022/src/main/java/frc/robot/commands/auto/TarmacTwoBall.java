@@ -33,9 +33,9 @@ public class TarmacTwoBall extends SequentialCommandGroup {
     addCommands(
       new CalibrateSystemBlock(transport),
 
-      new MoveAndIntakeBlock(transport, drivingGroup),
+      new MoveAndIntakeBlock(transport, drivingGroup, false),
 
-      new ShootWithTimerBlock(transport, 1250)
+      new ShootWithTimerBlock(transport, 1250, false)
     
     );
 

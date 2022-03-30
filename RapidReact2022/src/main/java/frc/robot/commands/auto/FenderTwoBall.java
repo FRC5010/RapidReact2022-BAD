@@ -51,9 +51,9 @@ public class FenderTwoBall extends SequentialCommandGroup {
 
       new FenderWithTimerBlock(transport,1500),
 
-      new MoveAndIntakeBlock(transport, drivingGroup),
+      new MoveAndIntakeBlock(transport, drivingGroup, false),
 
-      new ShootWithTimerBlock(transport, 1500)
+      new ShootWithTimerBlock(transport, 1500, false)
     );
   }
 }

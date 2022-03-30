@@ -10,7 +10,8 @@ public class ClimbConstants {
     public static double climbSpeedDown = -1;
     public static double encoderMax = 0;
 
-    public static double climbBothMax = 106;
+    // 3/26/2022 new climb limits changing gearboxes at tippie
+    public static double climbBothMax = 140;//106;
     public static double climbRightMax = climbBothMax; // not used
     public static double climbLeftMax = climbBothMax; // not used
     

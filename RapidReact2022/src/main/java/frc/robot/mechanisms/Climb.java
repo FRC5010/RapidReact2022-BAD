@@ -103,7 +103,7 @@ public class Climb {
         climbTime = new JoystickButton(driver, ControlConstants.climbTime);
     
         climbTime.whileHeld(new SequentialCommandGroup(
-                new CalibrateHood(transport.getShooterSubsystem()),
+                //new CalibrateHood(transport.getShooterSubsystem()),
                 new ParallelCommandGroup(
                     new DefaultClimb(climbSubsystem, operator, transport)),
                     new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), false)

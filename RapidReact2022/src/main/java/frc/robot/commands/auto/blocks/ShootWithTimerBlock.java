@@ -15,13 +15,13 @@ import frc.robot.mechanisms.Transport;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShootWithTimerBlock extends ParallelDeadlineGroup {
   /** Creates a new ShootWithTimer. */
-  public ShootWithTimerBlock(Transport transport, long timeMilli) {
+  public ShootWithTimerBlock(Transport transport, long timeMilli, boolean isSeek) {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
     super(new Timer(timeMilli));
     addCommands(
       
-      new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), true),
+      new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), isSeek),
       new AimAndShoot(transport.getShooterSubsystem(), transport.getVerticalIndexerSubsystem(), transport.getDiagonalIndexerSubsystem(), transport.getShooterVision())
     );
     // addCommands(new FooCommand(), new BarCommand());

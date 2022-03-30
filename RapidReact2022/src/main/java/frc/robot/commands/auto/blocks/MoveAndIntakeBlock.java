@@ -15,13 +15,13 @@ import frc.robot.mechanisms.Transport;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class MoveAndIntakeBlock extends ParallelDeadlineGroup {
   /** Creates a new MoveAndIntake. */
-  public MoveAndIntakeBlock(Transport transport, Command drivingGroup) {
+  public MoveAndIntakeBlock(Transport transport, Command drivingGroup, boolean isSeek) {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
     super(drivingGroup);
     addCommands(
       new SpinIntake(transport.getIntakeSubsystem(), transport.getDiagonalIndexerSubsystem(), 1.0),
-      new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), true)
+      new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), isSeek)
       
     );
     // addCommands(new FooCommand(), new BarCommand());

@@ -84,7 +84,7 @@ public class Transport {
     private JoystickButton fenderShot;
     private JoystickButton defaultShoot;
     private JoystickButton driveYEET;
-    private Trigger fenderShot2;
+    private JoystickButton fenderShot2;
     private JoystickButton climbTime;
     private Trigger lockAndLoad; 
     private Trigger intakeTrigger;
@@ -224,8 +224,8 @@ public class Transport {
         fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,true), false);
 
         
-        fenderShot2 = new Trigger(() -> Math.abs(operator.getRawAxis(ControlConstants.fender2Button)) > 0);
-        fenderShot2.whileActiveOnce(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
+        fenderShot2 = new JoystickButton(operator, ControlConstants.fender2Button);
+        fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
 
         //lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
         //lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);

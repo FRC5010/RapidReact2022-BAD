@@ -57,14 +57,15 @@ public class SpinTurret extends CommandBase {
     } 
     if(pow == 0){
       if(shooterSystem.isValidTarget()){
+        // pid turret
         double angle = shooterSystem.getAngleX();
-        //System.out.println("angle mannnnnnn: " + angle);
         turretSubsystem.angleTurret(angle, lastTime, lastAngle);
         turretSubsystem.isOnTarget(angle);
 
         lastAngle = angle;
         lastTime = System.currentTimeMillis();
       }else{
+        // seeking code
         if (isSeek){
           pow = TurretConstants.seekSpeed; 
           turretSubsystem.turnTurret(pow * seekDirection);
@@ -80,6 +81,7 @@ public class SpinTurret extends CommandBase {
         }
       }
     }else{
+      // this runs on the joystick
       turretSubsystem.turnTurret(pow);
       turretSubsystem.setOnTarget(false);
       

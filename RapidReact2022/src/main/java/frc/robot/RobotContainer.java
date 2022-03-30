@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
 import frc.robot.commands.SetPipeline;
+import frc.robot.commands.Timer;
 import frc.robot.commands.auto.ExtendingTerminalBall;
 import frc.robot.commands.auto.ExtendingThreeBall;
 import frc.robot.commands.auto.FenderTwoBall;
@@ -96,7 +97,16 @@ public class RobotContainer {
      * command.addOption("ManyBall", new ManyBallAuto());
      */
 
-    command.addOption("MoveAndShoot", new TarmacTwoBall(transport, new SingleCargoPath()));
+    command.addOption("FarMoveAndShoot", new TarmacTwoBall(transport, new SingleCargoPath()));
+    command.addOption("ShortMoveAndShoot", new TarmacTwoBall(transport, new LowerTarmacToBall1()));
+    
+    command.addOption("DelayShortMoveAndShoot", 
+      new SequentialCommandGroup(
+        new Timer(4000),
+        new TarmacTwoBall(transport, new LowerTarmacToBall1())
+      )
+    );
+    command.addOption("FenderLongMoveAndShoot", new FenderTwoBall(transport, new UpperTarmacToBall()));
 
     command.addOption("Lower 3+1 Ball",
       new SequentialCommandGroup(
@@ -115,7 +125,7 @@ public class RobotContainer {
 
     // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision,
     // new HubToBall2()));
-    command.addOption("FenderMoveAndShoot", new FenderTwoBall(transport, new UpperTarmacToBall()));
+    
     // command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision,
     // new ManyBallAuto()));
     // command.addOption("Galactic Search", new

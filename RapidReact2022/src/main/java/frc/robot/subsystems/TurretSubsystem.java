@@ -25,7 +25,7 @@ public class TurretSubsystem extends SubsystemBase {
 private CANSparkMax turretMotor;
 private VisionSystem shooterVision;
 
-private boolean onTarget;
+private static boolean onTarget;
 
 private RelativeEncoder turretEncoder;
 
@@ -39,7 +39,7 @@ private ShuffleboardLayout turretLayout;
     ShuffleboardTab turretTab = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay);
     turretLayout = turretTab.getLayout("Turret", BuiltInLayouts.kGrid).withPosition(Constants.turretIndex, 0).withSize(1, 5);
     turretLayout.addNumber("Turret Pos", this::getTurretPos).withSize(1, 1);
-    turretLayout.addBoolean("Turret Is On Target", this::getIsOnTarget).withSize(1, 1);
+    turretLayout.addBoolean("Turret Is On Target", TurretSubsystem::getIsOnTarget).withSize(1, 1);
 
     SmartDashboard.putNumber("TurretP", TurretConstants.kPVision);
     SmartDashboard.putNumber("TurretD", TurretConstants.kDVision);
@@ -63,20 +63,43 @@ private ShuffleboardLayout turretLayout;
     double dVal = d * ((angle - lastAngle) / ((System.currentTimeMillis() - lastTime) * 1000));
     double anglePow = pVal + dVal; // + ((1) * Math.signum(angle) * TurretConstants.kS);
     double limit = 0;
-    if(Math.abs(angle) > 1){
-      limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));  
-    }
+    // if(Math.abs(angle) > TurretConstants.onTargetLowLimit){
+    //   limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));  
+    //   // limit = Math.signum(angle) * TurretConstants.kS;
+    // }
     
+    // double currPos = turretEncoder.getPosition();
+    // if(currPos < TurretConstants.leftLimit || currPos > TurretConstants.rightLimit){
+    //   limit = TurretConstants.kS * Math.signum(currPos);
+    // }
+
+    // try to keep the turret at the limit only when its trying to go to the limit in the same direction of the limit
+    // ex target is right side of camera, and turret is at right limit
     double currPos = turretEncoder.getPosition();
-    if(currPos < TurretConstants.leftLimit || currPos > TurretConstants.rightLimit){
+
+    if(Math.abs(angle) > TurretConstants.onTargetLowLimit)
+      limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));
+    else
       limit = 0;
+    
+    
+    if(currPos < TurretConstants.leftLimit){
+      if(angle < 0){
+        limit = TurretConstants.kS * Math.signum(currPos);
+      }
+    }else if(currPos > TurretConstants.rightLimit){
+      if(angle > 0){
+        limit = TurretConstants.kS * Math.signum(currPos);
+      }
     }
+
     SmartDashboard.putNumber("TurretPow", limit);
     turretMotor.set(limit);
+    
   }
 
-  public boolean isOnTarget(double angle){
-    onTarget = Math.abs(angle) <= 1;
+  public static boolean isOnTarget(double angle){
+    onTarget = Math.abs(angle) <= TurretConstants.onTargetHighLimit;
     return onTarget;
   }
 
@@ -93,11 +116,10 @@ private ShuffleboardLayout turretLayout;
   public boolean isAtLeftLimit(){
     return this.getTurretPos() < TurretConstants.leftLimit; 
   }
-  public void setOnTarget(boolean onTarget){
-    this.onTarget = onTarget;
+  public void setOnTarget(boolean target){
+    onTarget = target;
   }
-
-  public boolean getIsOnTarget(){
+  public static boolean getIsOnTarget(){
     return onTarget;
   }
 

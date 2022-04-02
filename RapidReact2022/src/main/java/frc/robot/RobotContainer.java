@@ -81,7 +81,7 @@ public class RobotContainer {
 
     // the 20 degrees as of march 15 2022,
     shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
-    shooterVision.setPiPMode(2);
+    shooterVision.setPiPMode(0); // removed shooter cam
 
     drive = new Drive(driver, shooterVision);
     transport = new Transport(operator, driver, shooterVision);

@@ -11,6 +11,7 @@ import frc.robot.constants.ShooterConstants.FeederConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
@@ -56,8 +57,8 @@ public class AimAndShoot extends CommandBase {
 
     shooterSubsystem.determineIfReadyToShoot();
 
-    if (shooterSubsystem.getReadyToShoot()) {
-      indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
+    if (shooterSubsystem.getReadyToShoot() && TurretSubsystem.getIsOnTarget()) {
+          indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
       indexerSubsystem.runWithVelocityControl();
 
       diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);

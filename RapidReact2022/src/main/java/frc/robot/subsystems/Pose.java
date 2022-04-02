@@ -47,7 +47,7 @@ public class Pose extends SubsystemBase {
     public final RelativeEncoder rightEncoder;
 
     // The gyro sensor
-    public final AHRS gyro = new AHRS(Port.kUSB);
+    public final AHRS gyro = new AHRS(Port.kMXP);
     //  I2C.Port.kMXP
 
     // Odometry class for tracking robot pose

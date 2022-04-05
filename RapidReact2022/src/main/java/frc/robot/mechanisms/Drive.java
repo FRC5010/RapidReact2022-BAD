@@ -96,7 +96,7 @@ public class Drive {
         () -> DriveConstants.steerFactor = Math.max(0, DriveConstants.steerFactor - DriveConstants.drivingAdjustment)));
 
     driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
-    //driveYEET.whileHeld(new DriveTrainYEET(driveTrain, driver));
+    driveYEET.whileHeld(new DriveTrainYEET(driveTrain, driver));
   }
 
   public static void setCurrentLimits(int currentLimit) {

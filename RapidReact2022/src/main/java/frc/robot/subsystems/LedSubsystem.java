@@ -28,10 +28,12 @@ public class LedSubsystem extends SubsystemBase {
 
   private boolean isBlink = false;
   private boolean ledOn;
+  private boolean isRainbow = false; 
 
   public LedSubsystem(int port, int length) {
     this.port = port;
     this.length = length;
+
     //init method, sets up the led strip and if you want it to be one solid color you would do that here
     //you can still change it later
     m_led = new AddressableLED(port);
@@ -51,9 +53,9 @@ public class LedSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     currTime = System.currentTimeMillis();
     // Runs the blueSnake method which changes the m_ledBuffer, then the m_led is set to the data that was just created
-    //rainbow();
 
     //this method is esscentially only for controlling blink
     if(isBlink){
@@ -67,10 +69,12 @@ public class LedSubsystem extends SubsystemBase {
         }
         startTime = currTime;
       }
+    } else if (isRainbow){
+      rainbow();
     }
   }
 
-  public void rainbow() {  //completely not needed but proof of concept if we want?
+  private void rainbow() {  //completely not needed but proof of concept if we want?
     // For every pixel
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -79,10 +83,16 @@ public class LedSubsystem extends SubsystemBase {
       // Set the value
       m_ledBuffer.setHSV(i, hue, 255, 128);
     }
+    m_led.setData(m_ledBuffer);
     // Increase by to make the rainbow "move"
     m_rainbowFirstPixelHue += 3;
     // Check bounds
     m_rainbowFirstPixelHue %= 180;
+  }
+
+  public void rainbow(boolean isRainbow) { 
+    this.isRainbow = isRainbow; 
+    isBlink = false;
   }
 
   public void speed(double power){
@@ -101,6 +111,7 @@ public class LedSubsystem extends SubsystemBase {
 
   public void setSolidColor(int red, int green, int blue){
     isBlink = false;
+    isRainbow = false; 
     for(int i = 0; i < m_ledBuffer.getLength(); i++){
       m_ledBuffer.setRGB(i,red,green,blue);
     }

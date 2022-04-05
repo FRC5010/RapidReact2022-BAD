@@ -7,24 +7,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.LedSubsystem;
 
-public class LedColor extends CommandBase {
+public class LedRainbow extends CommandBase {
   /** Creates a new LedColor. */
   private int red,green,blue;
   private LedSubsystem ledSubsystem;
-  public LedColor(int red, int green, int blue, LedSubsystem ledSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
+  public LedRainbow(LedSubsystem ledSubsystem) {
     this.ledSubsystem = ledSubsystem;
-
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(ledSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ledSubsystem.setSolidColor(red, green, blue);
+    ledSubsystem.rainbow(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,6 +34,6 @@ public class LedColor extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

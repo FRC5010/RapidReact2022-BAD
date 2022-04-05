@@ -19,21 +19,27 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DefaultLed;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
+import frc.robot.commands.LedRainbow;
 import frc.robot.commands.SetPipeline;
 import frc.robot.commands.Timer;
+import frc.robot.commands.auto.ExtendingShortLeftTurn;
 import frc.robot.commands.auto.ExtendingTerminalBall;
 import frc.robot.commands.auto.ExtendingThreeBall;
 import frc.robot.commands.auto.FenderTwoBall;
+import frc.robot.commands.auto.TarmacToBall2;
 import frc.robot.commands.auto.TarmacTwoBall;
-import frc.robot.commands.auto.pathing.UpperTarmacToBall;
+import frc.robot.commands.auto.pathing.LowerBall2ToTerminalA2Path;
 import frc.robot.commands.auto.pathing.LowerBall1ToBall2;
 import frc.robot.commands.auto.pathing.LowerBall2ToTerminal;
 import frc.robot.commands.auto.pathing.LowerTarmacToBall1;
 import frc.robot.commands.auto.pathing.SingleCargoPath;
-import frc.robot.commands.auto.pathing.TarmacToCargoPath;
+import frc.robot.commands.auto.pathing.TarmacToBall2Path;
 import frc.robot.commands.auto.pathing.TerminalDriveBack;
+import frc.robot.commands.auto.pathing.TurnBotLeft;
+import frc.robot.commands.auto.pathing.UpperTarmacToBall;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.mechanisms.Climb;
@@ -41,8 +47,6 @@ import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
-import frc.robot.subsystems.vision.VisionLimeLight;
-import frc.robot.subsystems.vision.VisionLimeLightH;
 import frc.robot.subsystems.vision.VisionLimeLightH2;
 
 /**
@@ -88,7 +92,7 @@ public class RobotContainer {
     climb = new Climb(driver, operator, transport);
 
     // cameraSubsystem = new CameraSubsystem(operator);
-    // ledSubsystem = new LedSubsystem(0, 300);
+    ledSubsystem = new LedSubsystem(0, 300);
 
     /*
      * command.addOption("LowerCargoToHub", new LowerCargoToHub());
@@ -97,25 +101,40 @@ public class RobotContainer {
      * command.addOption("ManyBall", new ManyBallAuto());
      */
 
-    command.addOption("FarMoveAndShoot", new TarmacTwoBall(transport, new SingleCargoPath()));
-    command.addOption("ShortMoveAndShoot", new TarmacTwoBall(transport, new LowerTarmacToBall1()));
-    
-    command.addOption("DelayShortMoveAndShoot", 
+    command.addOption("FarM&S", new TarmacTwoBall(transport, new SingleCargoPath()));
+    command.addOption("ShortM&S", 
       new SequentialCommandGroup(
-        new Timer(4000),
-        new TarmacTwoBall(transport, new LowerTarmacToBall1())
+        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+        new ExtendingShortLeftTurn(transport, new TurnBotLeft())
       )
     );
-    command.addOption("FenderLongMoveAndShoot", new FenderTwoBall(transport, new UpperTarmacToBall()));
+    
+    command.addOption("DelayShortM&S", 
+      new SequentialCommandGroup(
+        new Timer(4000),
+        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+        new ExtendingShortLeftTurn(transport, new TurnBotLeft())
+      )
+    );
+    command.addOption("FenderLongM&S", 
+      new FenderTwoBall(transport, new UpperTarmacToBall())
+      );
 
-    command.addOption("Lower 3+1 Ball",
+    command.addOption("Lower 3 Ball",
       new SequentialCommandGroup(
         new TarmacTwoBall(transport, new LowerTarmacToBall1()),
         new ExtendingThreeBall(transport, new LowerBall1ToBall2())
       )
     );
 
-    command.addOption("Lower 5+1 Ball",
+    command.addOption("Middle 4 Ball", 
+      new SequentialCommandGroup(
+        new TarmacToBall2(transport, new TarmacToBall2Path()),
+        new ExtendingTerminalBall(transport, new LowerBall2ToTerminalA2Path(), new TerminalDriveBack())
+      )
+    );
+
+    command.addOption("Lower 5 Ball",
       new SequentialCommandGroup(
         new TarmacTwoBall(transport, new LowerTarmacToBall1()),
         new ExtendingThreeBall(transport, new LowerBall1ToBall2()),
@@ -164,6 +183,7 @@ public class RobotContainer {
     SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
     SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
+    SmartDashboard.putData("Led Rainbow", new LedRainbow(ledSubsystem));
 
     toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
     toggleLL.whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
@@ -174,6 +194,8 @@ public class RobotContainer {
 
   // Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
+    transport.getShooterSubsystem().setHoodCalibrated(false);
+    ledSubsystem.setDefaultCommand(new DefaultLed(ledSubsystem, transport));
     if (!DriverStation.isTest()) {
       drive.setUpDeftCom();
       transport.setUpDeftCom();

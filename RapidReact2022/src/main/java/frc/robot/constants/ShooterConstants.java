@@ -79,9 +79,9 @@ public class ShooterConstants {
 
 
     // characterized values
-    public static double kSC = 0.084437; // 0.11361;
-    public static double kVC = 0.12852; // 0.13197;
-    public static double kAC = 0.00671; // 0.0066214;
+    public static double kSC = 0.11449; // 0.11361;
+    public static double kVC = 0.12735; // 0.13197;
+    public static double kAC = 0.00649; // 0.0066214;
 
     public static double kS = kSC / 12;
     public static double kV = kVC / 60 / 1 / (12 - kS);
@@ -118,7 +118,7 @@ public class ShooterConstants {
     }
 
     public static class HoodConstants{
-        public static double kPC = 2.3541;
+        public static double kPC = 0.58908; // 2.3541;
         public static double kIC = 0;
         public static double kDC = 0;
 
@@ -126,9 +126,9 @@ public class ShooterConstants {
         public static double kI = kIC / 60;
         public static double kD = kDC / 60;
 
-        public static double kSC = 0.35779;
-        public static double kVC = 1.2718;
-        public static double kAC = 0.11975;
+        public static double kSC = 0.22225;  // 0.35779
+        public static double kVC = 0.59444;  // 1.2718
+        public static double kAC = 0.034764; // 0.11975
 
         public static double kS = kSC / 12;
         public static double kV = kVC / 60 / 1 / (12 - kS);

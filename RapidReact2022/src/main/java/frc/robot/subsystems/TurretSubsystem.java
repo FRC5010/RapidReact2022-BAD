@@ -77,11 +77,11 @@ private ShuffleboardLayout turretLayout;
     // ex target is right side of camera, and turret is at right limit
     double currPos = turretEncoder.getPosition();
 
-    if(Math.abs(angle) > TurretConstants.onTargetLowLimit)
+    if(Math.abs(angle) > TurretConstants.onTargetLowLimit){
       limit = Math.min(TurretConstants.limitPow, Math.max(anglePow, -TurretConstants.limitPow));
-    else
-      limit = 0;
-    
+    } else {
+      limit = TurretConstants.kS * Math.signum(angle);
+    }
     
     if(currPos < TurretConstants.leftLimit){
       if(angle < 0){
@@ -91,7 +91,7 @@ private ShuffleboardLayout turretLayout;
       if(angle > 0){
         limit = TurretConstants.kS * Math.signum(currPos);
       }
-    }
+    } 
 
     SmartDashboard.putNumber("TurretPow", limit);
     turretMotor.set(limit);

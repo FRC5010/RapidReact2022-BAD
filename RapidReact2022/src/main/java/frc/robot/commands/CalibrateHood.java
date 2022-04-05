@@ -33,6 +33,7 @@ public class CalibrateHood extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    shooterSubsystem.setHoodCalibrated(true);
     shooterSubsystem.setHoodMotor(0);
     shooterSubsystem.setHoodEncoder(0);
   }

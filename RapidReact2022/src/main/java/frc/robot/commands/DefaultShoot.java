@@ -36,8 +36,8 @@ public class DefaultShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      shooterSubsystem.spinUpWheelRPM();
-      shooterSubsystem.runWithVelocityControl();
+      shooterSubsystem.runFlyWheelWithVelocityControl();
+      shooterSubsystem.runFeederWheelWithVelocityControl();
       shooterSubsystem.determineIfReadyToShoot();
 
       if (shooterSubsystem.getReadyToShoot()) {

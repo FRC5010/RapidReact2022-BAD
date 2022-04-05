@@ -42,12 +42,13 @@ public class LockAndLoad extends CommandBase {
     if (shooterVision.isValidTarget()) {
       double flyWheelPoint = shooterSubsystem.flyWheelCalculations(distance);
       shooterSubsystem.setFlyWheelPoint(flyWheelPoint);
+
+      shooterSubsystem.runFlyWheelWithVelocityControl();
       double hoodPoint = shooterSubsystem.hoodCalculations(distance);
       shooterSubsystem.setHoodSetPoint(hoodPoint);
-      shooterSubsystem.spinUpWheelRPM();
       shooterSubsystem.pidHood();
+      shooterSubsystem.runFeederWheelWithVelocityControl();     
 
-      shooterSubsystem.runWithVelocityControl();
     } 
     diagonalBB = diagonalSubsystem.getLowerBB();
     if (!diagonalBB) {

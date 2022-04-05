@@ -64,10 +64,10 @@ public class FenderShot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooterSubsystem.spinUpWheelRPM();
     shooterSubsystem.pidHood();
     shooterSubsystem.determineIfReadyToShoot();
-    shooterSubsystem.runWithVelocityControl();
+    shooterSubsystem.runFeederWheelWithVelocityControl();
+    shooterSubsystem.runFlyWheelWithVelocityControl();
 
     if(shooterSubsystem.getReadyToShoot()){
       indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);

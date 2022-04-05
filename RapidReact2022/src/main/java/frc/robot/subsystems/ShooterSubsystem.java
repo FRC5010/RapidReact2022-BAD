@@ -37,7 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double hoodSetPoint = 0, flyWheelSetPoint = 0,feederSetPoint = 0;
 
   private boolean readyToShoot;
-
+  private boolean hoodCalibrated = false; 
   public ShooterSubsystem(CANSparkMax flyWheelRight, CANSparkMax hoodMotor, CANSparkMax feederMotor, VisionSystem shooterVision) {
     this.flyWheelRight = flyWheelRight;
     this.hoodMotor = hoodMotor;
@@ -80,10 +80,11 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterLayout.addNumber("Default RPM Flywheel", () -> ShooterConstants.defaultFlyWheelRPM).withSize(1, 1);
     shooterLayout.addNumber("Feeder RPM", this::getFeederRPM);
     shooterLayout.addNumber("Shot adjustment RPM", this::getShotAdjustment);
+    shooterLayout.addBoolean("Hood Calibrated", this::getHoodCalibrated);
   }
   
-  public void spinUpWheelRPM() {
-    flyWheelPidController.setFF(ShooterConstants.kS / flyWheelSetPoint + ShooterConstants.kV);
+  public void runFlyWheelWithVelocityControl() {
+    flyWheelPidController.setFF(FeederConstants.kS / flyWheelSetPoint + FeederConstants.kV);
     flyWheelPidController.setReference(flyWheelSetPoint, CANSparkMax.ControlType.kVelocity);
   
   }
@@ -156,13 +157,20 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public boolean pidHood(){
-    if (HoodConstants.hoodMaxPos > hoodSetPoint && hoodSetPoint > 0){
+    if (HoodConstants.hoodMaxPos > hoodSetPoint && hoodSetPoint > 0 && getHoodCalibrated()){
       hoodPidController.setReference(hoodSetPoint, CANSparkMax.ControlType.kPosition);
       return true;
     }
     return false;
   }
 
+  public boolean getHoodCalibrated(){
+    return hoodCalibrated;
+  }
+
+  public void setHoodCalibrated(boolean hoodCalibrated){
+    this.hoodCalibrated = hoodCalibrated;
+  }
 
 
   public double hoodCalculations(double distanceCurrent) {
@@ -216,8 +224,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void runWithVelocityControl() {
-    feederPidController.setFF(FeederConstants.kS / flyWheelSetPoint + FeederConstants.kV);
+  public void runFeederWheelWithVelocityControl() {
+    feederPidController.setFF(FeederConstants.kS / feederSetPoint + FeederConstants.kV);
     feederPidController.setReference(feederSetPoint, CANSparkMax.ControlType.kVelocity);
   
   }

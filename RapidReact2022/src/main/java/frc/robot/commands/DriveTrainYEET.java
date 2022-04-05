@@ -36,7 +36,7 @@ public class DriveTrainYEET extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrainMain.driverCurvatureDrive(-driver.getRawAxis(ControlConstants.throttle), driver.getRawAxis(ControlConstants.steer));
+    driveTrainMain.driverCurvatureDrive(-DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.throttle)), DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
   }
 
   // Called once the command ends or is interrupted.

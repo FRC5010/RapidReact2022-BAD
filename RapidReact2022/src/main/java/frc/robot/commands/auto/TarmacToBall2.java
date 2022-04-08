@@ -22,7 +22,7 @@ public class TarmacToBall2 extends SequentialCommandGroup {
       new SequentialCommandGroup(
         new MoveAndIntakeBlock(transport, drivingGroup, true),
         
-        new ShootWithTimerBlock(transport, 1250, true)
+        new ShootWithTimerBlock(transport, 1500, true)
       )
     );
   }

@@ -92,6 +92,7 @@ public class AimAndShoot extends CommandBase {
     shooterSubsystem.stopHood();
     shooterSubsystem.setFlyFeederPoint(0);
     shooterSubsystem.spinFeeder(0);
+    shooterSubsystem.cancelReadyToShoot();
 
     indexerSubsystem.setVerticalIndexer(0);
     diagonalIndexerSubsystem.setDiagonalIndexer(0);

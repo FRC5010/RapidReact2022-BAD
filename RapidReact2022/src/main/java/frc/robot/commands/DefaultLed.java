@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import javax.naming.ldap.LdapReferralException;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.LedSubsystem;
@@ -38,18 +40,39 @@ public class DefaultLed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ledSubsystem.setSolidColor(0, 0, 0);  
+    int color = 0;
     if (visionSystem.isValidTarget()){
-      ledSubsystem.setSolidColor(0, 0, 255);
+      color = 1;
     }
 
     if (TurretSubsystem.getIsOnTarget()){
-      ledSubsystem.setSolidColor(255, 25, 0);
+      color = 2; 
     }
 
-    if (shooterSubsystem.getReadyToShoot() && TurretSubsystem.getIsOnTarget()){
-      ledSubsystem.setSolidColor(255, 0, 0);
+    if (shooterSubsystem.getFlywheelSetPoint() > 0){
+      color = 3; 
+    }
 
+
+
+    switch(color){
+      case 1: 
+        ledSubsystem.setSolidColor(0, 0, 255);
+        break;
+      case 2: 
+        ledSubsystem.setSolidColor(255, 20, 0);
+        break;
+      case 3:
+        double percent = shooterSubsystem.getFlyWheelPercentRPM();
+        if(percent < 0.97){
+          ledSubsystem.setSolidColorPercent(255, 20, 0, percent);
+        }else{
+          ledSubsystem.setSolidColor(255, 0, 255);
+        }
+        break; 
+      default: 
+        ledSubsystem.setSolidColor(0, 0, 0);;
+        break;
     }
   }
 

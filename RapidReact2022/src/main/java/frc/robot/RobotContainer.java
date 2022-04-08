@@ -92,7 +92,7 @@ public class RobotContainer {
     climb = new Climb(driver, operator, transport);
 
     // cameraSubsystem = new CameraSubsystem(operator);
-    ledSubsystem = new LedSubsystem(0, 300);
+    ledSubsystem = new LedSubsystem(0, 62);
 
     /*
      * command.addOption("LowerCargoToHub", new LowerCargoToHub());

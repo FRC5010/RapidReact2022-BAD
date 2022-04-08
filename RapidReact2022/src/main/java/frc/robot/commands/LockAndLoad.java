@@ -53,7 +53,7 @@ public class LockAndLoad extends CommandBase {
     diagonalBB = diagonalSubsystem.getLowerBB();
     if (!diagonalBB) {
       System.out.println("down ooo");
-      diagonalSubsystem.setDiagonalIndexer(-0.5);
+      diagonalSubsystem.setDiagonalIndexer(-0.35);
       verticalSubsystem.setVerticalIndexer(-0.5);  
     } else {
       System.out.println("no down");

@@ -69,9 +69,9 @@ public class ShooterConstants {
     public static final double[] hoodPosition = {highHood,highHood,highHood,highHood,hood4,hood5,hood6,hood7, hood8, hood9, hood10, hood11, hood12, hood12, hood12,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
     
         // pid values
-    public static double kPC = 0.2;//0.11889;
+    public static double kPC = 0.33; // 0.2 //0.11889;
     public static double kIC = 0.000005;
-    public static double kDC = 0.5;
+    public static double kDC = 1.2; //0.5;
 
     public static double kP = kPC / 60 / 10;
     public static double kI = kIC / 60;
@@ -118,7 +118,7 @@ public class ShooterConstants {
     }
 
     public static class HoodConstants{
-        public static double kPC = 0.58908; // 2.3541;
+        public static double kPC = 2.3541;  // 0.58908; // 2.3541;
         public static double kIC = 0;
         public static double kDC = 0;
 

@@ -98,7 +98,6 @@ public class LedSubsystem extends SubsystemBase {
   public void speed(double power){
     //this method shows that you can use the speed of something to change the leds, and its pretty simple to do
     int amountOn = Math.abs((int) ((double) m_ledBuffer.getLength() * power));
-    System.out.println(amountOn);
     int leds = m_ledBuffer.getLength() - 1;
     for(int i = 0; i < amountOn; i++){
       m_ledBuffer.setRGB(i,0,255,0);
@@ -115,6 +114,21 @@ public class LedSubsystem extends SubsystemBase {
     for(int i = 0; i < m_ledBuffer.getLength(); i++){
       m_ledBuffer.setRGB(i,red,green,blue);
     }
+    m_led.setData(m_ledBuffer);
+  }
+
+  public void setSolidColorPercent(int red, int green, int blue, double percent){
+    isBlink = false;
+    isRainbow = false; 
+    int percentLength = (int) ((double) m_ledBuffer.getLength() * percent);
+    for(int i = 0; i < percentLength; i++){
+      m_ledBuffer.setRGB(i,red,green,blue);
+    }
+
+    for (int i = percentLength; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i,0,0,0);
+    }
+
     m_led.setData(m_ledBuffer);
   }
 

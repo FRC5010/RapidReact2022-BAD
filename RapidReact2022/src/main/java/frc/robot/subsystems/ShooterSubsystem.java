@@ -121,8 +121,17 @@ public class ShooterSubsystem extends SubsystemBase {
     return (flyWheelSetPoint - flyWheelRight.getEncoder().getVelocity()) < rpmRange;
   }
 
+  public double getFlyWheelPercentRPM(){
+    return Math.abs(DriveTrainMain.minMaxOne(flyWheelRight.getEncoder().getVelocity() / flyWheelSetPoint));
+    //return Math.max(Math.min(flyWheelSetPoint / flyWheelRight.getEncoder().getVelocity(), 1), 0);
+  }
+
   public void determineIfReadyToShoot() {
     readyToShoot = getFlyWheelReadyToShoot() && getHoodReadyToShoot();
+  }
+
+  public void cancelReadyToShoot(){
+    readyToShoot = false; 
   }
 
   public boolean getReadyToShoot() {

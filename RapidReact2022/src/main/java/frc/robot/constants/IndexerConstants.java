@@ -12,6 +12,7 @@ public class IndexerConstants {
     // diagonals are 7:1
 
     public static double indexerRPM = 10000;
+    public static double diagIndexerRPM = 10000 / 2;
 
     public static class VerticalLong{
         // pid values

@@ -116,7 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean getFlyWheelReadyToShoot() {
     double rpmRange = 25;
     if (readyToShoot) {
-      rpmRange = 150;
+      rpmRange = 75;
     }
     return (flyWheelSetPoint - flyWheelRight.getEncoder().getVelocity()) < rpmRange;
   }

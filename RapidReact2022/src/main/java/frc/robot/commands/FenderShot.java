@@ -73,7 +73,7 @@ public class FenderShot extends CommandBase {
       indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
       indexerSubsystem.runWithVelocityControl();
 
-      diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.diagIndexerRPM);
       diagonalIndexerSubsystem.runWithVelocityControl();
     }else if(!diagonalIndexerSubsystem.getLowerBB()){
       indexerSubsystem.setVerticalIndexerPoint(-IndexerConstants.indexerRPM/75);

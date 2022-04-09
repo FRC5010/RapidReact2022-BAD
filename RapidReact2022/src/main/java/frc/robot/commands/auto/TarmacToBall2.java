@@ -5,7 +5,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AimAndShoot;
+import frc.robot.commands.auto.blocks.CalibrateSystemBlock;
 import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
 import frc.robot.commands.auto.blocks.ShootWithTimerBlock;
 import frc.robot.mechanisms.Transport;
@@ -20,9 +20,11 @@ public class TarmacToBall2 extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SequentialCommandGroup(
-        new MoveAndIntakeBlock(transport, drivingGroup, true),
+        new CalibrateSystemBlock(transport), 
+
+        new MoveAndIntakeBlock(transport, drivingGroup, false),
         
-        new ShootWithTimerBlock(transport, 1500, true)
+        new ShootWithTimerBlock(transport, 1500, false)
       )
     );
   }

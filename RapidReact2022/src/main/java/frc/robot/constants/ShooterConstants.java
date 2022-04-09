@@ -39,21 +39,21 @@ public class ShooterConstants {
     private static double rpm5 = 2500;
     private static double hood5 = 18.2;
     // 6(72) feet = 2325, 19.2
-    private static double rpm6 = 2575;
+    private static double rpm6 = 2625;
     private static double hood6 = 20.5;
     // 7(84) feet = 2425, 20.2
     private static double rpm7 = 2700;
     private static double hood7 = 20.7;
     // 8(96) feet = 2500, 22.9
-    private static double rpm8 = 2775;
-    private static double hood8 = 22.8;
+    private static double rpm8 = 2750;
+    private static double hood8 = 23.4;
     ;
     // 9(108) feet = 2600, 24.8
-    private static double rpm9 = 2975;
+    private static double rpm9 = 2950;
     private static double hood9 = 25.4;
     // 10(120) feet = 2650, 28.2
-    private static double rpm10 = 3075;
-    private static double hood10 = 27.8;
+    private static double rpm10 = 3100;
+    private static double hood10 = 28.3;
     // 11(132) feet = 2800, 30.0
     private static double rpm11 = 3175;
     private static double hood11 = 29.6;
@@ -69,9 +69,9 @@ public class ShooterConstants {
     public static final double[] hoodPosition = {highHood,highHood,highHood,highHood,hood4,hood5,hood6,hood7, hood8, hood9, hood10, hood11, hood12, hood12, hood12,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
     
         // pid values
-    public static double kPC = 0.33; // 0.2 //0.11889;
-    public static double kIC = 0.000005;
-    public static double kDC = 1.2; //0.5;
+    public static double kPC = 0.22; //0.16; // 0.33 //0.11889;
+    public static double kIC = 0.000005 * 1.5;
+    public static double kDC = 20; //4; //0.5;
 
     public static double kP = kPC / 60 / 10;
     public static double kI = kIC / 60;
@@ -80,7 +80,7 @@ public class ShooterConstants {
 
     // characterized values
     public static double kSC = 0.11449; // 0.11361;
-    public static double kVC = 0.12735; // 0.13197;
+    public static double kVC = 0.13197; // 0.12735;
     public static double kAC = 0.00649; // 0.0066214;
 
     public static double kS = kSC / 12;
@@ -140,7 +140,7 @@ public class ShooterConstants {
         public static double hoodMaxPos = 40;
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
-        public static double highHood = 10.38; //4 is what this was during 1st comp
+        public static double highHood = 8; //4 is what this was during 1st comp
         public static double manualPow = 0.25;
     }
 
@@ -151,18 +151,18 @@ public class ShooterConstants {
 
         public static double kS = 0.02;
 
-        public static double kPVision = 0.0065; //0.004;
+        public static double kPVision = 0.01; //0.004;
         public static double kDVision = 2000; //850;
 
         public static double kPEncoder = 0.15;
 
         // 3/26/2022, changed limits of turret to keep static hooks up
         // old values for full range are commented outs
-        public static double leftLimit = -0.35; //-1.8;
-        public static double rightLimit = 0.35; //1.3;
+        public static double leftLimit = -0.30; // -0.35
+        public static double rightLimit = 0.39; // 0.35
 
-        public static double onTargetLowLimit = 2; 
-        public static double onTargetHighLimit = 5; 
+        public static double onTargetLowLimit = 1; 
+        public static double onTargetHighLimit = 3; 
     }
 }
 

@@ -44,7 +44,7 @@ public class DefaultShoot extends CommandBase {
         indexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM);
         indexerSubsystem.runWithVelocityControl();
   
-        diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+        diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.diagIndexerRPM);
         diagonalIndexerSubsystem.runWithVelocityControl();
       }else{
         indexerSubsystem.setVerticalIndexerPoint(0);

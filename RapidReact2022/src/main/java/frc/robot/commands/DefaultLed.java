@@ -65,13 +65,15 @@ public class DefaultLed extends CommandBase {
       case 3:
         double percent = shooterSubsystem.getFlyWheelPercentRPM();
         if(percent < 0.97){
-          ledSubsystem.setSolidColorPercent(255, 20, 0, percent);
-        }else{
+          ledSubsystem.setSolidColorPercent(255, 20, 0, Math.pow(percent, 3));
+        } else if (shooterSubsystem.getReadyToShoot()){
           ledSubsystem.setSolidColor(255, 0, 255);
+        } else {
+          ledSubsystem.setSolidColor(255, 0, 0);
         }
         break; 
       default: 
-        ledSubsystem.setSolidColor(0, 0, 0);;
+        ledSubsystem.setSolidColor(0, 0, 0);
         break;
     }
   }

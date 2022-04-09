@@ -31,13 +31,14 @@ import frc.robot.commands.auto.ExtendingThreeBall;
 import frc.robot.commands.auto.FenderTwoBall;
 import frc.robot.commands.auto.TarmacToBall2;
 import frc.robot.commands.auto.TarmacTwoBall;
-import frc.robot.commands.auto.pathing.LowerBall2ToTerminalA2Path;
 import frc.robot.commands.auto.pathing.LowerBall1ToBall2;
 import frc.robot.commands.auto.pathing.LowerBall2ToTerminal;
+import frc.robot.commands.auto.pathing.LowerBall2ToTerminalA2Path;
 import frc.robot.commands.auto.pathing.LowerTarmacToBall1;
 import frc.robot.commands.auto.pathing.SingleCargoPath;
 import frc.robot.commands.auto.pathing.TarmacToBall2Path;
 import frc.robot.commands.auto.pathing.TerminalDriveBack;
+import frc.robot.commands.auto.pathing.TerminalDriveBackA2;
 import frc.robot.commands.auto.pathing.TurnBotLeft;
 import frc.robot.commands.auto.pathing.UpperTarmacToBall;
 import frc.robot.constants.ControlConstants;
@@ -130,7 +131,7 @@ public class RobotContainer {
     command.addOption("Middle 4 Ball", 
       new SequentialCommandGroup(
         new TarmacToBall2(transport, new TarmacToBall2Path()),
-        new ExtendingTerminalBall(transport, new LowerBall2ToTerminalA2Path(), new TerminalDriveBack())
+        new ExtendingTerminalBall(transport, new LowerBall2ToTerminalA2Path(), new TerminalDriveBackA2())
       )
     );
 

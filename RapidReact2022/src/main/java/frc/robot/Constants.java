@@ -15,7 +15,7 @@ package frc.robot;
 public final class Constants {
     // driver Tab
     public static int shooterIndex = 2;
-    public static int turretIndex = 1;
+    public static int turretIndex = 5;
     public static int indexerIndex = 1;
 
     // climbTab

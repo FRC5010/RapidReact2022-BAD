@@ -22,9 +22,9 @@ public class ExtendingThreeBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new MoveAndIntakeBlock(transport, drivingGroup, true),
+      new MoveAndIntakeBlock(transport, drivingGroup, false),
       new IntakeWithTimerBlock(transport, 150),
-      new ShootWithTimerBlock(transport,1500, true)
+      new ShootWithTimerBlock(transport,2000, false)
     );
   }
 }

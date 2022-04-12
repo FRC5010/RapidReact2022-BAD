@@ -195,7 +195,7 @@ public class RobotContainer {
 
   // Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
-    transport.getShooterSubsystem().setHoodCalibrated(false);
+    //transport.getShooterSubsystem().setHoodCalibrated(false);
     ledSubsystem.setDefaultCommand(new DefaultLed(ledSubsystem, transport));
     if (!DriverStation.isTest()) {
       drive.setUpDeftCom();

@@ -69,7 +69,7 @@ public class ShooterConstants {
     public static final double[] hoodPosition = {highHood,highHood,highHood,highHood,hood4,hood5,hood6,hood7, hood8, hood9, hood10, hood11, hood12, hood12, hood12,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
     
         // pid values
-    public static double kPC = 0.22; //0.16; // 0.33 //0.11889;
+    public static double kPC = 0.20; //0.16(visible stop between each shot but has more consistent shots)(lowest) // 0.33(overshoots first shot but typically makes second shot)(highest) //0.11889(got from SysID);
     public static double kIC = 0.000005 * 1.5;
     public static double kDC = 20; //4; //0.5;
 
@@ -89,7 +89,7 @@ public class ShooterConstants {
 
     //Defaults
     public static double defaultFlyWheelRPM = 1000;
-    public static double lowRPM = 900;
+    public static double lowRPM = 1500;
     public static double indexerPow = 1;
     public static double changeSetPoint = 25;
     public static double shotAdjustment = 0;

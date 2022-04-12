@@ -28,7 +28,17 @@ public class LedSubsystem extends SubsystemBase {
 
   private boolean isBlink = false;
   private boolean ledOn;
-  private boolean isRainbow = false; 
+  private boolean isRainbow = false;
+  private boolean isOrbit = false; 
+
+  private int red1;
+  private int green1;
+  private int blue1;
+  private int red2;
+  private int green2;
+  private int blue2;
+  private int numberOrbit;
+  private int ledPos = 0;
 
   public LedSubsystem(int port, int length) {
     this.port = port;
@@ -49,6 +59,7 @@ public class LedSubsystem extends SubsystemBase {
     //taking the data created above and inserting it into the leds
     m_led.setData(m_ledBuffer);
     m_led.start();
+    ledPos = 0;
   }
 
   @Override
@@ -71,6 +82,8 @@ public class LedSubsystem extends SubsystemBase {
       }
     } else if (isRainbow){
       rainbow();
+    } else if (isOrbit){
+      orbit();
     }
   }
 
@@ -90,9 +103,42 @@ public class LedSubsystem extends SubsystemBase {
     m_rainbowFirstPixelHue %= 180;
   }
 
+  private void orbit(){
+    for(int i = 0; i < m_ledBuffer.getLength(); i++){
+      if(i >= ledPos && (i - ledPos) < numberOrbit){
+        m_ledBuffer.setRGB(i % m_ledBuffer.getLength(), red2, green2, blue2);
+        if((ledPos + numberOrbit) - m_ledBuffer.getLength() >= 0){
+          for(int j = 0; j <= (ledPos + numberOrbit) - m_ledBuffer.getLength(); j++){
+            m_ledBuffer.setRGB(j, red2, green2, blue2);
+          }
+        }
+      }else{
+        m_ledBuffer.setRGB(i % m_ledBuffer.getLength(), red1, green1, blue1);
+      }
+    }
+    m_led.setData(m_ledBuffer);
+
+    //pushes the positon of the orbititing leds up by 1
+    ledPos++;
+    if(ledPos > m_ledBuffer.getLength()){
+      ledPos = 0;
+    }
+  }
+
   public void rainbow(boolean isRainbow) { 
     this.isRainbow = isRainbow; 
     isBlink = false;
+  }
+
+  public void orbit(int r1, int g1, int b1, int r2, int g2, int b2, double percentLed){
+    red1 = r1;
+    green1 = g1;
+    blue1 = b1;
+    red2 = r2;
+    green2 = g2;
+    blue2 = b2;
+    numberOrbit = (int) ((double) m_ledBuffer.getLength() * percentLed);
+    isOrbit = true;
   }
 
   public void speed(double power){
@@ -111,6 +157,7 @@ public class LedSubsystem extends SubsystemBase {
   public void setSolidColor(int red, int green, int blue){
     isBlink = false;
     isRainbow = false; 
+    isOrbit = false;
     for(int i = 0; i < m_ledBuffer.getLength(); i++){
       m_ledBuffer.setRGB(i,red,green,blue);
     }

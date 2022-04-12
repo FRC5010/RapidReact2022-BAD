@@ -35,6 +35,7 @@ public class DefaultLed extends CommandBase {
   @Override
   public void initialize() {
     ledSubsystem.setSolidColor(0, 0, 0);
+    //ledSubsystem.orbit(255, 20, 0, 0, 0, 255, .25);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -80,7 +81,10 @@ public class DefaultLed extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    //ledSubsystem.orbit(255, 20, 0, 0, 0, 255, .25);
+    ledSubsystem.rainbow(true);
+  }
 
   // Returns true when the command should end.
   @Override

@@ -65,11 +65,11 @@ public class AimAndShoot extends CommandBase {
       diagonalIndexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.diagIndexerRPM);
       diagonalIndexerSubsystem.runWithVelocityControl();
     }else if(!diagonalIndexerSubsystem.getLowerBB()){
-      indexerSubsystem.setVerticalIndexerPoint(-IndexerConstants.indexerRPM/75);
+      indexerSubsystem.setVerticalIndexerPoint(-IndexerConstants.indexerRPM/125);
       //might want to change the 75 to find a better number that doesn't take so long, the diagonal and vertical might be different, just something we need to mess with with driver practice 3/17
       indexerSubsystem.runWithVelocityControl();
 
-      diagonalIndexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM/75);
+      diagonalIndexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM/125);
       diagonalIndexerSubsystem.runWithVelocityControl();
     }
     else{

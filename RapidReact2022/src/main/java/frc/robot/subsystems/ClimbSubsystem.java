@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class ClimbSubsystem extends SubsystemBase {
   private CANSparkMax leftWinch;
@@ -80,5 +81,5 @@ public class ClimbSubsystem extends SubsystemBase {
  public double getRightEncoderValue(){
    return rightEncoder.getPosition();
  }
-
+ 
 }

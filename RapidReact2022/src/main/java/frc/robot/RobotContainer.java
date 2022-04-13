@@ -92,7 +92,7 @@ public class RobotContainer {
     transport = new Transport(operator, driver, shooterVision);
     climb = new Climb(driver, operator, transport);
 
-    // cameraSubsystem = new CameraSubsystem(operator);
+    cameraSubsystem = new CameraSubsystem();
     ledSubsystem = new LedSubsystem(0, 62);
 
     /*

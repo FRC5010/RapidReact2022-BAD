@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.CalibrateHood;
@@ -42,7 +43,7 @@ public class Climb {
     private ClimbSubsystem climbSubsystem;
 
     private JoystickButton climbTime;
-    private JoystickButton climbTogglePistons;
+    private Trigger climbTogglePistons;
     private ShuffleboardLayout climbEncoderLayout;
 
     public IntakeSubsystem intakeSubsystem;
@@ -109,9 +110,10 @@ public class Climb {
                     new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), false)
                 ),
             true);
+            //climbTogglePistons = new JoystickButton(operator, ControlConstants.toggleClimb);
+            climbTogglePistons = new Trigger(() -> (Math.abs(operator.getRawAxis(ControlConstants.toggleClimb)) > 0));
+            climbTogglePistons.whenActive(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));
         
-        climbTogglePistons = new JoystickButton(operator, ControlConstants.toggleClimb);
-        climbTogglePistons.whenPressed(new InstantCommand(()->climbSubsystem.toggleClimbArm(), climbSubsystem));
     
         SmartDashboard.putData("Calibrate Dynamic Arms", new CalibrateDynamicArms(climbSubsystem));
     }

@@ -140,7 +140,7 @@ public class ControlConstants {
     public static int rightClimbArm = AxisNums.RIGHT_Y.ordinal();
     public static int spinHood = AxisNums.RIGHT_Y.ordinal();
     public static int turnTurret = AxisNums.RIGHT_X.ordinal();
-    public static int bothArmsDown = AxisNums.L_TRIGGER.ordinal() ;
+    public static int toggleClimb = AxisNums.L_TRIGGER.ordinal() ;
     public static int lockAndLoadButton = AxisNums.R_TRIGGER.ordinal();
 
     public static int fender2Button = ButtonNums.A_BUTTON.ordinal(); // 3/25/2022 added arms down for comp at tippie
@@ -149,14 +149,13 @@ public class ControlConstants {
     public static int hoodUp = ButtonNums.Y_BUTTON.ordinal(); 
     public static int fenderButton = ButtonNums.LEFT_BUMPER.ordinal();
     public static int launchButton = ButtonNums.RIGHT_BUMPER.ordinal();
-
     //public static int fenderButton2 = ButtonNums.RIGHT_STICK_BUTT.ordinal();
     //public static int lockAndLoadButton = ButtonNums.LEFT_STICK_BUTT.ordinal();
 
     //public static int overrideIntake = ButtonNums.START_BUTTON.ordinal();
 
     public static int defaultShoot = ButtonNums.START_BUTTON.ordinal();
-    public static int toggleClimb = ButtonNums.BACK_BUTTON.ordinal();
+    
     
 
     public static int incShooter = POVDirs.UP.ordinal() * 90;

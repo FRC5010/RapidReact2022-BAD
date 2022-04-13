@@ -8,14 +8,16 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ControlConstants;
 
 public class CameraSubsystem extends SubsystemBase {
   UsbCamera camera1;
   UsbCamera camera2;
-  //NetworkTableEntry cameraSelection;
+  NetworkTableEntry cameraSelection;
   VideoSink server;
 
   Joystick operator;
@@ -26,12 +28,13 @@ public class CameraSubsystem extends SubsystemBase {
     camera1 = CameraServer.startAutomaticCapture(0);
     //camera2 = CameraServer.startAutomaticCapture(1);
 
-    //cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+    cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
     server = CameraServer.getServer();
 
     camera1.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
     //camera2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
     server.setSource(camera1);
+
   }
 
   @Override

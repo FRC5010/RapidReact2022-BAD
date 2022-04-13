@@ -63,20 +63,8 @@ public class DefaultClimb extends CommandBase {
     intakeSubsystem.deployIntake();
 
     // trigger is negated to power the arms down
-    double downSpeed = (-1) * DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.bothArmsDown));
-    if(downSpeed < 0){
-
-      if(climbSubsystem.getRightEncoderValue() > 0)
-        climbSubsystem.setRightWinchSpeed(downSpeed);
-      else
-        climbSubsystem.setRightWinchSpeed(0);
-        
-      if(climbSubsystem.getLeftEncoderValue() > 0)
-        climbSubsystem.setLeftWinchSpeed(downSpeed);
-      else
-        climbSubsystem.setLeftWinchSpeed(0);
-
-    }else{
+    //double downSpeed = (-1) * DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.bothArmsDown));
+    //riley doesn't use this and would rather have it as a toggle for the pistons
       // right climb
       double rightClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm));
       if (climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax || rightClimbSpeed < 0){
@@ -115,7 +103,7 @@ public class DefaultClimb extends CommandBase {
     }
 
     */
-  }
+  
 
   // Called once the command ends or is interrupted.
   @Override

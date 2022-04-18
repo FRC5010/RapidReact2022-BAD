@@ -28,6 +28,7 @@ import frc.robot.commands.LedRainbow;
 import frc.robot.commands.LockAndLoad;
 import frc.robot.commands.MoveHood;
 import frc.robot.commands.RunIndexer;
+import frc.robot.commands.SnapshotCmd;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.commands.Timer;
@@ -199,7 +200,11 @@ public class Transport {
 
         aimAndShoot = new JoystickButton(operator, ControlConstants.launchButton);
         //switched out DefaultShoot for AimAndShoot
-        aimAndShoot.whileHeld(new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision), false);
+        aimAndShoot.whileHeld(
+            new ParallelDeadlineGroup(
+                new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision),
+                new SnapshotCmd(shooterVision)),
+            false);
 
         defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot);
         defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem));

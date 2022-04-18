@@ -6,7 +6,9 @@ package frc.robot.commands.auto.blocks;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.commands.CalibrateHood;
+import frc.robot.commands.Timer;
 import frc.robot.mechanisms.Transport;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,7 +20,10 @@ public class CalibrateSystemBlock extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new CalibrateHood(transport.getShooterSubsystem()),
+      new ParallelRaceGroup(
+        new Timer(750), 
+        new CalibrateHood(transport.getShooterSubsystem())
+      ),
       new InstantCommand(() -> transport.getIntakeSubsystem().deployIntake()),
       new InstantCommand(() -> transport.getTurretSubsystem().zeroTurret())
     );

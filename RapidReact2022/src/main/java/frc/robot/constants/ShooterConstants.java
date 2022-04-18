@@ -9,7 +9,7 @@ public class ShooterConstants {
 
     // flywheel values
     public static final double highHood = HoodConstants.highHood;  
-    public static final double highRPM = 2325;
+    public static final double highRPM = 2425;
   
     // funny array to store flywheel rpm and hood position to index, index values represent feet, ex index 0 is 0ft
 
@@ -141,7 +141,7 @@ public class ShooterConstants {
         public static double hoodMaxPos = 40;
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
-        public static double highHood = 8; //4 is what this was during 1st comp
+        public static double highHood = 6.4; //4 is what this was during 1st comp
         public static double manualPow = 0.25;
     }
 

@@ -82,6 +82,7 @@ public abstract class VisionSystem extends SubsystemBase {
   public abstract void setLight(boolean on);
   public abstract boolean isLightOn();
   public abstract void flashLight();
+  public abstract void setSnapshotMode(int snapVal);
 
   public void setCamAngle(double a) {
     camAngle = a;

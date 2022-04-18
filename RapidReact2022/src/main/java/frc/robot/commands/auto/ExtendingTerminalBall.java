@@ -5,6 +5,7 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Timer;
 import frc.robot.commands.auto.blocks.IntakeWithTimerBlock;
 import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
 import frc.robot.commands.auto.blocks.ShootWithTimerBlock;
@@ -20,6 +21,8 @@ public class ExtendingTerminalBall extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new MoveAndIntakeBlock(transport, drivingToGroup, false),
+      
+      new IntakeWithTimerBlock(transport, 1000),
 
       new MoveAndIntakeBlock(transport, drivingBackGroup, false),
 

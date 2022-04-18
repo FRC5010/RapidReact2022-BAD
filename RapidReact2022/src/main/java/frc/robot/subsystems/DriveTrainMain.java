@@ -99,7 +99,7 @@ public class DriveTrainMain extends SubsystemBase {
     steer = driverModSteer(steer, throttle);
     throttle = driverModThrottle(throttle);
 
-    System.out.println(throttle);
+    //System.out.println(throttle);
     diffDrive.arcadeDrive(throttle, steer);
   }
 

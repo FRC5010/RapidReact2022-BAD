@@ -24,6 +24,7 @@ import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
 import frc.robot.commands.LedRainbow;
 import frc.robot.commands.SetPipeline;
+import frc.robot.commands.SnapshotCmd;
 import frc.robot.commands.Timer;
 import frc.robot.commands.auto.ExtendingShortLeftTurn;
 import frc.robot.commands.auto.ExtendingTerminalBall;
@@ -77,6 +78,8 @@ public class RobotContainer {
 
   private JoystickButton toggleLL;
 
+  private JoystickButton takeSnapshot;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -103,6 +106,7 @@ public class RobotContainer {
      */
 
     command.addOption("FarM&S", new TarmacTwoBall(transport, new SingleCargoPath()));
+    
     command.addOption("ShortM&S", 
       new SequentialCommandGroup(
         new TarmacTwoBall(transport, new LowerTarmacToBall1()),
@@ -189,7 +193,8 @@ public class RobotContainer {
     toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
     toggleLL.whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
 
-
+    takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
+    takeSnapshot.whileHeld(new SnapshotCmd(shooterVision));
 
   }
 

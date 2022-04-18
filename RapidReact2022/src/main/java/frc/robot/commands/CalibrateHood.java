@@ -13,6 +13,7 @@ public class CalibrateHood extends CommandBase {
   private double currEncoderPos;
   private double lastEncoderPos;
   private int cycleCount = 0;
+
   public CalibrateHood(ShooterSubsystem shooterSubsystem) {
     this.shooterSubsystem = shooterSubsystem;
     addRequirements(shooterSubsystem);
@@ -22,7 +23,7 @@ public class CalibrateHood extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterSubsystem.setHoodMotor(-0.3);
+    shooterSubsystem.setHoodMotor(-0.2);
     lastEncoderPos = 1000;
   }
 

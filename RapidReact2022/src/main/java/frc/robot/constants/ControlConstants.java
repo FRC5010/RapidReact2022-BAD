@@ -109,6 +109,7 @@ public class ControlConstants {
 
     //public static int rightClimbArmDown = ButtonNums.A_BUTTON.ordinal();
     public static int toggleLL = ButtonNums.A_BUTTON.ordinal();
+    public static int takeSnapshot = ButtonNums.B_BUTTON.ordinal();
     //public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
     //public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
     //public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();

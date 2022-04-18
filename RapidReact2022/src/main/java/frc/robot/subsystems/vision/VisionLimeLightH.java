@@ -70,6 +70,10 @@ public class VisionLimeLightH extends VisionSystem {
     table.getTable(name).getEntry("stream").setNumber(streamVal);
   }
 
+  public void setSnapshotMode(int snapVal){
+    table.getTable(name).getEntry("snapshot").setNumber(snapVal);
+  }
+
   public void toggleLight() {
     Number lightVal = table.getTable(name).getEntry("ledMode").getNumber(1);
     table.getTable(name).getEntry("ledMode").setNumber(lightVal.intValue() == 3 ? 1 : 3);

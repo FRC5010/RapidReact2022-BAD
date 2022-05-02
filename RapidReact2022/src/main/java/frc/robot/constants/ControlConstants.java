@@ -141,7 +141,7 @@ public class ControlConstants {
     public static int rightClimbArm = AxisNums.RIGHT_Y.ordinal();
     public static int spinHood = AxisNums.RIGHT_Y.ordinal();
     public static int turnTurret = AxisNums.RIGHT_X.ordinal();
-    public static int toggleClimb = AxisNums.L_TRIGGER.ordinal() ;
+    public static int toggleClimb = AxisNums.L_TRIGGER.ordinal(); 
     public static int lockAndLoadButton = AxisNums.R_TRIGGER.ordinal();
 
     public static int fender2Button = ButtonNums.A_BUTTON.ordinal(); // 3/25/2022 added arms down for comp at tippie

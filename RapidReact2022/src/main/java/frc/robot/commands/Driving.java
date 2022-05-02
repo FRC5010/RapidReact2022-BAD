@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.FRC5010.Controller;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
 import frc.robot.subsystems.DriveTrainMain;
@@ -16,12 +17,14 @@ import frc.robot.subsystems.DriveTrainMain;
 public class Driving extends CommandBase {
   DriveTrainMain driveSubsystem;
   Joystick driver;
+  Controller driver2;
   /**
    * Creates a new Driving.
    */
-  public Driving(DriveTrainMain driveTrain, Joystick driver) {
+  public Driving(DriveTrainMain driveTrain, Joystick driver, Controller driver2) {
     driveSubsystem = driveTrain;
     this.driver = driver;
+    this.driver2 = driver2; 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveSubsystem);
   }
@@ -37,8 +40,9 @@ public class Driving extends CommandBase {
   public void execute() {
     
     driveSubsystem.driverArcadeDrive(
-      DriveTrainMain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle)), 
-      DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
+      // DriveTrainMain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle)), 
+      // DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
+      driver2.getLeftYAxis(), driver2.getRightXAxis());
   }
 
   // Called once the command ends or is interrupted.

@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Robot;
+import frc.robot.FRC5010.Controller;
 import frc.robot.commands.DriveTrainYEET;
 import frc.robot.commands.Driving;
 import frc.robot.commands.RamseteFollower;
@@ -45,6 +46,8 @@ public class Drive {
   private static VisionSystem shooterCam;
 
   public static Joystick driver;
+  public static Controller driver2; 
+  
   public static CANSparkMax lDrive1;
   //public static CANSparkMax lDrive2;
   public static CANSparkMax lDrive3;
@@ -72,31 +75,38 @@ public class Drive {
   public JoystickButton autoNavButton;
   public JoystickButton driveYEET;
 
-  public Drive(Joystick driver, VisionSystem shooterVision) {
-    init(driver, shooterVision);
+  public Drive(Joystick driver, VisionSystem shooterVision, Controller driver2) {
+    init(driver, shooterVision, driver2);
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
+    driver2.createLeftYAxis().negate().deadzone(.075).cubed().limit(1);
+    driver2.createRightXAxis().deadzone(.075).cubed().limit(1);
+      // incThrottleFactor = new POVButton(driver, ControlConstants.incThrottleFactor);
 
-    incThrottleFactor = new POVButton(driver, ControlConstants.incThrottleFactor);
-    incThrottleFactor.whenPressed(new InstantCommand(() -> DriveConstants.throttleFactor = Math.min(1,
+
+  driver2.createUpPovButton().whenPressed(new InstantCommand(() -> DriveConstants.throttleFactor = Math.min(1,
         DriveConstants.throttleFactor + DriveConstants.drivingAdjustment)));
 
-    decThrottleFactor = new POVButton(driver, ControlConstants.decThrottleFactor);
-    decThrottleFactor.whenPressed(new InstantCommand(() -> DriveConstants.throttleFactor = Math.max(0,
+    // decThrottleFactor = new POVButton(driver, ControlConstants.decThrottleFactor);
+
+  driver2.createDownPovButton().whenPressed(new InstantCommand(() -> DriveConstants.throttleFactor = Math.max(0,
         DriveConstants.throttleFactor - DriveConstants.drivingAdjustment)));
 
-    incSteerFactor = new POVButton(driver, ControlConstants.incSteerFactor);
-    incSteerFactor.whenPressed(new InstantCommand(
+    // incSteerFactor = new POVButton(driver, ControlConstants.incSteerFactor);
+
+  driver2.createRightPovButton().whenPressed(new InstantCommand(
         () -> DriveConstants.steerFactor = Math.min(1, DriveConstants.steerFactor + DriveConstants.drivingAdjustment)));
 
-    decSteerFactor = new POVButton(driver, ControlConstants.decSteerFactor);
-    decSteerFactor.whenPressed(new InstantCommand(
+    // decSteerFactor = new POVButton(driver, ControlConstants.decSteerFactor);
+
+  driver2.createLeftPovButton().whenPressed(new InstantCommand(
         () -> DriveConstants.steerFactor = Math.max(0, DriveConstants.steerFactor - DriveConstants.drivingAdjustment)));
 
-    driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
-    driveYEET.whileHeld(new DriveTrainYEET(driveTrain, driver));
+    // driveYEET = new JoystickButton(driver, ControlConstants.driveYEET);
+  driver2.createLeftBumper().whileHeld(new DriveTrainYEET(driveTrain, driver));
+
   }
 
   public static void setCurrentLimits(int currentLimit) {
@@ -110,9 +120,9 @@ public class Drive {
     }
   }
 
-  public void init(Joystick driver, VisionSystem shooterVision) {
+  public void init(Joystick driver, VisionSystem shooterVision, Controller driver2) {
     this.driver = driver;
-
+    this.driver2 = driver2; 
     // 10.71:1 gearbox on drivetrain as of 3/17/2022
 
     // Neos HAVE to be in brushless
@@ -162,7 +172,7 @@ public class Drive {
   }
 //Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
-    driveTrain.setDefaultCommand(new Driving(driveTrain, driver));
+    driveTrain.setDefaultCommand(new Driving(driveTrain, driver, driver2));
 
   }
 

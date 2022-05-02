@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.FRC5010.Controller;
 import frc.robot.commands.DefaultLed;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
@@ -64,6 +65,10 @@ public class RobotContainer {
   private Joystick driver;
 
   private Joystick operator;
+
+  private Controller driver2 = new Controller(Controller.JoystickPorts.ZERO.ordinal());
+  private Controller operator2 = new Controller(Controller.JoystickPorts.ONE.ordinal());
+
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
@@ -91,7 +96,7 @@ public class RobotContainer {
     shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
     shooterVision.setPiPMode(0); // removed shooter cam
 
-    drive = new Drive(driver, shooterVision);
+    drive = new Drive(driver, shooterVision, driver2);
     transport = new Transport(operator, driver, shooterVision);
     climb = new Climb(driver, operator, transport);
 
@@ -190,11 +195,13 @@ public class RobotContainer {
     SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
     SmartDashboard.putData("Led Rainbow", new LedRainbow(ledSubsystem));
 
-    toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
-    toggleLL.whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
+    // toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
 
-    takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
-    takeSnapshot.whileHeld(new SnapshotCmd(shooterVision));
+    driver2.createAButton().whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
+
+    // takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
+
+    driver2.createBButton().whileHeld(new SnapshotCmd(shooterVision));
 
   }
 

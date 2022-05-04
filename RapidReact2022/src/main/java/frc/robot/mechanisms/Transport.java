@@ -15,30 +15,24 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.FRC5010.Controller;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
 import frc.robot.commands.FenderShot;
-import frc.robot.commands.LedColor;
-import frc.robot.commands.LedRainbow;
 import frc.robot.commands.LockAndLoad;
 import frc.robot.commands.MoveHood;
 import frc.robot.commands.RunIndexer;
 import frc.robot.commands.SnapshotCmd;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
-import frc.robot.commands.Timer;
 import frc.robot.constants.ControlConstants;
-import frc.robot.constants.IndexerConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
-import frc.robot.subsystems.DriveTrainMain;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
@@ -49,6 +43,8 @@ public class Transport {
 
     private Joystick operator;
     private Joystick driver;
+    private Controller operator2; 
+    private Controller driver2;
     private JoystickButton togglePiston;
 
     private VisionSystem shooterVision;
@@ -100,10 +96,12 @@ public class Transport {
     private POVButton shotAdjustmentInc;
     
 
-    public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
+    public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision, Controller operator2, Controller driver2){
         this.shooterVision = shooterVision;
         this.driver = driver;
         this.operator = operator;
+        this.driver2 = driver2;
+        this.operator2 = operator2;
         //togglePiston = new JoystickButton(driver, ControlConstants.toggleIntake);
 
         // initializes intake
@@ -192,31 +190,32 @@ public class Transport {
     }
 
     public void configureButtonBindings(){
-        hoodDown = new JoystickButton(operator, ControlConstants.hoodDown);
-        hoodUp = new JoystickButton(operator, ControlConstants.hoodUp);
+        // hoodDown = new JoystickButton(operator, ControlConstants.hoodDown); // B Button
+        // hoodUp = new JoystickButton(operator, ControlConstants.hoodUp); // Y Button
+        
+        operator2.createBButton().whenPressed(new MoveHood(shooterSubsystem, -ShooterConstants.HoodConstants.hoodTolerance));
+        operator2.createYButton().whenPressed(new MoveHood(shooterSubsystem, ShooterConstants.HoodConstants.hoodTolerance));
 
-        hoodDown.whenPressed(new MoveHood(shooterSubsystem, -ShooterConstants.HoodConstants.hoodTolerance));
-        hoodUp.whenPressed(new MoveHood(shooterSubsystem, ShooterConstants.HoodConstants.hoodTolerance));
-
-        aimAndShoot = new JoystickButton(operator, ControlConstants.launchButton);
+        // aimAndShoot = new JoystickButton(operator, ControlConstants.launchButton); // right bumper
         //switched out DefaultShoot for AimAndShoot
-        aimAndShoot.whileHeld(
+        operator2.createRightBumper().whileHeld(
             new ParallelDeadlineGroup(
                 new AimAndShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,shooterVision),
                 new SnapshotCmd(shooterVision)),
             false);
 
-        defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot);
-        defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem));
+        // defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot); // Start Button
+        operator2.createStartButton().whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem));
 
-        incFlyWheel = new POVButton(operator, ControlConstants.incShooter);
-        incFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM += ShooterConstants.changeSetPoint));
+        // incFlyWheel = new POVButton(operator, ControlConstants.incShooter); // POVButton UP
 
-        decFlyWheel = new POVButton(operator, ControlConstants.decShooter);
-        decFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM -= ShooterConstants.changeSetPoint));
+        operator2.createUpPovButton().whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM += ShooterConstants.changeSetPoint));
 
-        calibrateHood = new JoystickButton(driver, ControlConstants.calibrate);
-        calibrateHood.whenPressed(new CalibrateHood(shooterSubsystem));
+        // decFlyWheel = new POVButton(operator, ControlConstants.decShooter); // POVButton DOWN
+        operator2.createDownPovButton().whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM -= ShooterConstants.changeSetPoint));
+
+        // calibrateHood = new JoystickButton(driver, ControlConstants.calibrate); // Driver START_BUTTON
+        driver2.createStartButton().whenPressed(new CalibrateHood(shooterSubsystem));
 
         //indexerUp = new JoystickButton(operator, ControlConstants.indexerUp);   
         //indexerUp.whileHeld(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, IndexerConstants.indexerRPM), false);
@@ -229,12 +228,12 @@ public class Transport {
         indexerTrigger = new Trigger(() -> Math.abs(operator.getRawAxis(ControlConstants.joystickIndexer)) > .08);
         indexerTrigger.whileActiveOnce(new RunIndexer(upperIndexerSubsystem, indexerSubsystem, operator));
 
-        fenderShot = new JoystickButton(operator, ControlConstants.fenderButton);
-        fenderShot.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,true), false);
+        // fenderShot = new JoystickButton(operator, ControlConstants.fenderButton); Operator Left Bumper
+        operator2.createLeftBumper().whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,true), false);
 
         
-        fenderShot2 = new JoystickButton(operator, ControlConstants.fender2Button);
-        fenderShot2.whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
+        // fenderShot2 = new JoystickButton(operator, ControlConstants.fender2Button); Operator A Button
+        operator2.createAButton().whileHeld(new FenderShot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem,false), false);
 
         //lockAndLoad = new JoystickButton(operator, ControlConstants.lockAndLoadButton);
         //lockAndLoad.whenPressed(new LockAndLoad(upperIndexerSubsystem, indexerSubsystem, shooterSubsystem, shooterVision), true);
@@ -246,16 +245,17 @@ public class Transport {
         //intakeTrigger.whileActiveOnce(new SequentialCommandGroup(new SpinIntake(intakeSubsystem, indexerSubsystem, driver, 200), ));
         intakeTrigger.whileActiveOnce(new SpinIntake(intakeSubsystem, indexerSubsystem, upperIndexerSubsystem, driver, 150));
 
-        toggleReject = new JoystickButton(operator, ControlConstants.toggleReject);
-        toggleReject.whenPressed(new InstantCommand(()-> intakeSubsystem.toggleReject(), intakeSubsystem));
+        // toggleReject = new JoystickButton(operator, ControlConstants.toggleReject); // Operator X_BUTTON
+        operator2.createXButton().whenPressed(new InstantCommand(()-> intakeSubsystem.toggleReject(), intakeSubsystem));
         //finish way to toggle the boolean in intakesubsystem
 
-        shotAdjustmentInc = new POVButton(operator, ControlConstants.shotAdjustmentUp);
-        shotAdjustmentInc.whenPressed(new InstantCommand(()-> ShooterConstants.shotAdjustment += 25));
+        // shotAdjustmentInc = new POVButton(operator, ControlConstants.shotAdjustmentUp); Operator POVButton Right
+        operator2.createRightPovButton().whenPressed(new InstantCommand(()-> ShooterConstants.shotAdjustment += 25));
         
-        shotAdjustmentDec = new POVButton(operator, ControlConstants.shotAdjustmentDown);
-        shotAdjustmentDec.whenPressed(new InstantCommand(()-> ShooterConstants.shotAdjustment -= 25));
+        // shotAdjustmentDec = new POVButton(operator, ControlConstants.shotAdjustmentDown); Operator POVButton Left
+        operator2.createLeftPovButton().whenPressed(new InstantCommand(()-> ShooterConstants.shotAdjustment -= 25));
     }
+
     public void setUpDeftCom(){
         //shooterSubsystem.setDefaultCommand(new Launcher(shooterSubsystem, operator));
         //intakeSubsystem.setDefaultCommand(new SpinIntake(intakeSubsystem, indexerSubsystem, driver));

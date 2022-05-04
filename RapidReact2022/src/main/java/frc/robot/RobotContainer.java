@@ -66,8 +66,9 @@ public class RobotContainer {
 
   private Joystick operator;
 
-  private Controller driver2 = new Controller(Controller.JoystickPorts.ZERO.ordinal());
-  private Controller operator2 = new Controller(Controller.JoystickPorts.ONE.ordinal());
+  private Controller driver2;
+  private Controller operator2;
+
 
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
@@ -92,13 +93,16 @@ public class RobotContainer {
     driver = new Joystick(ControlConstants.driverJoystick);
     operator = new Joystick(ControlConstants.operatorJoystick);
 
+    driver2 = new Controller(Controller.JoystickPorts.ZERO.ordinal());
+    operator2 = new Controller(Controller.JoystickPorts.ONE.ordinal());
+
     // the 20 degrees as of march 15 2022,
     shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
     shooterVision.setPiPMode(0); // removed shooter cam
 
     drive = new Drive(driver, shooterVision, driver2);
-    transport = new Transport(operator, driver, shooterVision);
-    climb = new Climb(driver, operator, transport);
+    transport = new Transport(operator, driver, shooterVision, driver2, operator2);
+    climb = new Climb(driver, operator, transport, driver2, operator2);
 
     cameraSubsystem = new CameraSubsystem();
     ledSubsystem = new LedSubsystem(0, 62);

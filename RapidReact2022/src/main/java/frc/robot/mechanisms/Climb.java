@@ -21,14 +21,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.FRC5010.Controller;
 import frc.robot.commands.CalibrateDynamicArms;
-import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultClimb;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.vision.VisionSystem;
 
 /** Add your docs here. */
@@ -39,7 +38,9 @@ public class Climb {
     private DoubleSolenoid climbSolenoid;
 
     private Joystick driver;
+    private Controller driver2;
     private Joystick operator;
+    private Controller operator2;
     private ClimbSubsystem climbSubsystem;
 
     private JoystickButton climbTime;
@@ -50,9 +51,11 @@ public class Climb {
     public VisionSystem shooterVision;
     public Transport transport;
 
-    public Climb(Joystick driver, Joystick operator, Transport transport){
+    public Climb(Joystick driver, Joystick operator, Transport transport, Controller driver2, Controller operator2){
         this.driver = driver;
+        this.driver2 = driver2;
         this.operator = operator;
+        this.operator2 = operator2;
         this.transport = transport;
 
         // defined motors
@@ -101,9 +104,8 @@ public class Climb {
 
     private void configureButtonBindings(){
 
-        climbTime = new JoystickButton(driver, ControlConstants.climbTime);
-    
-        climbTime.whileHeld(new SequentialCommandGroup(
+        // climbTime = new JoystickButton(driver, ControlConstants.climbTime);
+        driver2.createBackButton().whileHeld(new SequentialCommandGroup(
                 //new CalibrateHood(transport.getShooterSubsystem()),
                 new ParallelCommandGroup(
                     new DefaultClimb(climbSubsystem, operator, transport)),

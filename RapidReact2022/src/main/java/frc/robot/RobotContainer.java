@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -51,6 +52,8 @@ import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.vision.VisionLimeLightH2;
+import frc.robot.subsystems.vision.VisionLimeLightSim;
+import frc.robot.subsystems.vision.VisionSystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -73,7 +76,7 @@ public class RobotContainer {
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
-  private VisionLimeLightH2 shooterVision;
+  private VisionSystem shooterVision;
   private Transport transport;
   private Climb climb;
 
@@ -96,17 +99,13 @@ public class RobotContainer {
     driver2 = new Controller(Controller.JoystickPorts.ZERO.ordinal());
     operator2 = new Controller(Controller.JoystickPorts.ONE.ordinal());
 
-    // the 20 degrees as of march 15 2022,
-    shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
-    shooterVision.setPiPMode(0); // removed shooter cam
+    initRealOrSim();
 
-    drive = new Drive(driver, shooterVision, driver2);
-    transport = new Transport(operator, driver, shooterVision, driver2, operator2);
-    climb = new Climb(driver, operator, transport, driver2, operator2);
-
-    cameraSubsystem = new CameraSubsystem();
-    ledSubsystem = new LedSubsystem(0, 62);
-
+    if (RobotBase.isReal()) {
+      drive = new Drive(driver, shooterVision, driver2);
+      transport = new Transport(operator, driver, shooterVision, driver2, operator2);
+      climb = new Climb(driver, operator, transport, driver2, operator2);
+    
     /*
      * command.addOption("LowerCargoToHub", new LowerCargoToHub());
      * command.addOption("HubBall2", new HubToBall2());
@@ -167,11 +166,28 @@ public class RobotContainer {
     teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));
     teamColor.addOption("Red", new InstantCommand(() -> shooterVision.setPipeline(1)));
     teamColor.addOption("Blue", new InstantCommand(() -> shooterVision.setPipeline(0)));
-
+    }
     // Configure the button bindings
     configureButtonBindings();
   }
 
+  private void initRealOrSim() {
+    if (RobotBase.isReal()) {
+      // the 20 degrees as of march 15 2022,
+      shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
+      shooterVision.setPiPMode(0); // removed shooter cam
+
+      ledSubsystem = new LedSubsystem(0, 62);
+      SmartDashboard.putData("Leds Orange", new LedColor(255, 25, 0, ledSubsystem));
+      SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
+      SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
+      SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
+      SmartDashboard.putData("Led Rainbow", new LedRainbow(ledSubsystem));
+    } else {
+      shooterVision = new VisionLimeLightSim("limelight-sim", ControlConstants.shooterVisionColumn);
+    }
+  }
+  
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -181,10 +197,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    if (RobotBase.isReal()) {
+      Command ledOrange = new InstantCommand(() -> ledSubsystem.setSolidColor(255, 20, 0));
+    
     Command red = new InstantCommand(() -> shooterVision.setPipeline(1));
     Command blue = new InstantCommand(() -> shooterVision.setPipeline(0));
     Command vTargets = new InstantCommand(() -> shooterVision.setPipeline(2));
-    Command ledOrange = new InstantCommand(() -> ledSubsystem.setSolidColor(255, 20, 0));
     // this adds auto selections in SmartDashboard
     Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay).getLayout("Auto", BuiltInLayouts.kList)
         .withPosition(ControlConstants.autoColumn, 0).withSize(3, 1).add("Choose an Auto Mode", command)
@@ -193,11 +211,6 @@ public class RobotContainer {
     SmartDashboard.putData("red", new SetPipeline(1, shooterVision));
     SmartDashboard.putData("blue", new SetPipeline(0, shooterVision));
     SmartDashboard.putData("default", new SetPipeline(2, shooterVision));
-    SmartDashboard.putData("Leds Orange", new LedColor(255, 25, 0, ledSubsystem));
-    SmartDashboard.putData("Leds Green", new LedColor(0, 255, 0, ledSubsystem));
-    SmartDashboard.putData("Leds Off", new LedColor(0, 0, 0, ledSubsystem));
-    SmartDashboard.putData("Led Blink Blue", new LedBlink(0, 0, 255, 100, ledSubsystem));
-    SmartDashboard.putData("Led Rainbow", new LedRainbow(ledSubsystem));
 
     // toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
 
@@ -206,20 +219,23 @@ public class RobotContainer {
     // takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
 
     driver2.createBButton().whileHeld(new SnapshotCmd(shooterVision));
-
+    }
   }
 
   // Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
-    //transport.getShooterSubsystem().setHoodCalibrated(false);
-    ledSubsystem.setDefaultCommand(new DefaultLed(ledSubsystem, transport));
-    if (!DriverStation.isTest()) {
-      drive.setUpDeftCom();
-      transport.setUpDeftCom();
-    } else {
-      transport.setUpDeftCom();
+    if (RobotBase.isReal()) {
+      //transport.getShooterSubsystem().setHoodCalibrated(false);
+      ledSubsystem.setDefaultCommand(new DefaultLed(ledSubsystem, transport));
+      cameraSubsystem = new CameraSubsystem();
+    
+      if (!DriverStation.isTest()) {
+        drive.setUpDeftCom();
+        transport.setUpDeftCom();
+      } else {
+        transport.setUpDeftCom();
+      }
     }
-    cameraSubsystem = new CameraSubsystem();
   }
 
   public void determineAllianceColor(){

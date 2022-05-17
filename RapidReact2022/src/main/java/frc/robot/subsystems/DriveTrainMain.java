@@ -6,7 +6,9 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
@@ -14,18 +16,11 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.FRC5010.Controller;
 import frc.robot.constants.ControlConstants;
-import frc.robot.commands.ComboDrive;
-import frc.robot.commands.CurvatureDrive;
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-import frc.robot.commands.Driving;
 import frc.robot.constants.DriveConstants;
 
 public class DriveTrainMain extends SubsystemBase {
@@ -42,39 +37,58 @@ public class DriveTrainMain extends SubsystemBase {
   Pose pose;
   private DifferentialDrive diffDrive;
 
-  public DriveTrainMain(MotorController left, MotorController right, Joystick driver, Pose pose) {
+  // Simulation
+  // Create our feedforward gain constants (from the identification tool)
+  static final double KvLinear = DriveConstants.kvVoltSecondsPerMeter;
+  static final double KaLinear = DriveConstants.kaVoltSecondsSquaredPerMeter;
+  static final double KvAngular = 1.5;
+  static final double KaAngular = 0.3;
+
+  // Create the simulation model of our drivetrain.
+  private DifferentialDrivetrainSim m_driveSim;
+  public DriveTrainMain() {
+    m_driveSim = new DifferentialDrivetrainSim(
+      // Create a linear system from our identification gains.
+      LinearSystemId.identifyDrivetrainSystem(KvLinear, KaLinear, KvAngular, KaAngular),
+      DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
+      DriveConstants.motorRotationsPerWheelRotation,  // 10.71:1 gearing reduction.
+      DriveConstants.kTrackwidthMeters, // The track width is 0.616 meters.
+      KitbotWheelSize.kSixInch.value, // The robot uses 3" radius wheels.
+    
+      // The standard deviations for measurement noise:
+      // x and y:          0.001 m
+      // heading:          0.001 rad
+      // l and r velocity: 0.1   m/s
+      // l and r position: 0.005 m
+      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
+  }
+
+  public DriveTrainMain(MotorController left, MotorController right) {
     leftMaster = left;
     rightMaster = right;
-    this.pose = pose;
     diffDrive = new DifferentialDrive(left, right);
+  }
 
+  public void init() {
     ShuffleboardLayout layout = Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay)
-      .getLayout("Driver", BuiltInLayouts.kList)
-      .withPosition(ControlConstants.driverColumn, 2)
-      .withSize(2, 5);
-    layout.addNumber("Throttle Factor", this::getThrottleFactorDisplay)
-      .withWidget(BuiltInWidgets.kDial)
-      .withProperties(Map.of("Max", 100, "Min", 0))
-      .withPosition(ControlConstants.driverColumn, 3);
-    layout.addNumber("Steer Factor", this::geSteerFactorDisplay)
-      .withWidget(BuiltInWidgets.kDial)
-      .withProperties(Map.of("Max", 100, "Min", 0))
-      .withPosition(ControlConstants.driverColumn, 5);
-      layout.addBoolean("Drive Direction", this::getDriveDirection)
-      .withWidget(BuiltInWidgets.kBooleanBox)
-      .withPosition(ControlConstants.driverColumn, 1);
-
-  //  pdp = new PowerDistributionPanel();
-    
-   // setDefaultCommand(new FlickStick(this, driver, pose));
+    .getLayout("Driver", BuiltInLayouts.kList)
+    .withPosition(ControlConstants.driverColumn, 2)
+    .withSize(2, 5);
+  layout.addNumber("Throttle Factor", this::getThrottleFactorDisplay)
+    .withWidget(BuiltInWidgets.kDial)
+    .withProperties(Map.of("Max", 100, "Min", 0))
+    .withPosition(ControlConstants.driverColumn, 3);
+  layout.addNumber("Steer Factor", this::geSteerFactorDisplay)
+    .withWidget(BuiltInWidgets.kDial)
+    .withProperties(Map.of("Max", 100, "Min", 0))
+    .withPosition(ControlConstants.driverColumn, 5);
+    layout.addBoolean("Drive Direction", this::getDriveDirection)
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withPosition(ControlConstants.driverColumn, 1);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    //SmartDashboard.putBoolean("limit", limit.get());
-    //SmartDashboard.putBoolean("BB1", BB1.get());
-    //SmartDashboard.putBoolean("BB2", BB2.get());
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -155,14 +169,13 @@ public class DriveTrainMain extends SubsystemBase {
     return input;
   }
 
-  
-
   public void setMaxOutput(double maxOutput) {
     leftMaster.set(maxOutput);
     rightMaster.set(maxOutput);
   }
 
-  public Pose getPose(){
-    return pose;
+  @Override
+  public void simulationPeriodic() {
+
   }
 }

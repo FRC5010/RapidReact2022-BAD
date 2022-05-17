@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.constants.ControlConstants;
 
 // base vision code, can be extended to more specific vision systems.
@@ -146,5 +145,14 @@ public abstract class VisionSystem extends SubsystemBase {
 
   public void calibarateCamAngle(double angleY) {
     camAngle = CAMERA_CAL_ANGLE - angleY;
+  }
+
+  public void toggleLight() {
+    Number lightVal = table.getTable(name).getEntry("ledMode").getNumber(1);
+    table.getTable(name).getEntry("ledMode").setNumber(lightVal.intValue() == 3 ? 1 : 3);
+  }
+
+  public void setPiPMode(int streamVal) {
+    table.getTable(name).getEntry("stream").setNumber(streamVal);
   }
 }

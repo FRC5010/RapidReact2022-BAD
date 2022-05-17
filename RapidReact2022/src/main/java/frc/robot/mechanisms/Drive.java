@@ -19,9 +19,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -43,7 +45,6 @@ import frc.robot.subsystems.vision.VisionSystem;
  */
 public class Drive {
   public static DriveTrainMain driveTrain;
-  private static VisionSystem shooterCam;
 
   public static Joystick driver;
   public static Controller driver2; 
@@ -58,6 +59,14 @@ public class Drive {
 
   public static RelativeEncoder lEncoder;
   public static RelativeEncoder rEncoder;
+
+  // These are our EncoderSim objects, which we will only use in
+  // simulation. However, you do not need to comment out these
+  // declarations when you are deploying code to the roboRIO.
+  private Encoder m_leftEncoder = new Encoder(10,11);
+  private Encoder m_rightEncoder = new Encoder(10,11);
+  private EncoderSim m_leftEncoderSim = new EncoderSim(m_leftEncoder);
+  private EncoderSim m_rightEncoderSim = new EncoderSim(m_rightEncoder);
 
   public static Pose robotPose;
 
@@ -125,50 +134,53 @@ public class Drive {
     this.driver2 = driver2; 
     // 10.71:1 gearbox on drivetrain as of 3/17/2022
 
-    // Neos HAVE to be in brushless
-    lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
-    //lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);
-    lDrive3 = new CANSparkMax(ControlConstants.leftDrive3M, MotorType.kBrushless);
+    if (RobotBase.isReal()) {
+      // Neos HAVE to be in brushless
+      lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
+      //lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);
+      lDrive3 = new CANSparkMax(ControlConstants.leftDrive3M, MotorType.kBrushless);
 
-    rDrive1 = new CANSparkMax(ControlConstants.rightDrive1M, MotorType.kBrushless);
-    //rDrive2 = new CANSparkMax(ControlConstants.rightDrive2M, MotorType.kBrushless);
-    rDrive3 = new CANSparkMax(ControlConstants.rightDrive3M, MotorType.kBrushless);
+      rDrive1 = new CANSparkMax(ControlConstants.rightDrive1M, MotorType.kBrushless);
+      //rDrive2 = new CANSparkMax(ControlConstants.rightDrive2M, MotorType.kBrushless);
+      rDrive3 = new CANSparkMax(ControlConstants.rightDrive3M, MotorType.kBrushless);
 
-    lDrive1.restoreFactoryDefaults();
-    //lDrive2.restoreFactoryDefaults();
-    lDrive3.restoreFactoryDefaults();
-    rDrive1.restoreFactoryDefaults();
-    //rDrive2.restoreFactoryDefaults();
-    rDrive3.restoreFactoryDefaults();
+      lDrive1.restoreFactoryDefaults();
+      //lDrive2.restoreFactoryDefaults();
+      lDrive3.restoreFactoryDefaults();
+      rDrive1.restoreFactoryDefaults();
+      //rDrive2.restoreFactoryDefaults();
+      rDrive3.restoreFactoryDefaults();
 
-    lDrive1.setInverted(false);
-    //lDrive2.follow(lDrive1, false);
-    lDrive3.follow(lDrive1, false);
+      lDrive1.setInverted(false);
+      //lDrive2.follow(lDrive1, false);
+      lDrive3.follow(lDrive1, false);
 
-    rDrive1.setInverted(true);
-    //rDrive2.follow(rDrive1, false);
-    //rDrive2.setInverted(false);
-    rDrive3.follow(rDrive1, false);
-    rDrive3.setInverted(false);
+      rDrive1.setInverted(true);
+      //rDrive2.follow(rDrive1, false);
+      //rDrive2.setInverted(false);
+      rDrive3.follow(rDrive1, false);
+      rDrive3.setInverted(false);
 
-    rDrive1.setOpenLoopRampRate(0.5);
-    lDrive1.setOpenLoopRampRate(0.5);
+      rDrive1.setOpenLoopRampRate(0.5);
+      lDrive1.setOpenLoopRampRate(0.5);
 
-    lEncoder = lDrive1.getEncoder();
-    rEncoder = rDrive1.getEncoder();
+      lEncoder = lDrive1.getEncoder();
+      rEncoder = rDrive1.getEncoder();
 
-    setCurrentLimits(ControlConstants.driveTrainCurrentLimit);
+      setCurrentLimits(ControlConstants.driveTrainCurrentLimit);
 
-    // lEncoder.setPositionConversionFactor(DriveConstants.distancePerPulse);
-    // rEncoder.setPositionConversionFactor(-DriveConstants.distancePerPulse);
+      // lEncoder.setPositionConversionFactor(DriveConstants.distancePerPulse);
+      // rEncoder.setPositionConversionFactor(-DriveConstants.distancePerPulse);
 
-    // lEncoder.setVelocityConversionFactor(DriveConstants.distancePerPulse);
-    // rEncoder.setVelocityConversionFactor(-DriveConstants.distancePerPulse);
+      // lEncoder.setVelocityConversionFactor(DriveConstants.distancePerPulse);
+      // rEncoder.setVelocityConversionFactor(-DriveConstants.distancePerPulse);
 
-    robotPose = new Pose(lEncoder, rEncoder);
-    robotPose.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-    shooterCam = shooterVision;
-    driveTrain = new DriveTrainMain(lDrive1, rDrive1, driver, robotPose);
+      robotPose = new Pose(lEncoder, rEncoder);
+      robotPose.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+      driveTrain = new DriveTrainMain(lDrive1, rDrive1);
+    } else {
+      driveTrain = new DriveTrainMain();
+    }
   }
 //Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {

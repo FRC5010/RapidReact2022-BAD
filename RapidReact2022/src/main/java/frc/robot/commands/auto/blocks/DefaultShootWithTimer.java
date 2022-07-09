@@ -5,21 +5,26 @@
 package frc.robot.commands.auto.blocks;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import frc.robot.commands.VariableShot;
-import frc.robot.commands.FenderShot;
+import frc.robot.commands.DefaultShoot;
+import frc.robot.commands.SpinTurret;
 import frc.robot.commands.Timer;
+import frc.robot.commands.VariableShot;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.mechanisms.Transport;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class FenderWithTimerBlock extends ParallelDeadlineGroup {
-  /** Creates a new FenderWithTimer. */
-  public FenderWithTimerBlock(Transport transport, long timeMilli) {
+public class DefaultShootWithTimer extends ParallelDeadlineGroup {
+  /** Creates a new ShootWithDefaultShoot. */
+  public DefaultShootWithTimer(Transport transport) {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
-    super(new Timer(timeMilli));
-    addCommands(new FenderShot(transport.getShooterSubsystem(), transport.getVerticalIndexerSubsystem(), transport.getDiagonalIndexerSubsystem(),false));
+    super(new Timer(3000));
+    addCommands(
+      new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), false),
+      new VariableShot(transport.getShooterSubsystem(), transport.getVerticalIndexerSubsystem(), transport.getDiagonalIndexerSubsystem(),ShooterConstants.defenseRPM,ShooterConstants.defenseHood)
+      );
     // addCommands(new FooCommand(), new BarCommand());
   }
 }

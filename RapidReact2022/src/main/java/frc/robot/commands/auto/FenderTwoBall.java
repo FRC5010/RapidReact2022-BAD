@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
-import frc.robot.commands.FenderShot;
+import frc.robot.commands.VariableShot;
 import frc.robot.commands.SpinIntake;
 import frc.robot.commands.SpinTurret;
 import frc.robot.commands.Timer;

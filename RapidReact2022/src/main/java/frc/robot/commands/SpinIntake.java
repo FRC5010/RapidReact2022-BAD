@@ -85,14 +85,14 @@ public class SpinIntake extends CommandBase {
     }else{
       if(confidence > 0.90){
         if(!opposingColor){
-          indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+          indexerSubsystem.setDiagonalIndexerPoint(Math.signum(modPow) * IndexerConstants.indexerRPM);
         }else{
           //indexerSubsystem.setDiagonalIndexerPoint(-IndexerConstants.indexerRPM);
           rejectBall = true;
           startTime = currTime;
         }
       }else{
-        indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM);
+        indexerSubsystem.setDiagonalIndexerPoint(Math.signum(modPow) * IndexerConstants.indexerRPM);
       }
     }
     indexerSubsystem.runWithVelocityControl();

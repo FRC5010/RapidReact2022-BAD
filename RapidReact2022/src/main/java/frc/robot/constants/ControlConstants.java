@@ -111,6 +111,7 @@ public class ControlConstants {
     public static int toggleLL = ButtonNums.A_BUTTON.ordinal();
     public static int takeSnapshot = ButtonNums.B_BUTTON.ordinal();
     //public static int rightClimbArmUp = ButtonNums.B_BUTTON.ordinal();
+    public static int defenseShoot = ButtonNums.X_BUTTON.ordinal();
     //public static int leftClimbArmDown = ButtonNums.X_BUTTON.ordinal();
     //public static int leftClimbArmUp = ButtonNums.Y_BUTTON.ordinal();
     public static int upperFender = ButtonNums.LEFT_BUMPER.ordinal(); // unused
@@ -187,6 +188,7 @@ public class ControlConstants {
     public static int neoCurrentLimit = 38;
     public static Color allianceColor = Color.kBlack;
     public static Color opposingColor = Color.kBlack;
+    
     
     
     public static boolean setupSingleDriver(Joystick operator){

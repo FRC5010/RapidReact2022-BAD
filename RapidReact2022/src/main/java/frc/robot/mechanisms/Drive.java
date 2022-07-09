@@ -81,8 +81,8 @@ public class Drive {
   }
 
   private void configureButtonBindings() {
-    driver2.createLeftYAxis().negate().deadzone(.075).cubed().limit(1);
-    driver2.createRightXAxis().deadzone(.075).cubed().limit(1);
+    driver2.createLeftYAxis().negate().deadzone(.4).cubed().limit(1);
+    driver2.createRightXAxis().deadzone(.4).cubed().limit(1);
       // incThrottleFactor = new POVButton(driver, ControlConstants.incThrottleFactor);
 
 

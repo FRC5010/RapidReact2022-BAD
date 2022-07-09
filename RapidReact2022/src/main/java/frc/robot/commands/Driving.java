@@ -42,7 +42,8 @@ public class Driving extends CommandBase {
     driveSubsystem.driverArcadeDrive(
       // DriveTrainMain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle)), 
       // DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
-      driver2.getLeftYAxis(), driver2.getRightXAxis());
+      DriveTrainMain.scaleInputs(-driver2.getLeftYAxis()), 
+      DriveTrainMain.scaleInputs(driver2.getRightXAxis()));
   }
 
   // Called once the command ends or is interrupted.

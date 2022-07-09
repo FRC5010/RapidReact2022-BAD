@@ -40,7 +40,8 @@ public final class DriveConstants {
     // 2.5 original
     public static final double kPDriveVel = 1.9308; // 1.8411; //1.8721; //2.6535; //3.0022;
 
-    public static final double kTrackwidthMeters = 0.616;
+    // Robot Width is 31.5 inches 
+    public static final double kTrackwidthMeters = 0.616; 
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
     public static final double kMaxSpeedMetersPerSecond = 72 * (.0254); // converting from in/s to m/s
     public static final double kMaxAccelerationMetersPerSecondSquared = 60 * (.0254); // converting from in/s/s to m/s/s

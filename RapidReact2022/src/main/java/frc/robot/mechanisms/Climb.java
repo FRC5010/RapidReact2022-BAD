@@ -107,6 +107,7 @@ public class Climb {
                 //new CalibrateHood(transport.getShooterSubsystem()),
                 new ParallelCommandGroup(
                     new DefaultClimb(climbSubsystem, operator, transport)),
+                    new CalibrateHood(transport.getShooterSubsystem()),
                     new SpinTurret(transport.getTurretSubsystem(), transport.getShooterVision(), false)
                 ),
             true);

@@ -5,7 +5,6 @@
 package frc.robot.commands.auto.blocks;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import frc.robot.commands.VariableShot;
 import frc.robot.commands.FenderShot;
 import frc.robot.commands.Timer;
 import frc.robot.mechanisms.Transport;

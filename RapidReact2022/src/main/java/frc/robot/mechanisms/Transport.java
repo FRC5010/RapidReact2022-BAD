@@ -23,7 +23,6 @@ import frc.robot.commands.AimAndShoot;
 import frc.robot.commands.CalibrateHood;
 import frc.robot.commands.DefaultShoot;
 import frc.robot.commands.FenderShot;
-import frc.robot.commands.VariableShot;
 import frc.robot.commands.LedColor;
 import frc.robot.commands.LedRainbow;
 import frc.robot.commands.LockAndLoad;
@@ -99,7 +98,6 @@ public class Transport {
     private Trigger indexerTriggerUp;
     private POVButton shotAdjustmentDec;
     private POVButton shotAdjustmentInc;
-    private JoystickButton defenseShoot;
     
 
     public Transport(Joystick operator, Joystick driver, VisionSystem shooterVision){
@@ -210,9 +208,6 @@ public class Transport {
 
         defaultShoot = new JoystickButton(operator, ControlConstants.defaultShoot);
         defaultShoot.whileHeld(new DefaultShoot(shooterSubsystem, upperIndexerSubsystem, indexerSubsystem));
-
-        defenseShoot = new JoystickButton(driver, ControlConstants.defenseShoot);
-        defenseShoot.whileHeld(new VariableShot(shooterSubsystem,upperIndexerSubsystem,indexerSubsystem, ShooterConstants.defenseRPM, ShooterConstants.defenseHood));
 
         incFlyWheel = new POVButton(operator, ControlConstants.incShooter);
         incFlyWheel.whenPressed(new InstantCommand(() -> ShooterConstants.defaultFlyWheelRPM += ShooterConstants.changeSetPoint));

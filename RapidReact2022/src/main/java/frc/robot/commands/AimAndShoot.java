@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.IndexerConstants;
+import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.FeederConstants;
+import frc.robot.constants.ShooterConstants.HoodConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
@@ -31,7 +33,6 @@ public class AimAndShoot extends CommandBase {
     addRequirements(shooterSubsystem, indexerSubsystem, diagonalIndexerSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-
 
   // Called when the command is initially scheduled.
   @Override

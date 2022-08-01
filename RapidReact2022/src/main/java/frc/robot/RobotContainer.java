@@ -27,12 +27,10 @@ import frc.robot.commands.LedRainbow;
 import frc.robot.commands.SetPipeline;
 import frc.robot.commands.SnapshotCmd;
 import frc.robot.commands.Timer;
-import frc.robot.commands.auto.ExtendingHangarDefense;
 import frc.robot.commands.auto.ExtendingShortLeftTurn;
 import frc.robot.commands.auto.ExtendingTerminalBall;
 import frc.robot.commands.auto.ExtendingThreeBall;
 import frc.robot.commands.auto.FenderTwoBall;
-import frc.robot.commands.auto.ShootThenMove;
 import frc.robot.commands.auto.TarmacToBall2;
 import frc.robot.commands.auto.TarmacTwoBall;
 import frc.robot.commands.auto.pathing.LowerBall1ToBall2;
@@ -44,9 +42,7 @@ import frc.robot.commands.auto.pathing.TarmacToBall2Path;
 import frc.robot.commands.auto.pathing.TerminalDriveBack;
 import frc.robot.commands.auto.pathing.TerminalDriveBackA2;
 import frc.robot.commands.auto.pathing.TurnBotLeft;
-import frc.robot.commands.auto.pathing.UpperBlueBallToUpperRedBall;
 import frc.robot.commands.auto.pathing.UpperTarmacToBall;
-import frc.robot.commands.auto.pathing.UpperTarmacToBlueBall;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.mechanisms.Climb;
@@ -122,11 +118,6 @@ public class RobotContainer {
         new ExtendingShortLeftTurn(transport, new TurnBotLeft())
       )
     );
-
-    command.addOption("FarS&M", 
-      new ShootThenMove(transport, new SingleCargoPath())
-    );
-    
     
     command.addOption("DelayShortM&S", 
       new SequentialCommandGroup(
@@ -160,13 +151,6 @@ public class RobotContainer {
         new ExtendingTerminalBall(transport, new LowerBall2ToTerminal(), new TerminalDriveBack())
       )
     );
-
-    command.addOption("Upper 2 Ball + Defense",
-      new SequentialCommandGroup(
-        new TarmacTwoBall(transport, new UpperTarmacToBlueBall()),
-        new ExtendingHangarDefense(transport, new UpperBlueBallToUpperRedBall()))
-    );
-    
 
     // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision,
     // new HubToBall2()));

@@ -9,7 +9,7 @@ public class ShooterConstants {
 
     // flywheel values
     public static final double highHood = HoodConstants.highHood;  
-    public static final double highRPM = 2450;
+    public static final double highRPM = 2425;
   
     // funny array to store flywheel rpm and hood position to index, index values represent feet, ex index 0 is 0ft
 
@@ -47,7 +47,7 @@ public class ShooterConstants {
     // 8(96) feet = 2500, 22.9
     private static double rpm8 = 2750;
     private static double hood8 = 23.4;
-    
+    ;
     // 9(108) feet = 2600, 24.8
     private static double rpm9 = 2950;
     private static double hood9 = 25.4;
@@ -68,9 +68,6 @@ public class ShooterConstants {
     public static final double[] flyWheelRPM = {highRPM,highRPM, highRPM, highRPM ,rpm4,rpm5,rpm6,rpm7, rpm8, rpm9, rpm10, rpm11, rpm12, rpm12, rpm12,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM,highRPM};
     public static final double[] hoodPosition = {highHood,highHood,highHood,highHood,hood4,hood5,hood6,hood7, hood8, hood9, hood10, hood11, hood12, hood12, hood12,highHood,highHood,highHood,highHood,highHood,highHood,highHood};
     
-    public static final double defenseRPM = 1700;
-    public static final double defenseHood = 32;
-
         // pid values
     public static double kPC = 0.20; //0.16(visible stop between each shot but has more consistent shots)(lowest) // 0.33(overshoots first shot but typically makes second shot)(highest) //0.11889(got from SysID);
     public static double kIC = 0.000005 * 1.5;
@@ -144,7 +141,7 @@ public class ShooterConstants {
         public static double hoodMaxPos = 40;
         public static double defaultHoodPoint = 30;
         public static double lowHood = 30;
-        public static double highHood = 12.8; //6.4; //4 is what this was during 1st comp
+        public static double highHood = 6.4; //4 is what this was during 1st comp
         public static double manualPow = 0.25;
     }
 

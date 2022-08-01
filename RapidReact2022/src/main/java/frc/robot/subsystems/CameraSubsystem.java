@@ -25,15 +25,15 @@ public class CameraSubsystem extends SubsystemBase {
   public CameraSubsystem() {
     
 
-    //camera1 = CameraServer.startAutomaticCapture(0);
+    camera1 = CameraServer.startAutomaticCapture(0);
     //camera2 = CameraServer.startAutomaticCapture(1);
 
-    //cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
-    //server = CameraServer.getServer();
+    cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+    server = CameraServer.getServer();
 
-    //camera1.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+    camera1.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
     //camera2.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-    //server.setSource(camera1);
+    server.setSource(camera1);
 
   }
 

@@ -54,7 +54,6 @@ public class Controller {
     }
 
     private static class Negate extends Axis{
-
         public Negate(Axis axis){
             instance = axis;
         }
@@ -65,11 +64,9 @@ public class Controller {
     }
 
     private static class Cubed extends Axis{
-
         public Cubed(Axis axis){
             instance = axis;
         }
-
 
         public double get(){
             return Math.pow(instance.get(), 3);
@@ -86,13 +83,13 @@ public class Controller {
         }
 
         public double get(){
+            System.out.println("deadzone");
             double input = instance.get();
             if (input > -deadzone && input < deadzone) {
                 return 0.0;
               }
               return input;
         }
-
     }
 
     public static class Limit extends Axis{

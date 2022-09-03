@@ -5,7 +5,6 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Timer;
 import frc.robot.commands.auto.blocks.IntakeWithTimerBlock;
 import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
 import frc.robot.commands.auto.blocks.ShootWithTimerBlock;

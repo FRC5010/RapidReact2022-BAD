@@ -7,32 +7,35 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.FRC5010.GenericEncoder;
+import frc.robot.FRC5010.GenericGyro;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
+import frc.robot.mechanisms.Drive;
 
 /**
  * Add your docs here.
  */
 public class Pose extends SubsystemBase {
+    private final Field2d m_fieldSim = new Field2d();
 
-    public double getEncoderDistance(RelativeEncoder encoder, double conversion) {
-        return encoder.getPosition() * conversion;
+    public double getEncoderDistance(GenericEncoder encoder) {
+        return encoder.getPosition();
     }
 
-    public double getEncoderVel(RelativeEncoder encoder, double conversion) {
-        return encoder.getVelocity() * conversion;
+    public double getEncoderVel(GenericEncoder encoder) {
+        return encoder.getVelocity();
     }
 
     // The robot's drive
@@ -40,13 +43,14 @@ public class Pose extends SubsystemBase {
     // rightMaster1);
 
     // The left-side drive encoder
-    public final RelativeEncoder leftEncoder;
+    public final GenericEncoder leftEncoder;
 
     // The right-side drive encoder
-    public final RelativeEncoder rightEncoder;
+    public final GenericEncoder rightEncoder;
 
     // The gyro sensor
-    public final AHRS gyro = new AHRS(Port.kMXP);
+    public final GenericGyro gyro;
+
     //  I2C.Port.kMXP
 
     // Odometry class for tracking robot pose
@@ -56,9 +60,11 @@ public class Pose extends SubsystemBase {
     // Sets the distance per pulse for the encoders
     // m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     // m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    public Pose(RelativeEncoder leftEncoder, RelativeEncoder rightEncoder) {
+    public Pose(GenericEncoder leftEncoder, GenericEncoder rightEncoder, GenericGyro gyro) {
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
+        this.gyro = gyro;
+
         gyro.reset();
         
         odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -66,17 +72,18 @@ public class Pose extends SubsystemBase {
         resetEncoders();
         ShuffleboardLayout poseLayout = Shuffleboard.getTab(ControlConstants.SBTabDiagnostics).getLayout("Pose",
                 BuiltInLayouts.kList);
-        poseLayout.addNumber("left encoder distance",
-                () -> getEncoderDistance(leftEncoder, DriveConstants.leftDistanceConv));
-        poseLayout.addNumber("right encoder distance",
-                () -> getEncoderDistance(rightEncoder, DriveConstants.rightDistanceConv));
-        poseLayout.addNumber("gyro heading", () -> getHeading());
+        poseLayout.addNumber("Left encoder distance",
+                () -> getEncoderDistance(leftEncoder));
+        poseLayout.addNumber("Right encoder distance",
+                () -> getEncoderDistance(rightEncoder));
+        poseLayout.addNumber("Gyro heading", () -> getHeading());
 
         poseLayout.addNumber("Robot X pos", () -> odometry.getPoseMeters().getTranslation().getX());
         poseLayout.addNumber("Robot Y pos", () -> odometry.getPoseMeters().getTranslation().getY());
         poseLayout.addNumber("Robot Heading", () -> odometry.getPoseMeters().getRotation().getDegrees());
         poseLayout.addNumber("Robot Velocity", () -> leftEncoder.getVelocity());
 
+        SmartDashboard.putData("Field", m_fieldSim);
     }
 
     /**
@@ -98,31 +105,41 @@ public class Pose extends SubsystemBase {
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(getEncoderVel(leftEncoder, DriveConstants.leftVelocityConv),
-                getEncoderVel(rightEncoder, DriveConstants.rightVelocityConv));
+        return new DifferentialDriveWheelSpeeds(getEncoderVel(leftEncoder),
+                getEncoderVel(rightEncoder));
     }
 
     @Override
     public void periodic() {
         posePeriodic();
+        m_fieldSim.setRobotPose(odometry.getPoseMeters());
     }
 
     public void posePeriodic() {
         odometry.update(Rotation2d.fromDegrees(getHeading()),
-                getEncoderDistance(leftEncoder, DriveConstants.leftDistanceConv),
-                getEncoderDistance(rightEncoder, DriveConstants.rightDistanceConv));
-        // SmartDashboard.putNumber("left encoder position", leftEncoder.getPosition());
-        // SmartDashboard.putNumber("right encoder position",
-        // rightEncoder.getPosition());
-
-        // SmartDashboard.putNumber("left velocity", getEncoderVel(leftEncoder,
-        // DriveConstants.leftVelocityConv));
-        // SmartDashboard.putNumber("right velocity", getEncoderVel(rightEncoder,
-        // DriveConstants.rightVelocityConv));
-        // SmartDashboard.putNumber("left raw velocity", leftEncoder.getVelocity());
-        // SmartDashboard.putNumber("right raw velocity", rightEncoder.getVelocity());
+                getEncoderDistance(leftEncoder),
+                getEncoderDistance(rightEncoder));
     }
 
+      /** Update our simulation. This should be run every robot loop in simulation. */
+  @Override
+  public void simulationPeriodic() {
+    // To update our simulation, we set motor voltage inputs, update the
+    // simulation, and write the simulated positions and velocities to our
+    // simulated encoder and gyro. We negate the right side so that positive
+    // voltages make the right side move forward.
+    Drive.m_driveSim.setInputs(
+        Drive.lDrive1.get() * RobotController.getInputVoltage(),
+        Drive.rDrive1.get() * RobotController.getInputVoltage());
+    Drive.m_driveSim.update(0.02);
+
+    leftEncoder.setPosition(Drive.m_driveSim.getLeftPositionMeters());
+    leftEncoder.setRate(Drive.m_driveSim.getLeftVelocityMetersPerSecond());
+    rightEncoder.setPosition(Drive.m_driveSim.getRightPositionMeters());
+    rightEncoder.setRate(Drive.m_driveSim.getRightVelocityMetersPerSecond());
+    gyro.setAngle(-Drive.m_driveSim.getHeading().getDegrees());
+  }
+  
     /**
      * Resets the odometry to the specified pose.
      *
@@ -134,28 +151,11 @@ public class Pose extends SubsystemBase {
     }
 
     /**
-     * Drives the robot using arcade controls.
-     *
-     * @param fwd the commanded forward movement
-     * @param rot the commanded rotation
-     */
-    // public void arcadeDrive(double fwd, double rot) {
-    // m_drive.arcadeDrive(fwd, rot);
-    // }
-
-    /**
-     * Controls the left and right sides of the drive directly with voltages.
-     *
-     * @param leftVolts  the commanded left output
-     * @param rightVolts the commanded right output
-     */
-
-    /**
      * Resets the drive encoders to currently read a position of 0.
      */
     public void resetEncoders() {
-        leftEncoder.setPosition(0);
-        rightEncoder.setPosition(0);
+        leftEncoder.reset();
+        rightEncoder.reset();;
     }
 
     /**
@@ -164,8 +164,8 @@ public class Pose extends SubsystemBase {
      * @return the average of the two encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (getEncoderDistance(leftEncoder, DriveConstants.leftDistanceConv)
-                + getEncoderDistance(rightEncoder, DriveConstants.rightDistanceConv)) / 2.0;
+        return (getEncoderDistance(leftEncoder)
+                + getEncoderDistance(rightEncoder)) / 2.0;
     }
 
     /**
@@ -173,7 +173,7 @@ public class Pose extends SubsystemBase {
      *
      * @return the left drive encoder
      */
-    public RelativeEncoder getLeftEncoder() {
+    public GenericEncoder getLeftEncoder() {
         return leftEncoder;
     }
 
@@ -182,19 +182,9 @@ public class Pose extends SubsystemBase {
      *
      * @return the right drive encoder
      */
-    public RelativeEncoder getRightEncoder() {
+    public GenericEncoder getRightEncoder() {
         return rightEncoder;
     }
-
-    /**
-     * Sets the max output of the drive. Useful for scaling the drive to drive more
-     * slowly.
-     *
-     * @param maxOutput the maximum output to which the drive will be constrained //
-     */
-    // public void setMaxOutput(double maxOutput) {
-    // RobotContainer.driveTrain.setMaxOutput(maxOutput);
-    // }
 
     /**
      * Zeroes the heading of the robot.

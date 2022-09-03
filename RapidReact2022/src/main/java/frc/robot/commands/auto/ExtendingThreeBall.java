@@ -4,14 +4,11 @@
 
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.SpinIntake;
 import frc.robot.commands.auto.blocks.IntakeWithTimerBlock;
 import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
 import frc.robot.commands.auto.blocks.ShootWithTimerBlock;
 import frc.robot.mechanisms.Transport;
-import frc.robot.subsystems.vision.VisionSystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

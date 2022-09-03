@@ -4,16 +4,7 @@
 
 package frc.robot.commands.auto;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AimAndShoot;
-import frc.robot.commands.CalibrateHood;
-import frc.robot.commands.FenderShot;
-import frc.robot.commands.SpinIntake;
-import frc.robot.commands.SpinTurret;
-import frc.robot.commands.Timer;
 import frc.robot.commands.auto.blocks.CalibrateSystemBlock;
 import frc.robot.commands.auto.blocks.FenderWithTimerBlock;
 import frc.robot.commands.auto.blocks.MoveAndIntakeBlock;
@@ -41,7 +32,6 @@ public class FenderTwoBall extends SequentialCommandGroup {
     intakeSubsystem = transport.getIntakeSubsystem();
     indexerSubsystem = transport.getDiagonalIndexerSubsystem();
     turretSubsystem = transport.getTurretSubsystem();
-    this.shooterVision = shooterVision;
     shooterSubsystem = transport.getShooterSubsystem();
     upperIndexerSubsystem = transport.getVerticalIndexerSubsystem(); 
     // Add your commands in the addCommands() call, e.g.

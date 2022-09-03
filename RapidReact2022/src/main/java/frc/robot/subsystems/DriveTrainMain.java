@@ -6,20 +6,14 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.FRC5010.Controller;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
 
@@ -27,45 +21,18 @@ public class DriveTrainMain extends SubsystemBase {
   /**
    * Creates a new DriveTrainMain.
    */
-  private MotorController leftMaster;
-  private MotorController rightMaster;
+  private MotorController leftLeader;
+  private MotorController rightLeader;
   
   //private DigitalInput limit = new DigitalInput(ControlConstants.limitSwitch);
   //private DigitalInput BB1 = new DigitalInput(ControlConstants.BB1);
   //private DigitalInput BB2 = new DigitalInput(ControlConstants.BB2);
 
-  Pose pose;
   private DifferentialDrive diffDrive;
 
-  // Simulation
-  // Create our feedforward gain constants (from the identification tool)
-  static final double KvLinear = DriveConstants.kvVoltSecondsPerMeter;
-  static final double KaLinear = DriveConstants.kaVoltSecondsSquaredPerMeter;
-  static final double KvAngular = 1.5;
-  static final double KaAngular = 0.3;
-
-  // Create the simulation model of our drivetrain.
-  private DifferentialDrivetrainSim m_driveSim;
-  public DriveTrainMain() {
-    m_driveSim = new DifferentialDrivetrainSim(
-      // Create a linear system from our identification gains.
-      LinearSystemId.identifyDrivetrainSystem(KvLinear, KaLinear, KvAngular, KaAngular),
-      DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
-      DriveConstants.motorRotationsPerWheelRotation,  // 10.71:1 gearing reduction.
-      DriveConstants.kTrackwidthMeters, // The track width is 0.616 meters.
-      KitbotWheelSize.kSixInch.value, // The robot uses 3" radius wheels.
-    
-      // The standard deviations for measurement noise:
-      // x and y:          0.001 m
-      // heading:          0.001 rad
-      // l and r velocity: 0.1   m/s
-      // l and r position: 0.005 m
-      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
-  }
-
   public DriveTrainMain(MotorController left, MotorController right) {
-    leftMaster = left;
-    rightMaster = right;
+    leftLeader = left;
+    rightLeader = right;
     diffDrive = new DifferentialDrive(left, right);
   }
 
@@ -92,8 +59,8 @@ public class DriveTrainMain extends SubsystemBase {
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftMaster.setVoltage(leftVolts);
-    rightMaster.setVoltage(rightVolts);
+    leftLeader.set(leftVolts/RobotController.getBatteryVoltage());
+    rightLeader.set(rightVolts/RobotController.getBatteryVoltage());
   }
 
   public double getThrottleFactorDisplay() {
@@ -170,12 +137,7 @@ public class DriveTrainMain extends SubsystemBase {
   }
 
   public void setMaxOutput(double maxOutput) {
-    leftMaster.set(maxOutput);
-    rightMaster.set(maxOutput);
-  }
-
-  @Override
-  public void simulationPeriodic() {
-
+    leftLeader.set(maxOutput);
+    rightLeader.set(maxOutput);
   }
 }

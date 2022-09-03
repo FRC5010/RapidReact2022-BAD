@@ -14,8 +14,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,7 +26,9 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -31,6 +36,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Robot;
 import frc.robot.FRC5010.Controller;
+import frc.robot.FRC5010.GenericEncoder;
+import frc.robot.FRC5010.GenericGyro;
+import frc.robot.FRC5010.Impl.NavXGyro;
+import frc.robot.FRC5010.Impl.RevEncoder;
+import frc.robot.FRC5010.Impl.SimulatedEncoder;
+import frc.robot.FRC5010.Impl.SimulatedGyro;
 import frc.robot.commands.DriveTrainYEET;
 import frc.robot.commands.Driving;
 import frc.robot.commands.RamseteFollower;
@@ -57,19 +68,18 @@ public class Drive {
   //public static CANSparkMax rDrive2;
   public static CANSparkMax rDrive3;
 
-  public static RelativeEncoder lEncoder;
-  public static RelativeEncoder rEncoder;
+  public static GenericEncoder lEncoder;
+  public static GenericEncoder rEncoder;
 
   // These are our EncoderSim objects, which we will only use in
   // simulation. However, you do not need to comment out these
   // declarations when you are deploying code to the roboRIO.
-  private Encoder m_leftEncoder = new Encoder(10,11);
-  private Encoder m_rightEncoder = new Encoder(10,11);
-  private EncoderSim m_leftEncoderSim = new EncoderSim(m_leftEncoder);
-  private EncoderSim m_rightEncoderSim = new EncoderSim(m_rightEncoder);
+  private static Encoder m_leftEncoder;
+  private static Encoder m_rightEncoder;
 
   public static Pose robotPose;
-
+  public GenericGyro gyro;
+  
   public JoystickButton intakeAimButton;
   public JoystickButton shooterAimButton;
 
@@ -134,58 +144,56 @@ public class Drive {
     this.driver2 = driver2; 
     // 10.71:1 gearbox on drivetrain as of 3/17/2022
 
+    // Neos HAVE to be in brushless
+    lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
+    lDrive1.restoreFactoryDefaults();
+    lDrive1.setInverted(false);
+    rDrive1 = new CANSparkMax(ControlConstants.rightDrive1M, MotorType.kBrushless);
+    rDrive1.restoreFactoryDefaults();
+    rDrive1.setInverted(true);
     if (RobotBase.isReal()) {
-      // Neos HAVE to be in brushless
-      lDrive1 = new CANSparkMax(ControlConstants.leftDrive1M, MotorType.kBrushless);
-      //lDrive2 = new CANSparkMax(ControlConstants.leftDrive2M, MotorType.kBrushless);
+      gyro = new NavXGyro(Port.kMXP);
       lDrive3 = new CANSparkMax(ControlConstants.leftDrive3M, MotorType.kBrushless);
-
-      rDrive1 = new CANSparkMax(ControlConstants.rightDrive1M, MotorType.kBrushless);
-      //rDrive2 = new CANSparkMax(ControlConstants.rightDrive2M, MotorType.kBrushless);
       rDrive3 = new CANSparkMax(ControlConstants.rightDrive3M, MotorType.kBrushless);
 
-      lDrive1.restoreFactoryDefaults();
-      //lDrive2.restoreFactoryDefaults();
       lDrive3.restoreFactoryDefaults();
-      rDrive1.restoreFactoryDefaults();
-      //rDrive2.restoreFactoryDefaults();
       rDrive3.restoreFactoryDefaults();
-
-      lDrive1.setInverted(false);
-      //lDrive2.follow(lDrive1, false);
       lDrive3.follow(lDrive1, false);
 
-      rDrive1.setInverted(true);
-      //rDrive2.follow(rDrive1, false);
-      //rDrive2.setInverted(false);
       rDrive3.follow(rDrive1, false);
       rDrive3.setInverted(false);
 
       rDrive1.setOpenLoopRampRate(0.5);
       lDrive1.setOpenLoopRampRate(0.5);
 
-      lEncoder = lDrive1.getEncoder();
-      rEncoder = rDrive1.getEncoder();
+      RelativeEncoder leftEncoder = lDrive1.getEncoder();
+      leftEncoder.setPositionConversionFactor(DriveConstants.leftDistanceConv);
+      leftEncoder.setVelocityConversionFactor(DriveConstants.leftVelocityConv);
+      lEncoder = new RevEncoder(leftEncoder);
+
+      RelativeEncoder rightEncoder = rDrive1.getEncoder();
+      rightEncoder.setPositionConversionFactor(DriveConstants.rightDistanceConv);
+      rightEncoder.setVelocityConversionFactor(DriveConstants.rightVelocityConv);
+      rEncoder = new RevEncoder(rightEncoder);
 
       setCurrentLimits(ControlConstants.driveTrainCurrentLimit);
-
-      // lEncoder.setPositionConversionFactor(DriveConstants.distancePerPulse);
-      // rEncoder.setPositionConversionFactor(-DriveConstants.distancePerPulse);
-
-      // lEncoder.setVelocityConversionFactor(DriveConstants.distancePerPulse);
-      // rEncoder.setVelocityConversionFactor(-DriveConstants.distancePerPulse);
-
-      robotPose = new Pose(lEncoder, rEncoder);
-      robotPose.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
-      driveTrain = new DriveTrainMain(lDrive1, rDrive1);
     } else {
-      driveTrain = new DriveTrainMain();
+      gyro = new SimulatedGyro();
+      m_leftEncoder = new Encoder(10,11);
+      m_rightEncoder = new Encoder(12,13);
+      m_leftEncoder.setDistancePerPulse(DriveConstants.leftDistanceConv);
+      m_rightEncoder.setDistancePerPulse(DriveConstants.rightDistanceConv);
+      lEncoder = new SimulatedEncoder(m_leftEncoder);
+      rEncoder = new SimulatedEncoder(m_rightEncoder);
+      initSimulation();
     }
+    driveTrain = new DriveTrainMain(lDrive1, rDrive1);
+    robotPose = new Pose(lEncoder, rEncoder, gyro);
+    robotPose.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
   }
 //Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
     driveTrain.setDefaultCommand(new Driving(driveTrain, driver, driver2));
-
   }
 
   /**
@@ -219,5 +227,30 @@ public class Drive {
 
   public Pose getPose() {
     return robotPose;
+  }
+  
+  // Simulation
+  // Create our feedforward gain constants (from the identification tool)
+  static final double KvLinear = DriveConstants.kvVoltSecondsPerMeter;
+  static final double KaLinear = DriveConstants.kaVoltSecondsSquaredPerMeter;
+  static final double KvAngular = 1.5;
+  static final double KaAngular = 0.3;
+  // Create the simulation model of our drivetrain.
+  public static DifferentialDrivetrainSim m_driveSim;
+  public void initSimulation() {
+    m_driveSim = new DifferentialDrivetrainSim(
+      // Create a linear system from our identification gains.
+      LinearSystemId.identifyDrivetrainSystem(KvLinear, KaLinear, KvAngular, KaAngular),
+      DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
+      DriveConstants.motorRotationsPerWheelRotation,  // 10.71:1 gearing reduction.
+      DriveConstants.kTrackwidthMeters, // The track width is 0.616 meters.
+      KitbotWheelSize.kSixInch.value, // The robot uses 3" radius wheels.
+    
+      // The standard deviations for measurement noise:
+      // x and y:          0.001 m
+      // heading:          0.001 rad
+      // l and r velocity: 0.1   m/s
+      // l and r position: 0.005 m
+      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
   }
 }

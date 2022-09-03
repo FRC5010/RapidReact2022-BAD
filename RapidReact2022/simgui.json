@@ -1,9 +1,104 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [7]": {
+        "header": {
+          "open": true
+        }
+      }
+    },
+    "Timing": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/DiagonalIndexerSubsystem": "Subsystem",
+      "/LiveWindow/DriveTrainMain": "Subsystem",
+      "/LiveWindow/IntakeSubsystem": "Subsystem",
+      "/LiveWindow/Pose": "Subsystem",
+      "/LiveWindow/ShooterSubsystem": "Subsystem",
+      "/LiveWindow/TurretSubsystem": "Subsystem",
+      "/LiveWindow/Ungrouped/AnalogGyro[0]": "Gyro",
+      "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/DigitalInput[0]": "Digital Input",
+      "/LiveWindow/Ungrouped/DigitalInput[1]": "Digital Input",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/LiveWindow/VisionLimeLightSim": "Subsystem"
+      "/LiveWindow/Ungrouped/navX-Sensor[1]": "Gyro",
+      "/LiveWindow/VerticalIndexerSubsystem": "Subsystem",
+      "/LiveWindow/VisionLimeLightSim": "Subsystem",
+      "/Shuffleboard/Driver Display/Auto/Choose an Auto Mode": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Mech Sim": "Mechanism2d"
+    },
+    "windows": {
+      "/LiveWindow/DriveTrainMain": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/LiveWindow/IntakeSubsystem": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/LiveWindow/Ungrouped/AnalogGyro[0]": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "image": "C:\\Users\\clroz\\OneDrive\\Pictures\\5010 Robot.jpg"
+        },
+        "image": "C:\\Users\\clroz\\OneDrive\\Documents\\Robotics\\Install\\2022\\2022-field.png",
+        "window": {
+          "name": "Rapid React Field",
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Mech Sim": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "LiveWindow": {
+      "open": true
+    },
+    "Shuffleboard": {
+      "Diagnostics": {
+        "open": true
+      },
+      "open": true
+    },
+    "SmartDashboard": {
+      "open": true
+    }
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 326
+        }
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

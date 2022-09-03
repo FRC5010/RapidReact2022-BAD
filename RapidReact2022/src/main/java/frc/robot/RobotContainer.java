@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -72,7 +73,6 @@ public class RobotContainer {
   private Controller driver2;
   private Controller operator2;
 
-
   private SendableChooser<Command> command = new SendableChooser<>();
   private SendableChooser<Command> teamColor = new SendableChooser<>();
 
@@ -89,6 +89,9 @@ public class RobotContainer {
 
   private JoystickButton takeSnapshot;
 
+  // Create a Mechanism2d display of an Arm with a fixed ArmTower and moving Arm.
+  public static final Mechanism2d mech2d = new Mechanism2d(60, 60);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -100,73 +103,19 @@ public class RobotContainer {
     operator2 = new Controller(Controller.JoystickPorts.ONE.ordinal());
 
     initRealOrSim();
-
+    // Put Mechanism 2d to SmartDashboard
+    SmartDashboard.putData("Mech Sim", mech2d);
+    drive = new Drive(driver, shooterVision, driver2);
+    transport = new Transport(operator, driver, shooterVision, driver2, operator2);
     if (RobotBase.isReal()) {
-      drive = new Drive(driver, shooterVision, driver2);
-      transport = new Transport(operator, driver, shooterVision, driver2, operator2);
       climb = new Climb(driver, operator, transport, driver2, operator2);
-    
-    /*
-     * command.addOption("LowerCargoToHub", new LowerCargoToHub());
-     * command.addOption("HubBall2", new HubToBall2());
-     * command.addOption("HubBall3", new HubToBall3());
-     * command.addOption("ManyBall", new ManyBallAuto());
-     */
 
-    command.addOption("FarM&S", new TarmacTwoBall(transport, new SingleCargoPath()));
-    
-    command.addOption("ShortM&S", 
-      new SequentialCommandGroup(
-        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
-        new ExtendingShortLeftTurn(transport, new TurnBotLeft())
-      )
-    );
-    
-    command.addOption("DelayShortM&S", 
-      new SequentialCommandGroup(
-        new Timer(4000),
-        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
-        new ExtendingShortLeftTurn(transport, new TurnBotLeft())
-      )
-    );
-    command.addOption("FenderLongM&S", 
-      new FenderTwoBall(transport, new UpperTarmacToBall())
-      );
 
-    command.addOption("Lower 3 Ball",
-      new SequentialCommandGroup(
-        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
-        new ExtendingThreeBall(transport, new LowerBall1ToBall2())
-      )
-    );
-
-    command.addOption("Middle 4 Ball", 
-      new SequentialCommandGroup(
-        new TarmacToBall2(transport, new TarmacToBall2Path()),
-        new ExtendingTerminalBall(transport, new LowerBall2ToTerminalA2Path(), new TerminalDriveBackA2())
-      )
-    );
-
-    command.addOption("Lower 5 Ball",
-      new SequentialCommandGroup(
-        new TarmacTwoBall(transport, new LowerTarmacToBall1()),
-        new ExtendingThreeBall(transport, new LowerBall1ToBall2()),
-        new ExtendingTerminalBall(transport, new LowerBall2ToTerminal(), new TerminalDriveBack())
-      )
-    );
-
-    // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision,
-    // new HubToBall2()));
-    
-    // command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision,
-    // new ManyBallAuto()));
-    // command.addOption("Galactic Search", new
-    // GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
-
-    teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));
-    teamColor.addOption("Red", new InstantCommand(() -> shooterVision.setPipeline(1)));
-    teamColor.addOption("Blue", new InstantCommand(() -> shooterVision.setPipeline(0)));
+      teamColor.setDefaultOption("VTargets", new InstantCommand(() -> shooterVision.setPipeline(2)));
+      teamColor.addOption("Red", new InstantCommand(() -> shooterVision.setPipeline(1)));
+      teamColor.addOption("Blue", new InstantCommand(() -> shooterVision.setPipeline(0)));
     }
+    initAutoCommands();
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -174,7 +123,8 @@ public class RobotContainer {
   private void initRealOrSim() {
     if (RobotBase.isReal()) {
       // the 20 degrees as of march 15 2022,
-      shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559, ControlConstants.shooterVisionColumn);
+      shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559,
+          ControlConstants.shooterVisionColumn);
       shooterVision.setPiPMode(0); // removed shooter cam
 
       ledSubsystem = new LedSubsystem(0, 62);
@@ -187,7 +137,55 @@ public class RobotContainer {
       shooterVision = new VisionLimeLightSim("limelight-sim", ControlConstants.shooterVisionColumn);
     }
   }
-  
+
+  private void initAutoCommands() {
+    command.addOption("Drive Only", new SequentialCommandGroup(
+      new SingleCargoPath(), 
+      new LowerBall1ToBall2(),
+      new LowerBall2ToTerminalA2Path(),
+      new TerminalDriveBackA2()
+      ));
+    if (RobotBase.isReal()) {
+      command.addOption("FarM&S", new TarmacTwoBall(transport, new SingleCargoPath()));
+
+      command.addOption("ShortM&S",
+          new SequentialCommandGroup(
+              new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+              new ExtendingShortLeftTurn(transport, new TurnBotLeft())));
+
+      command.addOption("DelayShortM&S",
+          new SequentialCommandGroup(
+              new Timer(4000),
+              new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+              new ExtendingShortLeftTurn(transport, new TurnBotLeft())));
+      command.addOption("FenderLongM&S",
+          new FenderTwoBall(transport, new UpperTarmacToBall()));
+
+      command.addOption("Lower 3 Ball",
+          new SequentialCommandGroup(
+              new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+              new ExtendingThreeBall(transport, new LowerBall1ToBall2())));
+
+      command.addOption("Middle 4 Ball",
+          new SequentialCommandGroup(
+              new TarmacToBall2(transport, new TarmacToBall2Path()),
+              new ExtendingTerminalBall(transport, new LowerBall2ToTerminalA2Path(), new TerminalDriveBackA2())));
+
+      command.addOption("Lower 5 Ball",
+          new SequentialCommandGroup(
+              new TarmacTwoBall(transport, new LowerTarmacToBall1()),
+              new ExtendingThreeBall(transport, new LowerBall1ToBall2()),
+              new ExtendingTerminalBall(transport, new LowerBall2ToTerminal(), new TerminalDriveBack())));
+
+      // command.addOption("HubBall2", new AutoMoveAndShoot(transport, shooterVision,
+      // new HubToBall2()));
+
+      // command.addOption("ManyBall", new AutoMoveAndShoot(transport, shooterVision,
+      // new ManyBallAuto()));
+      // command.addOption("Galactic Search", new
+      // GalacticSearch(drive.getDriveTrainMain(), shooterVision, drive.getPose()));
+    }
+  }
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -199,51 +197,53 @@ public class RobotContainer {
   private void configureButtonBindings() {
     if (RobotBase.isReal()) {
       Command ledOrange = new InstantCommand(() -> ledSubsystem.setSolidColor(255, 20, 0));
-    
-    Command red = new InstantCommand(() -> shooterVision.setPipeline(1));
-    Command blue = new InstantCommand(() -> shooterVision.setPipeline(0));
-    Command vTargets = new InstantCommand(() -> shooterVision.setPipeline(2));
-    // this adds auto selections in SmartDashboard
+
+      Command red = new InstantCommand(() -> shooterVision.setPipeline(1));
+      Command blue = new InstantCommand(() -> shooterVision.setPipeline(0));
+      Command vTargets = new InstantCommand(() -> shooterVision.setPipeline(2));
+      // this adds auto selections in SmartDashboard
+      SmartDashboard.putData("red", new SetPipeline(1, shooterVision));
+      SmartDashboard.putData("blue", new SetPipeline(0, shooterVision));
+      SmartDashboard.putData("default", new SetPipeline(2, shooterVision));
+
+      // toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
+
+      driver2.createAButton().whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
+
+      // takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
+
+      driver2.createBButton().whileHeld(new SnapshotCmd(shooterVision));
+    }
     Shuffleboard.getTab(ControlConstants.SBTabDriverDisplay).getLayout("Auto", BuiltInLayouts.kList)
         .withPosition(ControlConstants.autoColumn, 0).withSize(3, 1).add("Choose an Auto Mode", command)
         .withWidget(BuiltInWidgets.kSplitButtonChooser);
 
-    SmartDashboard.putData("red", new SetPipeline(1, shooterVision));
-    SmartDashboard.putData("blue", new SetPipeline(0, shooterVision));
-    SmartDashboard.putData("default", new SetPipeline(2, shooterVision));
-
-    // toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
-
-    driver2.createAButton().whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
-
-    // takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
-
-    driver2.createBButton().whileHeld(new SnapshotCmd(shooterVision));
-    }
   }
 
   // Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
     if (RobotBase.isReal()) {
-      //transport.getShooterSubsystem().setHoodCalibrated(false);
+      // transport.getShooterSubsystem().setHoodCalibrated(false);
       ledSubsystem.setDefaultCommand(new DefaultLed(ledSubsystem, transport));
       cameraSubsystem = new CameraSubsystem();
-    
-      if (!DriverStation.isTest()) {
-        drive.setUpDeftCom();
-        transport.setUpDeftCom();
-      } else {
-        transport.setUpDeftCom();
-      }
     }
+    if (!DriverStation.isTest()) {
+      drive.setUpDeftCom();
+      if (RobotBase.isReal())
+        transport.setUpDeftCom();
+    } else {
+      if (RobotBase.isReal())
+        transport.setUpDeftCom();
+    }
+
   }
 
-  public void determineAllianceColor(){
+  public void determineAllianceColor() {
     Alliance color = DriverStation.getAlliance();
-    if (Alliance.Red.equals(color)){
+    if (Alliance.Red.equals(color)) {
       ControlConstants.allianceColor = IndexerConstants.kRedTarget;
       ControlConstants.opposingColor = IndexerConstants.kBlueTarget;
-    } else if (Alliance.Blue.equals(color)){
+    } else if (Alliance.Blue.equals(color)) {
       ControlConstants.allianceColor = IndexerConstants.kBlueTarget;
       ControlConstants.opposingColor = IndexerConstants.kRedTarget;
     } else {

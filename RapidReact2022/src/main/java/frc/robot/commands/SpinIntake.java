@@ -4,16 +4,10 @@
 
 package frc.robot.commands;
 
-import java.util.ResourceBundle.Control;
-
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
-import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;

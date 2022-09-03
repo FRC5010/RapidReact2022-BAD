@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import javax.naming.ldap.LdapReferralException;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.LedSubsystem;

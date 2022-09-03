@@ -24,8 +24,6 @@ public class LedSubsystem extends SubsystemBase {
   private AddressableLEDBuffer m_ledOff;
   private int m_rainbowFirstPixelHue = 180;
 
-  private int port, length;
-
   private boolean isBlink = false;
   private boolean ledOn;
   private boolean isRainbow = false;
@@ -41,9 +39,6 @@ public class LedSubsystem extends SubsystemBase {
   private int ledPos = 0;
 
   public LedSubsystem(int port, int length) {
-    this.port = port;
-    this.length = length;
-
     //init method, sets up the led strip and if you want it to be one solid color you would do that here
     //you can still change it later
     m_led = new AddressableLED(port);

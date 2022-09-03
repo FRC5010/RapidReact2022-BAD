@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -42,8 +43,8 @@ public final class DriveConstants {
 
     public static final double kTrackwidthMeters = 0.616;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-    public static final double kMaxSpeedMetersPerSecond = 72 * (.0254); // converting from in/s to m/s
-    public static final double kMaxAccelerationMetersPerSecondSquared = 60 * (.0254); // converting from in/s/s to m/s/s
+    public static final double kMaxSpeedMetersPerSecond = Units.inchesToMeters(20);//72 * (.0254); // converting from in/s to m/s
+    public static final double kMaxAccelerationMetersPerSecondSquared = Units.inchesToMeters(20); //60 * (.0254); // converting from in/s/s to m/s/s
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
 

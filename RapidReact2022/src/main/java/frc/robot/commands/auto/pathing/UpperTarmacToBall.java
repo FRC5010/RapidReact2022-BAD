@@ -4,7 +4,6 @@
 
 package frc.robot.commands.auto.pathing;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.mechanisms.Drive;
 
@@ -18,7 +17,6 @@ public class UpperTarmacToBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     String path1 = "paths/HubToBall3.wpilib.json";
-    String path2 = "paths/Ball3ToHub.wpilib.json";
     addCommands(
       Drive.getAutonomousCommand(path1, true)
     );

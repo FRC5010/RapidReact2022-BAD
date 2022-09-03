@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ClimbConstants;
-import frc.robot.mechanisms.Climb;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class CalibrateDynamicArms extends CommandBase {

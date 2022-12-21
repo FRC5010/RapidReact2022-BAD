@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 
 public class CurvatureDrive extends CommandBase {
-  DriveTrainMain driveSubsystem;
+  DriveTrain driveSubsystem;
   Joystick driver;
   /**
    * Creates a new Driving.
    */
-  public CurvatureDrive(DriveTrainMain driveTrain, Joystick driver) {
+  public CurvatureDrive(DriveTrain driveTrain, Joystick driver) {
     driveSubsystem = driveTrain;
     this.driver = driver;
     // Use addRequirements() here to declare subsystem dependenOcies.
@@ -35,8 +35,8 @@ public class CurvatureDrive extends CommandBase {
     SmartDashboard.putNumber("Steer", steer);
     //turns the robot at a curve/ rate like a car
     driveSubsystem.driverCurvatureDrive(
-      DriveTrainMain.scaleInputs(throttle), 
-      DriveTrainMain.scaleInputs(steer));
+      DriveTrain.scaleInputs(throttle), 
+      DriveTrain.scaleInputs(steer));
   }
 
   // Called once the command ends or is interrupted.

@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class SnapshotCmd extends CommandBase {
   /** Creates a new SnapshotCmd. */

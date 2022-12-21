@@ -9,6 +9,8 @@ public interface GenericEncoder {
     double getPosition();
     double getVelocity();
     void reset();
+    void setPositionConversion(double conversion);
+    void setVelocityConversion(double conversion);
     void setPosition(double position);
     void setRate(double rate);
 }

@@ -11,11 +11,11 @@ import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class DefaultClimb extends CommandBase {
   /** Creates a new DefaultClimb. */
@@ -65,7 +65,7 @@ public class DefaultClimb extends CommandBase {
     //double downSpeed = (-1) * DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.bothArmsDown));
     //riley doesn't use this and would rather have it as a toggle for the pistons
       // right climb
-      double rightClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm));
+      double rightClimbSpeed = DriveTrain.scaleInputs(-operator.getRawAxis(ControlConstants.rightClimbArm));
       if (climbSubsystem.getRightEncoderValue() < ClimbConstants.climbBothMax || rightClimbSpeed < 0){
         climbSubsystem.setRightWinchSpeed(rightClimbSpeed);
       } else {
@@ -73,7 +73,7 @@ public class DefaultClimb extends CommandBase {
       }
 
       // left climb
-      double leftClimbSpeed = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm));
+      double leftClimbSpeed = DriveTrain.scaleInputs(-operator.getRawAxis(ControlConstants.leftClimbArm));
       if (climbSubsystem.getLeftEncoderValue() < ClimbConstants.climbBothMax || leftClimbSpeed < 0){
         climbSubsystem.setLeftWinchSpeed(leftClimbSpeed);
       } else {

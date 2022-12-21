@@ -38,4 +38,14 @@ public class RevEncoder implements GenericEncoder {
   @Override
   public void setRate(double rate) {
   }
+
+  @Override
+  public void setPositionConversion(double conversion) {
+    encoder.setPositionConversionFactor(conversion);
+  }
+
+  @Override
+  public void setVelocityConversion(double conversion) {
+    encoder.setVelocityConversionFactor(conversion);
+  }
 }

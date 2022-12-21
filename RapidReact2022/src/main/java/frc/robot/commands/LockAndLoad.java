@@ -9,7 +9,7 @@ import frc.robot.constants.ShooterConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class LockAndLoad extends CommandBase {
   /** Creates a new LockAndLoad. */

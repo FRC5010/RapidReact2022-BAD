@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class Launcher extends CommandBase {
@@ -29,7 +29,7 @@ public class Launcher extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pow = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.spinHood))* HoodConstants.manualPow;
+    double pow = DriveTrain.scaleInputs(-operator.getRawAxis(ControlConstants.spinHood))* HoodConstants.manualPow;
     SmartDashboard.putNumber("HoodPow", pow);
     shooterSubsystem.spinHood(pow);
   }

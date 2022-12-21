@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 
 public class ComboDrive extends CommandBase {
   /** Creates a new ComboDrive. */
-  DriveTrainMain driveTrain;
+  DriveTrain driveTrain;
   Joystick driver;
-  public ComboDrive(DriveTrainMain driveTrain, Joystick driver) {
+  public ComboDrive(DriveTrain driveTrain, Joystick driver) {
     this.driveTrain = driveTrain;
     this.driver = driver;
     addRequirements(driveTrain);
@@ -33,8 +33,8 @@ public class ComboDrive extends CommandBase {
   public void execute() {
 
 
-    double throttle = DriveTrainMain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle));
-    double steer = DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer));
+    double throttle = DriveTrain.scaleInputs(-driver.getRawAxis(ControlConstants.throttle));
+    double steer = DriveTrain.scaleInputs(driver.getRawAxis(ControlConstants.steer));
     SmartDashboard.putNumber("Throttle", throttle);
     SmartDashboard.putNumber("Steer", steer);
     //driveSubsystem.curvatureDrive();

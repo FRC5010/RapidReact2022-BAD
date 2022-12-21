@@ -9,7 +9,7 @@ import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class DefaultLed extends CommandBase {
   /** Creates a new DefaultLed. */

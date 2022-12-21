@@ -15,7 +15,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

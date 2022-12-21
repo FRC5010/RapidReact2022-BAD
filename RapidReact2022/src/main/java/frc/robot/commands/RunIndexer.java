@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.IndexerConstants;
 import frc.robot.subsystems.DiagonalIndexerSubsystem;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.VerticalIndexerSubsystem;
 
 public class RunIndexer extends CommandBase {
@@ -51,7 +51,7 @@ public class RunIndexer extends CommandBase {
       indexerSubsystem.setDiagonalIndexerPoint(power);
       upperIndexerSubsystem.setVerticalIndexerPoint(power);
     }else{
-      double powMod = DriveTrainMain.scaleInputs(-operator.getRawAxis(ControlConstants.joystickIndexer));
+      double powMod = DriveTrain.scaleInputs(-operator.getRawAxis(ControlConstants.joystickIndexer));
       indexerSubsystem.setDiagonalIndexerPoint(IndexerConstants.indexerRPM * powMod);
       upperIndexerSubsystem.setVerticalIndexerPoint(IndexerConstants.indexerRPM * powMod);
     }

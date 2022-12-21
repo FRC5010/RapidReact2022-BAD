@@ -5,22 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainMain;
-import frc.robot.subsystems.Pose;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.FRC5010.GenericPose;
+import frc.robot.FRC5010.VisionSystem;
 
 public class SeekTarget extends CommandBase {
   /** Creates a new SeekTarget. */
-  DriveTrainMain driveTrainMain;
+  DriveTrain driveTrainMain;
   VisionSystem visionSystem;
   int seekDirection = 1;
-  Pose pose;
+  GenericPose pose;
   double angleToSwitchDir = 45;
   double startGyro;
   double currGyro;
   boolean targetFound = false;
 
-  public SeekTarget(DriveTrainMain driveTrainMain, VisionSystem visionSystem, Pose pose) {
+  public SeekTarget(DriveTrain driveTrainMain, VisionSystem visionSystem, GenericPose pose) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainMain = driveTrainMain;
     this.visionSystem = visionSystem;
@@ -32,7 +32,7 @@ public class SeekTarget extends CommandBase {
   public void initialize() {
     angleToSwitchDir = 45;
     targetFound = false;
-    startGyro = pose.getHeading();
+    startGyro = pose.getGyroAngleZ();
     angleToSwitchDir += startGyro;
     seekDirection = 1;
   }
@@ -40,7 +40,7 @@ public class SeekTarget extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currGyro = pose.getHeading();
+    currGyro = pose.getGyroAngleZ();
     if(currGyro > angleToSwitchDir){
       seekDirection = -1;
     }

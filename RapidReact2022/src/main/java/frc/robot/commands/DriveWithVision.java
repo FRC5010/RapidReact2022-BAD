@@ -10,15 +10,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.DriveConstants;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class DriveWithVision extends CommandBase {
   
   // Drive with vision TURNS the robot till it sees it and DRIVES the robot to set distance
 
-  DriveTrainMain drive;
+  DriveTrain drive;
   VisionSystem vision;
   
 
@@ -29,7 +29,7 @@ public class DriveWithVision extends CommandBase {
   double startTime, currTime;
   boolean timeStarted;
 
-  public DriveWithVision(DriveTrainMain drive, VisionSystem vision, double targetAngle, double targetDistance, double driveSpeed) {
+  public DriveWithVision(DriveTrain drive, VisionSystem vision, double targetAngle, double targetDistance, double driveSpeed) {
     this.drive = drive;
     this.vision = vision;
     this.targetDistance = targetDistance;

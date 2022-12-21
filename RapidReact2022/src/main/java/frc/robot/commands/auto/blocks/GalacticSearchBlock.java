@@ -10,21 +10,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveWithVision;
 
 import frc.robot.commands.SeekTarget;
-import frc.robot.subsystems.DriveTrainMain;
-
-import frc.robot.subsystems.Pose;
-
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.FRC5010.GenericPose;
+import frc.robot.FRC5010.VisionSystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class GalacticSearchBlock extends SequentialCommandGroup {
-  private DriveTrainMain driveTrainMain;
+  private DriveTrain driveTrainMain;
   private VisionSystem visionSystem;
-  private Pose pose;
+  private GenericPose pose;
 
-  public GalacticSearchBlock(DriveTrainMain driveTrainMain, VisionSystem visionSystem, Pose pose) {
+  public GalacticSearchBlock(DriveTrain driveTrainMain, VisionSystem visionSystem, GenericPose pose) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.driveTrainMain = driveTrainMain;
     this.visionSystem = visionSystem;

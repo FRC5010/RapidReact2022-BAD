@@ -36,8 +36,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Robot;
 import frc.robot.FRC5010.Controller;
+import frc.robot.FRC5010.DrivetrainPoseEstimator;
 import frc.robot.FRC5010.GenericEncoder;
 import frc.robot.FRC5010.GenericGyro;
+import frc.robot.FRC5010.GenericPose;
+import frc.robot.FRC5010.VisionSystem;
+import frc.robot.FRC5010.Impl.DifferentialPose;
 import frc.robot.FRC5010.Impl.NavXGyro;
 import frc.robot.FRC5010.Impl.RevEncoder;
 import frc.robot.FRC5010.Impl.SimulatedEncoder;
@@ -47,15 +51,13 @@ import frc.robot.commands.Driving;
 import frc.robot.commands.RamseteFollower;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
-import frc.robot.subsystems.DriveTrainMain;
-import frc.robot.subsystems.Pose;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.subsystems.DriveTrain;
 
 /**
  * Add your docs here.
  */
 public class Drive {
-  public static DriveTrainMain driveTrain;
+  public static DriveTrain driveTrain;
 
   public static Joystick driver;
   public static Controller driver2; 
@@ -77,7 +79,8 @@ public class Drive {
   private static Encoder m_leftEncoder;
   private static Encoder m_rightEncoder;
 
-  public static Pose robotPose;
+  public static GenericPose robotPose;
+  public static DrivetrainPoseEstimator poseEstimator;
   public GenericGyro gyro;
   
   public JoystickButton intakeAimButton;
@@ -101,7 +104,7 @@ public class Drive {
 
   private void configureButtonBindings() {
     driver2.setLeftYAxis(driver2.createLeftYAxis().negate().deadzone(.075).cubed().limit(1));
-    driver2.setRightXAxis(driver2.createRightXAxis().deadzone(.075).cubed().limit(1));
+    driver2.setRightXAxis(driver2.createRightXAxis().deadzone(.075).negate().cubed().limit(0.2));
       // incThrottleFactor = new POVButton(driver, ControlConstants.incThrottleFactor);
 
 
@@ -172,24 +175,28 @@ public class Drive {
       lEncoder = new RevEncoder(leftEncoder);
 
       RelativeEncoder rightEncoder = rDrive1.getEncoder();
-      rightEncoder.setPositionConversionFactor(DriveConstants.rightDistanceConv);
-      rightEncoder.setVelocityConversionFactor(DriveConstants.rightVelocityConv);
       rEncoder = new RevEncoder(rightEncoder);
 
       setCurrentLimits(ControlConstants.driveTrainCurrentLimit);
     } else {
       gyro = new SimulatedGyro();
-      m_leftEncoder = new Encoder(10,11);
-      m_rightEncoder = new Encoder(12,13);
-      m_leftEncoder.setDistancePerPulse(DriveConstants.leftDistanceConv);
-      m_rightEncoder.setDistancePerPulse(DriveConstants.rightDistanceConv);
-      lEncoder = new SimulatedEncoder(m_leftEncoder);
-      rEncoder = new SimulatedEncoder(m_rightEncoder);
-      initSimulation();
+      lEncoder = new SimulatedEncoder(10,11);
+      rEncoder = new SimulatedEncoder(12,13);
     }
-    driveTrain = new DriveTrainMain(lDrive1, rDrive1);
-    robotPose = new Pose(lEncoder, rEncoder, gyro);
-    robotPose.resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+    lEncoder.setVelocityConversion(DriveConstants.leftVelocityConv);
+    lEncoder.setPositionConversion(DriveConstants.leftDistanceConv);
+    rEncoder.setVelocityConversion(DriveConstants.rightVelocityConv);
+    rEncoder.setPositionConversion(DriveConstants.rightDistanceConv);
+
+    driveTrain = new DriveTrain(lDrive1, rDrive1);
+    DifferentialPose robotPose = new DifferentialPose(gyro, lEncoder, rEncoder);
+    robotPose.setupSimulator(DriveConstants.kvVoltSecondsPerMeter, 
+      DriveConstants.kaVoltSecondsSquaredPerMeter, 1.5, 3, 
+      DriveConstants.motorRotationsPerWheelRotation, DriveConstants.kTrackwidthMeters,
+      lDrive1, rDrive1);
+    robotPose.resetToPose(new Pose2d(0, 0, new Rotation2d(0)));
+    Drive.robotPose = robotPose;
+    poseEstimator = new DrivetrainPoseEstimator(robotPose, shooterVision);
   }
 //Just sets up defalt commands (setUpDeftCom)
   public void setUpDeftCom() {
@@ -221,36 +228,11 @@ public class Drive {
     return result;
   }
 
-  public DriveTrainMain getDriveTrainMain() {
+  public DriveTrain getDriveTrainMain() {
     return driveTrain;
   }
 
-  public Pose getPose() {
+  public GenericPose getPose() {
     return robotPose;
-  }
-  
-  // Simulation
-  // Create our feedforward gain constants (from the identification tool)
-  static final double KvLinear = DriveConstants.kvVoltSecondsPerMeter;
-  static final double KaLinear = DriveConstants.kaVoltSecondsSquaredPerMeter;
-  static final double KvAngular = 1.5;
-  static final double KaAngular = 0.3;
-  // Create the simulation model of our drivetrain.
-  public static DifferentialDrivetrainSim m_driveSim;
-  public void initSimulation() {
-    m_driveSim = new DifferentialDrivetrainSim(
-      // Create a linear system from our identification gains.
-      LinearSystemId.identifyDrivetrainSystem(KvLinear, KaLinear, KvAngular, KaAngular),
-      DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
-      DriveConstants.motorRotationsPerWheelRotation,  // 10.71:1 gearing reduction.
-      DriveConstants.kTrackwidthMeters, // The track width is 0.616 meters.
-      KitbotWheelSize.kSixInch.value, // The robot uses 3" radius wheels.
-    
-      // The standard deviations for measurement noise:
-      // x and y:          0.001 m
-      // heading:          0.001 rad
-      // l and r velocity: 0.1   m/s
-      // l and r position: 0.005 m
-      VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005));
   }
 }

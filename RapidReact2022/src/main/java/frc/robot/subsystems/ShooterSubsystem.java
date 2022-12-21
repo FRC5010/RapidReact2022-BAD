@@ -20,7 +20,7 @@ import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.FeederConstants;
 import frc.robot.constants.ShooterConstants.HoodConstants;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class ShooterSubsystem extends SubsystemBase {
   private CANSparkMax flyWheelRight, hoodMotor, feederMotor;
@@ -122,7 +122,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getFlyWheelPercentRPM(){
-    return Math.abs(DriveTrainMain.minMaxOne(flyWheelRight.getEncoder().getVelocity() / flyWheelSetPoint));
+    return Math.abs(DriveTrain.minMaxOne(flyWheelRight.getEncoder().getVelocity() / flyWheelSetPoint));
     //return Math.max(Math.min(flyWheelSetPoint / flyWheelRight.getEncoder().getVelocity(), 1), 0);
   }
 

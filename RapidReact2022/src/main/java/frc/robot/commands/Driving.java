@@ -12,16 +12,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.FRC5010.Controller;
 import frc.robot.constants.ControlConstants;
 import frc.robot.mechanisms.Drive;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 
 public class Driving extends CommandBase {
-  DriveTrainMain driveSubsystem;
+  DriveTrain driveSubsystem;
   Joystick driver;
   Controller driver2;
   /**
    * Creates a new Driving.
    */
-  public Driving(DriveTrainMain driveTrain, Joystick driver, Controller driver2) {
+  public Driving(DriveTrain driveTrain, Joystick driver, Controller driver2) {
     driveSubsystem = driveTrain;
     this.driver = driver;
     this.driver2 = driver2; 

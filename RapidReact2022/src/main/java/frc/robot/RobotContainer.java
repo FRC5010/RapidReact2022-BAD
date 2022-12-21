@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.FRC5010.Controller;
+import frc.robot.FRC5010.VisionSystem;
+import frc.robot.FRC5010.Vision.VisionLimeLight;
+import frc.robot.FRC5010.Vision.VisionLimeLightSim;
 import frc.robot.commands.DefaultLed;
 import frc.robot.commands.LedBlink;
 import frc.robot.commands.LedColor;
@@ -52,9 +55,7 @@ import frc.robot.mechanisms.Drive;
 import frc.robot.mechanisms.Transport;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.LedSubsystem;
-import frc.robot.subsystems.vision.VisionLimeLightH2;
-import frc.robot.subsystems.vision.VisionLimeLightSim;
-import frc.robot.subsystems.vision.VisionSystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -123,9 +124,8 @@ public class RobotContainer {
   private void initRealOrSim() {
     if (RobotBase.isReal()) {
       // the 20 degrees as of march 15 2022,
-      shooterVision = new VisionLimeLightH2("limelight-shooter", 36.5, 37, 102.559,
-          ControlConstants.shooterVisionColumn);
-      shooterVision.setPiPMode(0); // removed shooter cam
+      shooterVision = new VisionLimeLight("limelight-shooter", 36.5, 37.0, 102.559,
+          ControlConstants.shooterVisionColumn, "drive");
 
       ledSubsystem = new LedSubsystem(0, 62);
       SmartDashboard.putData("Leds Orange", new LedColor(255, 25, 0, ledSubsystem));
@@ -208,7 +208,7 @@ public class RobotContainer {
 
       // toggleLL = new JoystickButton(driver, ControlConstants.toggleLL);
 
-      driver2.createAButton().whenPressed(new InstantCommand(() -> shooterVision.toggleLight(), shooterVision));
+      driver2.createAButton().whenPressed(new InstantCommand(() -> shooterVision.setLight(true), shooterVision));
 
       // takeSnapshot = new JoystickButton(driver, ControlConstants.takeSnapshot);
 

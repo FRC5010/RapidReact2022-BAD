@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.mechanisms.Drive;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 
 public class DriveTrainYEET extends CommandBase {
   /** Creates a new DriveTrainYEET. */
   double currTrottle;
-  private DriveTrainMain driveTrainMain;
+  private DriveTrain driveTrainMain;
   private Joystick driver;
-  public DriveTrainYEET(DriveTrainMain driveTrainMain, Joystick driver) {
+  public DriveTrainYEET(DriveTrain driveTrainMain, Joystick driver) {
     this.driveTrainMain = driveTrainMain;
     this.driver = driver;
     addRequirements(driveTrainMain);
@@ -34,7 +34,7 @@ public class DriveTrainYEET extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrainMain.driverCurvatureDrive(-DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.throttle)), DriveTrainMain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
+    driveTrainMain.driverCurvatureDrive(-DriveTrain.scaleInputs(driver.getRawAxis(ControlConstants.throttle)), DriveTrain.scaleInputs(driver.getRawAxis(ControlConstants.steer)));
   }
 
   // Called once the command ends or is interrupted.

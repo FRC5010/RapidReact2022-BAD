@@ -37,4 +37,14 @@ public class WpiEncoder implements GenericEncoder {
     @Override
     public void setRate(double rate) {
     }
+
+    @Override
+    public void setPositionConversion(double conversion) {
+        encoder.setDistancePerPulse(conversion);
+    }
+
+    @Override
+    public void setVelocityConversion(double conversion) {
+        encoder.setDistancePerPulse(conversion);
+    }
 }

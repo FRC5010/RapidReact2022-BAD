@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.ControlConstants;
 import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.TurretConstants;
-import frc.robot.subsystems.DriveTrainMain;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class SpinTurret extends CommandBase {
   /** Creates a new SpinTurret. */
@@ -53,7 +53,7 @@ public class SpinTurret extends CommandBase {
   public void execute() {
     double pow = 0;
     if (null != operator) {
-      pow = DriveTrainMain.scaleInputs(operator.getRawAxis(ControlConstants.turnTurret)); 
+      pow = DriveTrain.scaleInputs(operator.getRawAxis(ControlConstants.turnTurret)); 
     } 
     if(pow == 0){
       if(shooterSystem.isValidTarget()){

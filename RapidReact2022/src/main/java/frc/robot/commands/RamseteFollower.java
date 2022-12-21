@@ -17,8 +17,9 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.mechanisms.Drive;
+import frc.robot.FRC5010.GenericPose;
+import frc.robot.FRC5010.Impl.DifferentialPose;
 import frc.robot.constants.DriveConstants;
-import frc.robot.subsystems.Pose;
 
 /**
  * An example command that uses an example subsystem.
@@ -30,7 +31,7 @@ public class RamseteFollower extends RamseteCommand {
   private double accXDiff = 0;
   private double accYDiff = 0;
   private double totalDistance = 0;
-  private Pose pose;
+  private GenericPose pose;
   private boolean reset;
   /**
    * Creates a new ExampleCommand.
@@ -38,11 +39,11 @@ public class RamseteFollower extends RamseteCommand {
    * @param subsystem The subsystem used by this command.
    */
   public RamseteFollower(Trajectory trajectory, boolean reset) {
-    super(trajectory, Drive.robotPose::getPose,
+    super(trajectory, () -> ((DifferentialPose)Drive.robotPose).getCurrentPose(),
       new RamseteController(DriveConstants.kRamseteB, DriveConstants.kRamseteZeta),
       new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
           DriveConstants.kaVoltSecondsSquaredPerMeter),
-      DriveConstants.kDriveKinematics, Drive.robotPose::getWheelSpeeds,
+      DriveConstants.kDriveKinematics, () -> ((DifferentialPose)Drive.robotPose).getWheelSpeeds(),
       new PIDController(DriveConstants.kPDriveVel, 0, 0), new PIDController(DriveConstants.kPDriveVel, 0, 0),
       Drive.driveTrain::tankDriveVolts, Drive.driveTrain);
 
@@ -56,7 +57,7 @@ public class RamseteFollower extends RamseteCommand {
   }
 
   public void reset() {
-    pose.resetOdometry(trajectory.getInitialPose());
+    pose.resetToPose(trajectory.getInitialPose());
   }
 
   // Called when the command is initially scheduled.
@@ -76,8 +77,8 @@ public class RamseteFollower extends RamseteCommand {
   public void execute() {
     State expState = trajectory.sample(timer.get());
     Pose2d expectedPose = expState.poseMeters;
-    DifferentialDriveOdometry odometer = Drive.robotPose.getOdometry();
-    Pose2d actualPose = odometer.getPoseMeters();
+    
+    Pose2d actualPose = Drive.robotPose.getCurrentPose();
     double actualX = actualPose.getTranslation().getX();
     double actualY = actualPose.getTranslation().getY();
     double expectedX = expectedPose.getTranslation().getX();

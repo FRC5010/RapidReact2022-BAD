@@ -15,10 +15,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.FRC5010.VisionSystem;
 import frc.robot.constants.ControlConstants;
-import frc.robot.constants.ShooterConstants;
 import frc.robot.constants.ShooterConstants.TurretConstants;
-import frc.robot.subsystems.vision.VisionSystem;
 
 public class TurretSubsystem extends SubsystemBase {
   

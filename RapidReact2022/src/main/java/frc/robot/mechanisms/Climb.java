@@ -22,13 +22,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.FRC5010.Controller;
+import frc.robot.FRC5010.VisionSystem;
 import frc.robot.commands.CalibrateDynamicArms;
 import frc.robot.commands.DefaultClimb;
 import frc.robot.commands.SpinTurret;
 import frc.robot.constants.ControlConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.vision.VisionSystem;
 
 /** Add your docs here. */
 public class Climb {

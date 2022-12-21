@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.vision.VisionSystem;
+import frc.robot.FRC5010.VisionSystem;
 
 public class SetPipeline extends CommandBase {
   /** Creates a new SetPipeline. */
-  double pipeline;
+  int pipeline;
   VisionSystem limelight; 
-  public SetPipeline(double pipeline, VisionSystem limelight) {
+  public SetPipeline(int pipeline, VisionSystem limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.limelight = limelight;
     this.pipeline = pipeline;

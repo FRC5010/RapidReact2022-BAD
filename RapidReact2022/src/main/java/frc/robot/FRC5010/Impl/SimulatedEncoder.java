@@ -15,8 +15,18 @@ public class SimulatedEncoder implements GenericEncoder {
 
     public SimulatedEncoder(Encoder encoder) {
         this.encoder = encoder;
-        encoderSim = new EncoderSim(encoder);
+        init();
     }
+
+    public SimulatedEncoder(int port1, int port2) {
+        this.encoder = new Encoder(port1, port2);
+        init();
+    }
+
+    private void init() {
+        encoderSim = new EncoderSim(encoder); 
+    }
+
     @Override
     public double getPosition() {
         return encoderSim.getDistance();
@@ -38,5 +48,12 @@ public class SimulatedEncoder implements GenericEncoder {
     @Override
     public void setRate(double rate) {
         encoderSim.setRate(rate);
+    }
+    @Override
+    public void setPositionConversion(double conversion) {
+        encoder.setDistancePerPulse(conversion);
+    }
+    @Override
+    public void setVelocityConversion(double conversion) {     
     }
 }
